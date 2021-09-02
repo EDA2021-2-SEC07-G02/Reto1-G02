@@ -57,7 +57,7 @@ def loadData(catalog):
     """
     Carga los artistas en la estructura de datos
     """
-    controller.loadArtists(catalog)
+    controller.loadData(catalog)
 
 
 catalog = None
@@ -74,6 +74,16 @@ while True:
         loadData(catalog)
         print('Autores cargados: ' + str(lt.size(catalog['artists'])))
         print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
+        ultimasTresObras=lt.subList(catalog['artworks'],lt.size(catalog['artworks'])-2,3)
+        print('Tres últimas obras: ')
+        print('  ',lt.removeFirst(ultimasTresObras)['Title'])
+        print('  ',lt.removeFirst(ultimasTresObras)['Title'])
+        print('  ',lt.removeFirst(ultimasTresObras)['Title'])
+        ultimosTresArtistas=lt.subList(catalog['artists'],lt.size(catalog['artists'])-2,3)
+        print('Tres últimos artistas: ')
+        print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
+        print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
+        print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
         
 
     elif int(inputs[0]) == 2:

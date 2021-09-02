@@ -59,7 +59,7 @@ def addArtwork(catalog, artwork):
     """
     Se agrega la obra entregada por parámetro en la última posición de la lista de obras del catalogo.
     """
-    lt.addLast(catalog['artwork'], artwork)
+    lt.addLast(catalog['artworks'], artwork)
 
 
 # Funciones para creacion de datos
