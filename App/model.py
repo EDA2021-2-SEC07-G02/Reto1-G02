@@ -49,17 +49,18 @@ def newCatalog():
 
 # Funciones para agregar informacion al catalogo
 
-def addArtist(artistlist, artist):
+def addArtist(catalog, artist):
     """
-    Se agrega en la última posición de la lista de artistas el artista entregado por parámetro.
+    Se agrega el artista entregado por parámetro en la última posición de la lista de artistas del catalogo.
     """
-    lt.addLast(artistlist, artist)
+    lt.addLast(catalog['artists'], artist)
 
-def addArtwork(artworklist, artwork):
+def addArtwork(catalog, artwork):
     """
-    Se agrega en la última posición de la lista de obras la obra entregada por parámetro.
+    Se agrega la obra entregada por parámetro en la última posición de la lista de obras del catalogo.
     """
-    lt.addLast(artworklist, artwork)
+    lt.addLast(catalog['artwork'], artwork)
+
 
 # Funciones para creacion de datos
 
