@@ -37,22 +37,17 @@ los mismos.
 
 # Construccion de modelos
 
+def newCatalog():
+    catalog = {'artists': None,
+               'artworks': None}
+
+    catalog['artists'] = lt.newList('SINGLE_LINKED')
+    
+    catalog['artworks'] = lt.newList('SINGLE_LINKED')
+
+    return catalog
+
 # Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
-def createArtistList():
-    """
-    Funcion para crear la lista de artistas. La lista se retorna vacía.
-    """
-    artistlist = lt.newList(datastructure='SINGLE_LINKED')
-    return artistlist
-
-def createArtworksList():
-    """
-    Funcion para crear la lista de obras. La lista se retorna vacía.
-    """
-    artworklist = lt.newList(datastructure='SINGLE_LINKED')
-    return artworklist
 
 def addArtist(artistlist, artist):
     """
@@ -65,6 +60,9 @@ def addArtwork(artworklist, artwork):
     Se agrega en la última posición de la lista de obras la obra entregada por parámetro.
     """
     lt.addLast(artworklist, artwork)
+
+# Funciones para creacion de datos
+
 
 # Funciones de consulta
 
