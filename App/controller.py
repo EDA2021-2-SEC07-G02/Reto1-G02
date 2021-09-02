@@ -38,27 +38,31 @@ def initCatalog():
     return catalog
 
 # Funciones para la carga de datos
-def loadArtists(filename):
+
+def loadData(catalog):
+    """
+    Carga los artistas y obras al catalogo
+    """
+    loadArtists(catalog)
+    loadArtworks(catalog)
+
+def loadArtists(catalog):
     """
     Carga los artistas en una lista dado un nombre de archivo
     """
-    artistsFilename = cf.data_dir + filename
+    artistsFilename = cf.data_dir + 'MOMA/Artists-utf8-small.csv'
     inputFile= csv.DictReader(open(artistsFilename, encoding='utf-8'))
-    artists = model.createArtistList()
     for artist in inputFile:
-        model.addArtist(artists, artist)
-    return artists
+        model.addArtist(catalog, artist)
 
-def loadArtworks(filename):
+def loadArtworks(catalog):
     """
     Carga las obras en una lista dado un nombre de archivo
     """
-    artworksFilename = cf.data_dir + filename
+    artworksFilename = cf.data_dir + 'MOMA/Artworks-utf8-small.csv'
     inputFile= csv.DictReader(open(artworksFilename, encoding='utf-8'))
-    artworks = model.createArtworkList()
     for artist in inputFile:
-        model.addArtwork(artworks, artist)
-    return artworks
+        model.addArtwork(catalog, artist)
 
 
 # Funciones de ordenamiento
