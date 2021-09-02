@@ -40,6 +40,31 @@ los mismos.
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
+def createArtistList():
+    """
+    Funcion para crear la lista de artistas. La lista se retorna vacía.
+    """
+    artistlist = lt.newList(datastructure='SINGLE_LINKED')
+    return artistlist
+
+def createArtworksList():
+    """
+    Funcion para crear la lista de obras. La lista se retorna vacía.
+    """
+    artworklist = lt.newList(datastructure='SINGLE_LINKED')
+    return artworklist
+
+def addArtist(artistlist, artist):
+    """
+    Se agrega en la última posición de la lista de artistas el artista entregado por parámetro.
+    """
+    lt.addLast(artistlist, artist)
+
+def addArtwork(artworklist, artwork):
+    """
+    Se agrega en la última posición de la lista de obras la obra entregada por parámetro.
+    """
+    lt.addLast(artworklist, artwork)
 
 # Funciones de consulta
 
