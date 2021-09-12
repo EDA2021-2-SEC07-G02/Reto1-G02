@@ -1,10 +1,12 @@
+## Reto 1 - EDA
+
+# Hecho por:
+1. Daniel Gomez | 201728920 | df.gomezb@uniandes.edu.co (Req. 3)
+2. Jenifer Arce | 202014993 | j.arce@uniandes.edu.co (Req. 4)
+
 #ISIS1225 - Librerias de soporte
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
-
-Hecho por:
-Req. 3 | Daniel Gomez | 201728920 | df.gomezb@uniandes.edu.co 
-Req. 4 | Jenifer Arce | 202014993 | j.arce@uniandes.edu.co
 
 -Lib
 Este directorio contiene todo el código de base que se entrega para el funcionamiento del curso.  Dentro de este directorio encuentran:

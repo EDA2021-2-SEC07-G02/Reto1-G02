@@ -30,20 +30,22 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
 
-"""
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
-"""
+
 
 # Construccion de modelos
 
-def newCatalog():
+def newCatalog(ListType):
+    """
+    Inicializa el catálogo. Se crea dos listas vacía, una para guardar a los artistas, otra para las obras de arte.
+    
+    Parámetro ListType: La representación de las listas que fue escogida por el usuario(ARRAY_LIST o LINKED_LIST)
+    """
     catalog = {'artists': None,
                'artworks': None}
 
-    catalog['artists'] = lt.newList('SINGLE_LINKED')
+    catalog['artists'] = lt.newList(ListType)
     
-    catalog['artworks'] = lt.newList('SINGLE_LINKED')
+    catalog['artworks'] = lt.newList(ListType)
 
     return catalog
 

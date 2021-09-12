@@ -43,13 +43,23 @@ def printMenu():
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Transportar obras de un departamento")
     print("7- Proponer una nueva exposición en el museo")
+    print("0- Salir")
 
+def printRepLista():
+    """
+    Opciones de representación de lista que se pueden escoger
+    al seleccionar la opción (1) de cargar información al catálogo.
+    La representación de lista posibles son: (1) ARRAY_LIST o (2)LINKED_LIST
+    """
+    print("\n¿Qué representación de lista desea para la carga del catálogo?")
+    print("1- ARRAY_LIST")
+    print("2- LINKED_LIST")
 
-def initCatalog():
+def initCatalog(ListType):
     """
     Inicializa el catalogo de libros
     """
-    return controller.initCatalog()
+    return controller.initCatalog(ListType)
 
 
 
@@ -69,18 +79,25 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
-        catalog = initCatalog()
+        
+        printRepLista()
+        Tipo_Lista=int(input("Seleccione el tipo de representación de la lista: "))
+        ListType="ARRAY_LIST" #Opción número 1. Asimismo, queda por defecto ARRAY_LIST en caso de que se haya digitado otra opción por equivocación
+        if ListType==2:
+            ListType="LINKED_LIST"
+
+        print("\n\nCargando información de los archivos con representación de lista: " + ListType + " .....")
+        catalog = initCatalog(ListType)
         loadData(catalog)
-        print('Autores cargados: ' + str(lt.size(catalog['artists'])))
-        print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
+        print('\nAutores cargados: ' + str(lt.size(catalog['artists'])))
+        print('\nObras cargadas: ' + str(lt.size(catalog['artworks'])))
         ultimasTresObras=lt.subList(catalog['artworks'],lt.size(catalog['artworks'])-2,3)
-        print('Tres últimas obras: ')
+        print('\nTres últimas obras: ')
         print('  ',lt.removeFirst(ultimasTresObras)['Title'])
         print('  ',lt.removeFirst(ultimasTresObras)['Title'])
         print('  ',lt.removeFirst(ultimasTresObras)['Title'])
         ultimosTresArtistas=lt.subList(catalog['artists'],lt.size(catalog['artists'])-2,3)
-        print('Tres últimos artistas: ')
+        print('\nTres últimos artistas: ')
         print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
         print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
         print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
