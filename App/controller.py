@@ -67,4 +67,9 @@ def loadArtworks(catalog):
 
 # Funciones de ordenamiento
 
+def SortArtWork(catalog,size,sortType):
+    """
+    Ordena el artwork dependiendo la fecha de adquisición
+    """
+    return model.sortArtwork(catalog, size, sortType)
 # Funciones de consulta sobre el catálogo

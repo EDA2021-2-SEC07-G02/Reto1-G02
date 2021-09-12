@@ -27,7 +27,11 @@
 
 import config as cf
 from DISClib.ADT import list as lt
+from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as ms
+from DISClib.Algorithms.Sorting import quicksort as qs
+import time
 assert cf
 
 
@@ -71,4 +75,38 @@ def addArtwork(catalog, artwork):
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
+def cmpArtworkByDateAcquired(artwork1, artwork2): 
+    """ 
+    Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de artwork2 
+    Args: artwork1: informacion de la primera obra que incluye su valor 'DateAcquired'
+    artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
+    """
+    fecha1=time.strptime(artwork1["DateAcquired"],"%Y-%m-%d")
+    fecha2=time.strptime(artwork2["DateAcquired"],"%Y-%m-%d")
+    comparacion=fecha1<fecha2
+    return comparacion
+
 # Funciones de ordenamiento
+def sortArtwork(catalog,size,sortType):
+    """
+    Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
+    iterativo deseado (Insertion, Shell, Merge o Quick Sorts).
+    """
+    sub_list = lt.subList(catalog['artworks'], 1, size)
+    sub_list = sub_list.copy()
+    start_time = time.process_time()
+    sorted_list=None
+
+    if sortType == "Insertion":
+        sorted_list= ins.sort(sub_list,cmpArtworkByDateAcquired)
+    elif sortType == "Shell":
+        sorted_list= sa.sort(sub_list,cmpArtworkByDateAcquired)
+    elif sortType == "Merge":
+        sorted_list= ms.sort(sub_list,cmpArtworkByDateAcquired)
+    elif sortType == "Quick":
+        sorted_list= qs.sort(sub_list,cmpArtworkByDateAcquired)
+
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg, sorted_list
+    

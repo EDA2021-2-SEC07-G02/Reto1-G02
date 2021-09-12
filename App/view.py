@@ -35,7 +35,9 @@ operación solicitada
 """
 
 def printMenu():
+    print("-"*50)
     print("Bienvenido")
+    print("Opciones:")
     print("1- Cargar información en el catálogo")
     print("2- Listar cronológicamente los artistas")
     print("3- Listar cronológicamente las adquisiciones")
@@ -44,6 +46,7 @@ def printMenu():
     print("6- Transportar obras de un departamento")
     print("7- Proponer una nueva exposición en el museo")
     print("0- Salir")
+    print("-"*50)
 
 def printRepLista():
     """
@@ -54,6 +57,57 @@ def printRepLista():
     print("\n¿Qué representación de lista desea para la carga del catálogo?")
     print("1- ARRAY_LIST")
     print("2- LINKED_LIST")
+
+def printOrdIterativo():
+    """
+    Opciones de ordenamiento iterativativo que se pueden escoger
+    al seleccionar las opciones: (3) listar cronológicamente las adquisiciones o
+    (2) listar cronológicamente los artistas
+    Los agloritmos de ordenamientos posibles son: (1) Insertion, (2)Shell, (3) Merge o (4) Quick Sorts
+    """
+    print("\n¿Cuál tipo de algoritmo de ordenamiento iterativo quiere escoger?")
+    print("1- Insertion Sort")
+    print("2- Shell Sort")
+    print("3- Merge Sort")
+    print("4- Quick Sort")
+
+def tuplaOrdIterativo(opcion):
+    """
+    Esta función será usada en las opciones (2) y (3). 
+    Su parámetro de entrada puede ser "opcion2" o "opcion3" dependiendo en que opción sea utilizado
+
+    La función le pedirá al usuario dos datos:
+    1. Un entero representando el tipo de algoritmo de ordenamiento deseado
+    2. Un entero con el tamaño de la muestra que quiere ordenar
+
+    Los retorno de la función será una tupla que contega:
+    1. Un booleano que comprueba si el tamaño de la muestra no superá al tamaño del catalogo correspondiente a la opción
+    2. Una cadena de str correspondiente al tipo de ordenamiento que quiere por el usuario.
+    3. Entero que representa el tamaño de la lista
+    """
+    printOrdIterativo()
+    Tipo_ord=int(input("\nSeleccione el tipo de algoritmo de ordenamiento iterativo: "))
+    sortType=None 
+    if Tipo_ord==1:
+        sortType="Insertion"
+    elif Tipo_ord==2:
+        sortType="Shell"
+    elif Tipo_ord==3:
+        sortType="Merge"
+    else:#Opción número 4. Asimismo, queda por defecto Quick Sort en caso de que se haya digitado otra opción por equivocación
+        sortType="Quick"
+    print("\nLa ordenación se hará con el tipo de ordenamiento "+sortType+" Sort")
+
+    size=int(input("\nIngrese el tamaño de muestra que quiere ordenar: "))
+    
+    boolsize=False
+    if opcion=="opcion2":
+        boolsize=size<=lt.size(catalog['artists'])
+    else:
+        boolsize=size<=lt.size(catalog['artworks'])
+
+    return boolsize, sortType, size
+
 
 def initCatalog(ListType):
     """
@@ -90,7 +144,7 @@ while True:
         catalog = initCatalog(ListType)
         loadData(catalog)
         print('\nAutores cargados: ' + str(lt.size(catalog['artists'])))
-        print('\nObras cargadas: ' + str(lt.size(catalog['artworks'])))
+        print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
         ultimasTresObras=lt.subList(catalog['artworks'],lt.size(catalog['artworks'])-2,3)
         print('\nTres últimas obras: ')
         print('  ',lt.removeFirst(ultimasTresObras)['Title'])
@@ -104,10 +158,20 @@ while True:
         
 
     elif int(inputs[0]) == 2:
+        tupEntradasUsuario=tuplaOrdIterativo("opcion2")
+        if tupEntradasUsuario[0]==True:
+            pass
         pass
 
     elif int(inputs[0]) == 3:
-        pass
+        tupEntradasUsuario=tuplaOrdIterativo("opcion3")
+        sortType=tupEntradasUsuario[1]
+        size=tupEntradasUsuario[2]
+        if tupEntradasUsuario[0]==True:
+            resultado= controller.SortArtWork(catalog, size, sortType)
+            print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
+        else:
+            print("\nLa muestra tiene un tamaño incorrecto")
 
     elif int(inputs[0]) == 4:
         pass
@@ -121,6 +185,7 @@ while True:
     elif int(inputs[0]) == 7:
         pass
 
-    else:
+    elif int(inputs[0]) == 0:
         sys.exit(0)
-sys.exit(0)
+    else:
+        print("Seleccione una opción válida")
