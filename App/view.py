@@ -83,7 +83,7 @@ while True:
         printRepLista()
         Tipo_Lista=int(input("Seleccione el tipo de representación de la lista: "))
         ListType="ARRAY_LIST" #Opción número 1. Asimismo, queda por defecto ARRAY_LIST en caso de que se haya digitado otra opción por equivocación
-        if ListType==2:
+        if Tipo_Lista==2:
             ListType="LINKED_LIST"
 
         print("\n\nCargando información de los archivos con representación de lista: " + ListType + " .....")
