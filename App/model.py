@@ -82,7 +82,7 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
     artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
     """
     comparacion=False
-    if len(artwork1)==10 and len(artwork2)==10: #La función dará False si la lista es vacía o posee un formato de fecha distinto, es decir fecha de artwork2 < artwork1
+    if len(artwork1["DateAcquired"])>0 and len(artwork2["DateAcquired"])>0: #La función dará False si la lista es vacía o posee un formato de fecha distinto, es decir fecha de artwork2 < artwork1
         fecha1=time.strptime(artwork1["DateAcquired"],"%Y-%m-%d")
         fecha2=time.strptime(artwork2["DateAcquired"],"%Y-%m-%d")
         comparacion=fecha1<fecha2
@@ -94,7 +94,7 @@ def sortArtwork(catalog,size,sortType):
     Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
     iterativo deseado (Insertion, Shell, Merge o Quick Sorts).
     """
-    sub_list = lt.subList(catalog['artworks'], 1, size)
+    sub_list = lt.subList(catalog['artworks'], 1, size) 
     sub_list = sub_list.copy()
     start_time = time.process_time()
     sorted_list=None
