@@ -48,6 +48,18 @@ def printMenu():
     print("0- Salir")
     print("-"*50)
 
+def initCatalog(ListType):
+    """
+    Inicializa el catalogo de libros
+    """
+    return controller.initCatalog(ListType)
+
+def loadData(catalog):
+    """
+    Carga los artistas en la estructura de datos
+    """
+    controller.loadData(catalog)
+
 def printRepLista():
     """
     Opciones de representación de lista que se pueden escoger
@@ -86,7 +98,7 @@ def tuplaOrdIterativo(opcion):
     3. Entero que representa el tamaño de la lista
     """
     printOrdIterativo()
-    Tipo_ord=int(input("\nSeleccione el tipo de algoritmo de ordenamiento iterativo: "))
+    Tipo_ord=int(input("\nSeleccione el tipo de algoritmo de ordenamiento: "))
     sortType=None 
     if Tipo_ord==1:
         sortType="Insertion"
@@ -109,20 +121,23 @@ def tuplaOrdIterativo(opcion):
     return boolsize, sortType, size
 
 
-def initCatalog(ListType):
-    """
-    Inicializa el catalogo de libros
-    """
-    return controller.initCatalog(ListType)
-
-
-
-def loadData(catalog):
-    """
-    Carga los artistas en la estructura de datos
-    """
-    controller.loadData(catalog)
-
+def printSortResults(ord_artwork, sample=3):
+    size = lt.size(ord_artwork)
+    if size > sample:
+        print("\nLas primeras ", sample, " obras ordenadas por fecha son:")
+        i=1
+        while i <= sample:
+            artwork = lt.getElement(ord_artwork,i)
+            print(i,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
+                artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
+            i+=1
+        print("\nLas últimas ", sample, " obras ordenadas por fecha son:")
+        j=size-(sample)+1
+        while j <= size:
+            artwork = lt.getElement(ord_artwork,j)
+            print(j,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
+                artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
+            j+=1
 
 catalog = None
 
@@ -132,60 +147,66 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        
-        printRepLista()
-        Tipo_Lista=int(input("Seleccione el tipo de representación de la lista: "))
-        ListType="ARRAY_LIST" #Opción número 1. Asimismo, queda por defecto ARRAY_LIST en caso de que se haya digitado otra opción por equivocación
-        if Tipo_Lista==2:
-            ListType="LINKED_LIST"
+    if inputs.isnumeric() == True:
+        if int(inputs[0]) == 1:
+            
+            printRepLista()
+            Tipo_Lista=int(input("Seleccione el tipo de representación de la lista: "))
+            ListType="ARRAY_LIST" #Opción número 1. Asimismo, queda por defecto ARRAY_LIST en caso de que se haya digitado otra opción por equivocación
+            if Tipo_Lista==2:
+                ListType="LINKED_LIST"
 
-        print("\n\nCargando información de los archivos con representación de lista: " + ListType + " .....")
-        catalog = initCatalog(ListType)
-        loadData(catalog)
-        print('\nAutores cargados: ' + str(lt.size(catalog['artists'])))
-        print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
-        ultimasTresObras=lt.subList(catalog['artworks'],lt.size(catalog['artworks'])-2,3)
-        print('\nTres últimas obras: ')
-        print('  ',lt.removeFirst(ultimasTresObras)['Title'])
-        print('  ',lt.removeFirst(ultimasTresObras)['Title'])
-        print('  ',lt.removeFirst(ultimasTresObras)['Title'])
-        ultimosTresArtistas=lt.subList(catalog['artists'],lt.size(catalog['artists'])-2,3)
-        print('\nTres últimos artistas: ')
-        print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
-        print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
-        print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
-        
+            print("\n\nCargando información de los archivos con representación de lista: " + ListType + " .....")
+            catalog = initCatalog(ListType)
+            loadData(catalog)
+            print('\nAutores cargados: ' + str(lt.size(catalog['artists'])))
+            print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
+            ultimasTresObras=lt.subList(catalog['artworks'],lt.size(catalog['artworks'])-2,3)
+            print('\nTres últimas obras: ')
+            print('  ',lt.removeFirst(ultimasTresObras)['Title'])
+            print('  ',lt.removeFirst(ultimasTresObras)['Title'])
+            print('  ',lt.removeFirst(ultimasTresObras)['Title'])
+            ultimosTresArtistas=lt.subList(catalog['artists'],lt.size(catalog['artists'])-2,3)
+            print('\nTres últimos artistas: ')
+            print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
+            print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
+            print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
+            
 
-    elif int(inputs[0]) == 2:
-        tupEntradasUsuario=tuplaOrdIterativo("opcion2")
-        if tupEntradasUsuario[0]==True:
+        elif int(inputs[0]) == 2:
+            tupEntradasUsuario=tuplaOrdIterativo("opcion2")
+            if tupEntradasUsuario[0]==True:
+                pass
             pass
-        pass
 
-    elif int(inputs[0]) == 3:
-        tupEntradasUsuario=tuplaOrdIterativo("opcion3")
-        sortType=tupEntradasUsuario[1]
-        size=tupEntradasUsuario[2]
-        if tupEntradasUsuario[0]==True:
-            resultado= controller.SortArtWork(catalog, size, sortType)
-            print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
+        elif int(inputs[0]) == 3:
+            tupEntradasUsuario=tuplaOrdIterativo("opcion3")
+            sortType=tupEntradasUsuario[1]
+            size=tupEntradasUsuario[2]
+            
+            if tupEntradasUsuario[0]==True:
+                resultado= controller.SortArtWork(catalog, size, sortType)
+                print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
+                printSortResults(resultado[1])
+                
+            else:
+                print("\nLa muestra tiene un tamaño incorrecto")
+
+        elif int(inputs[0]) == 4:
+            pass
+
+        elif int(inputs[0]) == 5:
+            pass
+
+        elif int(inputs[0]) == 6:
+            pass
+
+        elif int(inputs[0]) == 7:
+            pass
+
+        elif int(inputs[0]) == 0:
+            sys.exit(0)
         else:
-            print("\nLa muestra tiene un tamaño incorrecto")
-
-    elif int(inputs[0]) == 4:
-        pass
-
-    elif int(inputs[0]) == 5:
-        pass
-
-    elif int(inputs[0]) == 6:
-        pass
-
-    elif int(inputs[0]) == 7:
-        pass
-
-    elif int(inputs[0]) == 0:
-        sys.exit(0)
+            print("Seleccione una opción válida") 
     else:
         print("Seleccione una opción válida")

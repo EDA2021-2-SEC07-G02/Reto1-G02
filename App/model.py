@@ -81,9 +81,11 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
     Args: artwork1: informacion de la primera obra que incluye su valor 'DateAcquired'
     artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
     """
-    fecha1=time.strptime(artwork1["DateAcquired"],"%Y-%m-%d")
-    fecha2=time.strptime(artwork2["DateAcquired"],"%Y-%m-%d")
-    comparacion=fecha1<fecha2
+    comparacion=False
+    if len(artwork1)==10 and len(artwork2)==10: #La función dará False si la lista es vacía o posee un formato de fecha distinto, es decir fecha de artwork2 < artwork1
+        fecha1=time.strptime(artwork1["DateAcquired"],"%Y-%m-%d")
+        fecha2=time.strptime(artwork2["DateAcquired"],"%Y-%m-%d")
+        comparacion=fecha1<fecha2
     return comparacion
 
 # Funciones de ordenamiento
