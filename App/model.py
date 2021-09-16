@@ -103,6 +103,10 @@ def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
         sorted_list= ms.sort(catalog['artworks'],cmpArtworkByDateAcquired)
     elif sortType == "Quick":
         sorted_list= qs.sort(catalog['artworks'], cmpArtworkByDateAcquired)
+    
+    med_time = time.process_time() # BORRAR
+    elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
+    print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg)
 
     cont=0
     while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaInicial}) and cont<lt.size(sorted_list):
