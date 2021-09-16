@@ -114,6 +114,7 @@ def sortArtwork(catalog,sortType,porcentaje):
     med_time = time.process_time() # BORRAR
     elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
     print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
+    print("TAMANO DE MUESTRA", lt.size(subLista))
 
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
