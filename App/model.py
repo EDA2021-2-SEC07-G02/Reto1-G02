@@ -89,16 +89,23 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
     return comparacion
 
 # Funciones de ordenamiento
-def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
+
+def sortArtwork(catalog,sortType,porcentaje):
     """
     Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
-    iterativo deseado (Insertion, Shell, Merge o Quick Sorts).
+    iterativo deseado (Insertion, Shell, Merge o Quick Sorts). Esta función está adaptada a las pruebas
+    de laboratorio ya que realmente el tamaño de la muestra está dado el rango de fechas seleccionado
+    Args: catalog: estructura de datos con toda la información
+    sortType: string con el tipo de ordenamiento seleccionado por le usuario
+    procentaje: porcentaje de cantidad de registros de la lista total de registros a organizar
     """
     start_time = time.process_time()
+    cantidad_registros= ((porcentaje/100)*lt.size(catalog['artworks']))//1
+    subLista=lt.subList(catalog['artworks'],0,cantidad_registros)
     if sortType == "Insertion":
-        sorted_list= ins.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+        sorted_list= ins.sort(subLista,cmpArtworkByDateAcquired)
     elif sortType == "Shell":
-        sorted_list= sa.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+        sorted_list= sa.sort(subLista,cmpArtworkByDateAcquired)
     elif sortType == "Merge":
         sorted_list= ms.sort(catalog['artworks'],cmpArtworkByDateAcquired)
     elif sortType == "Quick":
@@ -106,24 +113,56 @@ def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
     
     med_time = time.process_time() # BORRAR
     elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
-    print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg)
+    print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
 
-    cont=0
-    while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaInicial}) and cont<lt.size(sorted_list):
-        cont+=1
-    indiceInicial=cont+1
-    while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaFinal}) and cont<lt.size(sorted_list):
-        cont+=1
-    indiceFinal=cont
-    if(indiceInicial<=indiceFinal):
-        sub_list = lt.subList(sorted_list, indiceInicial, indiceFinal-indiceInicial) 
-        sub_list = sub_list.copy()
-        sorted_list=sub_list
-    else:
-        sorted_list=None   
-    
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg, sorted_list
+
+# NOTA: Esta función es la que está en implementación para la entrega final del reto.
+# def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
+#     """
+#     Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
+#     iterativo deseado (Insertion, Shell, Merge o Quick Sorts).
+#     Args: catalog: estructura de datos con toda la información
+#     sortType: string con el tipo de ordenamiento seleccionado por le usuario
+#     fechaInicial: fecha de inicio del rango
+#     fechaFinal: fecha final del rango de obras de arte
+#     """
+#     start_time = time.process_time()
+#     if sortType == "Insertion":
+#         sorted_list= ins.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+#     elif sortType == "Shell":
+#         sorted_list= sa.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+#     elif sortType == "Merge":
+#         sorted_list= ms.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+#     elif sortType == "Quick":
+#         sorted_list= qs.sort(catalog['artworks'], cmpArtworkByDateAcquired)
+    
+#     med_time = time.process_time() # BORRAR
+#     elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
+#     print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
+
+#     cont=0
+#     while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaInicial}) and cont<lt.size(sorted_list):
+#         cont+=1
+#     indiceInicial=cont+1
+#     while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaFinal}) and cont<lt.size(sorted_list):
+#         cont+=1
+#     indiceFinal=cont
+#     if(indiceInicial<=indiceFinal):
+#         sub_list = lt.subList(sorted_list, indiceInicial, indiceFinal-indiceInicial) 
+#         sub_list = sub_list.copy()
+#         sorted_list=sub_list
+#     else:
+#         sorted_list=None   
+    
+#     stop_time = time.process_time()
+#     elapsed_time_mseg = (stop_time - start_time)*1000
+#     return elapsed_time_mseg, sorted_list
+
+
+
+
 
 

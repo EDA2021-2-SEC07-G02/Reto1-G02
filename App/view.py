@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from time import process_time
 import config as cf
 import sys
 import controller
@@ -113,10 +114,17 @@ def tuplaOrdIterativo(opcion):
         sortType="Quick"
     print("\nLa ordenación se hará con el tipo de ordenamiento "+sortType+" Sort")
 
+    porcentaje=float(input("Ingrese el porcentaje de registros del total de registros a organizar:"))
+    return sortType, porcentaje
+    """
     fecha_inicio=(input("\nIngrese la fecha de inicio del rango (YYYY-MM-DD): "))
-    fecha_final=(input("\nIngrese la fecha final del rango (YYYY-MM-DD): "))
+    #fecha_final=(input("\nIngrese la fecha final del rango (YYYY-MM-DD): "))
 
-    return sortType, fecha_inicio, fecha_final
+    #return sortType, fecha_inicio, fecha_final
+    """
+
+
+
 
 
 def printSortResults(ord_artwork, sample=3):
@@ -180,15 +188,14 @@ while True:
         elif int(inputs[0]) == 3:
             tupEntradasUsuario=tuplaOrdIterativo("opcion3")
             sortType=tupEntradasUsuario[0]
-            fechaInicio=tupEntradasUsuario[1]
-            fechaFinal=tupEntradasUsuario[2]
+            porcentaje=tupEntradasUsuario[1]
+            #fechaInicio=tupEntradasUsuario[1]
+            #fechaFinal=tupEntradasUsuario[2]
             
-            try:
-                resultado= controller.SortArtWork(catalog, sortType, fechaInicio, fechaFinal)
-                print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
-                printSortResults(resultado[1])
-            except:  
-                print("\nLas entradas son incorrectas")
+            resultado= controller.SortArtWork(catalog, sortType, porcentaje)
+            #resultado= controller.SortArtWork(catalog, sortType, fechaInicio, fechaFinal)
+            print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
+            printSortResults(resultado[1])
             
 
         elif int(inputs[0]) == 4:
