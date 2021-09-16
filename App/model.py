@@ -107,9 +107,9 @@ def sortArtwork(catalog,sortType,porcentaje):
     elif sortType == "Shell":
         sorted_list= sa.sort(subLista,cmpArtworkByDateAcquired)
     elif sortType == "Merge":
-        sorted_list= ms.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+        sorted_list= ms.sort(subLista,cmpArtworkByDateAcquired)
     elif sortType == "Quick":
-        sorted_list= qs.sort(catalog['artworks'], cmpArtworkByDateAcquired)
+        sorted_list= qs.sort(subLista, cmpArtworkByDateAcquired)
     
     med_time = time.process_time() # BORRAR
     elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
