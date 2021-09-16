@@ -110,15 +110,10 @@ def tuplaOrdIterativo(opcion):
         sortType="Quick"
     print("\nLa ordenación se hará con el tipo de ordenamiento "+sortType+" Sort")
 
-    size=int(input("\nIngrese el tamaño de muestra que quiere ordenar: "))
-    
-    boolsize=False
-    if opcion=="opcion2":
-        boolsize=size<=lt.size(catalog['artists'])
-    else:
-        boolsize=size<=lt.size(catalog['artworks'])
+    fecha_inicio=(input("\nIngrese la fecha de inicio del rango (YYYY-MM-DD): "))
+    fecha_final=(input("\nIngrese la fecha final del rango (YYYY-MM-DD): "))
 
-    return boolsize, sortType, size
+    return sortType, fecha_inicio, fecha_final
 
 
 def printSortResults(ord_artwork, sample=3):
@@ -181,16 +176,17 @@ while True:
 
         elif int(inputs[0]) == 3:
             tupEntradasUsuario=tuplaOrdIterativo("opcion3")
-            sortType=tupEntradasUsuario[1]
-            size=tupEntradasUsuario[2]
+            sortType=tupEntradasUsuario[0]
+            fechaInicio=tupEntradasUsuario[1]
+            fechaFinal=tupEntradasUsuario[2]
             
-            if tupEntradasUsuario[0]==True:
-                resultado= controller.SortArtWork(catalog, size, sortType)
+            try:
+                resultado= controller.SortArtWork(catalog, sortType, fechaInicio, fechaFinal)
                 print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
                 printSortResults(resultado[1])
-                
-            else:
-                print("\nLa muestra tiene un tamaño incorrecto")
+            except:  
+                print("\nLas entradas son incorrectas")
+            
 
         elif int(inputs[0]) == 4:
             pass

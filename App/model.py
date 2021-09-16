@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import subList
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import insertionsort as ins
@@ -70,7 +71,6 @@ def addArtwork(catalog, artwork):
 
 # Funciones para creacion de datos
 
-
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
@@ -89,26 +89,37 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
     return comparacion
 
 # Funciones de ordenamiento
-def sortArtwork(catalog,size,sortType):
+def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
     """
     Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
     iterativo deseado (Insertion, Shell, Merge o Quick Sorts).
     """
-    sub_list = lt.subList(catalog['artworks'], 1, size) 
-    sub_list = sub_list.copy()
     start_time = time.process_time()
-    sorted_list=None
-
     if sortType == "Insertion":
-        sorted_list= ins.sort(sub_list,cmpArtworkByDateAcquired)
+        sorted_list= ins.sort(catalog['artworks'],cmpArtworkByDateAcquired)
     elif sortType == "Shell":
-        sorted_list= sa.sort(sub_list,cmpArtworkByDateAcquired)
+        sorted_list= sa.sort(catalog['artworks'],cmpArtworkByDateAcquired)
     elif sortType == "Merge":
-        sorted_list= ms.sort(sub_list,cmpArtworkByDateAcquired)
+        sorted_list= ms.sort(catalog['artworks'],cmpArtworkByDateAcquired)
     elif sortType == "Quick":
-        sorted_list= qs.sort(sub_list,cmpArtworkByDateAcquired)
+        sorted_list= qs.sort(catalog['artworks'], cmpArtworkByDateAcquired)
 
+    cont=0
+    while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaInicial}) and cont<lt.size(sorted_list):
+        cont+=1
+    indiceInicial=cont+1
+    while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaFinal}) and cont<lt.size(sorted_list):
+        cont+=1
+    indiceFinal=cont
+    if(indiceInicial<=indiceFinal):
+        sub_list = lt.subList(sorted_list, indiceInicial, indiceFinal-indiceInicial) 
+        sub_list = sub_list.copy()
+        sorted_list=sub_list
+    else:
+        sorted_list=None   
+    
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg, sorted_list
-    
+
+
