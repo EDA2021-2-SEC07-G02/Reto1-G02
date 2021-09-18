@@ -71,7 +71,47 @@ def addArtwork(catalog, artwork):
 
 # Funciones para creacion de datos
 
-# Funciones de consulta
+# def ConsID(ConsID,artista,nacionalidad):
+#     """
+#     Crea una nueva estructura para relacionar el 
+#     constituent id con el artista y su nacionalidad.
+#     """
+#     ConsID={"ConsID":"","Nombre Autor:":"","Nacionalidad":""}
+#     ConsID["Nombre Autor:"]=artista
+#     ConsID["Nacionalidad"]=nacionalidad
+#     ConsID["ConsID"]=ConsID
+
+
+# def AddConsId(catalog,ListType):
+#     """
+#     Relaciona el artist con su código de constituentID
+#     """
+#     Artists=catalog["artists"]
+#     infoArtists=lt.newList(ListType)
+#     ConsID=(id["ConstituentID"],id["DisplayName"],id["Nationality"])
+#     return lt.addLast(infoArtists,id)
+
+
+# # Funciones de consulta
+
+# def getArtistNameNationality(catalog,ConstituentID,Nationality): #req 2, 4
+#     """
+#     Retorna un artista de acuerdo a su constituentID
+#     """
+#     posartist = lt.isPresent(catalog['artists'], ConstituentID)
+#     posartist = lt.isPresent(catalog['artists'], ConstituentID)
+#     if posartist > 0:
+#         artist = lt.getElement(catalog['authors'], posartist)
+#         nationality = lt.getElement(catalog['authors'], posartist)
+#         return artist
+#     return None
+
+# def addInfoArtist(catalog):
+#     for artwork in lt.iterator(catalog["artworks"]):
+#         for artist in lt.iterator(catalog["artists"]):
+#             #print(artwork["ConstituentID"])
+#             if artwork["ConstituentID"]==artist["ConstituentID"]:
+#                 artwork["InfoArtist"]={"Name:":artist["DisplayName"],"Nationality":artist["Nationality"]}
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -90,80 +130,106 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
 
 # Funciones de ordenamiento
 
-def sortArtwork(catalog,sortType,porcentaje):
-    """
-    Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
-    iterativo deseado (Insertion, Shell, Merge o Quick Sorts). Esta función está adaptada a las pruebas
-    de laboratorio ya que realmente el tamaño de la muestra está dado el rango de fechas seleccionado
-    Args: catalog: estructura de datos con toda la información
-    sortType: string con el tipo de ordenamiento seleccionado por le usuario
-    procentaje: porcentaje de cantidad de registros de la lista total de registros a organizar
-    """
-    start_time = time.process_time()
-    cantidad_registros= ((porcentaje/100)*lt.size(catalog['artworks']))//1
-    subLista=lt.subList(catalog['artworks'],0,cantidad_registros)
-    if sortType == "Insertion":
-        sorted_list= ins.sort(subLista,cmpArtworkByDateAcquired)
-    elif sortType == "Shell":
-        sorted_list= sa.sort(subLista,cmpArtworkByDateAcquired)
-    elif sortType == "Merge":
-        sorted_list= ms.sort(subLista,cmpArtworkByDateAcquired)
-    elif sortType == "Quick":
-        sorted_list= qs.sort(subLista, cmpArtworkByDateAcquired)
-    
-    med_time = time.process_time() # BORRAR
-    elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
-    print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
-    print("TAMANO DE MUESTRA", lt.size(subLista))
-
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
-
-# NOTA: Esta función es la que está en implementación para la entrega final del reto.
-# def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
+# def sortArtwork(catalog,sortType,porcentaje):
 #     """
 #     Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
-#     iterativo deseado (Insertion, Shell, Merge o Quick Sorts).
+#     iterativo deseado (Insertion, Shell, Merge o Quick Sorts). Esta función está adaptada a las pruebas
+#     de laboratorio ya que realmente el tamaño de la muestra está dado el rango de fechas seleccionado
 #     Args: catalog: estructura de datos con toda la información
 #     sortType: string con el tipo de ordenamiento seleccionado por le usuario
-#     fechaInicial: fecha de inicio del rango
-#     fechaFinal: fecha final del rango de obras de arte
+#     procentaje: porcentaje de cantidad de registros de la lista total de registros a organizar
 #     """
 #     start_time = time.process_time()
+#     cantidad_registros= ((porcentaje/100)*lt.size(catalog['artworks']))//1
+#     subLista=lt.subList(catalog['artworks'],0,cantidad_registros)
 #     if sortType == "Insertion":
-#         sorted_list= ins.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+#         sorted_list= ins.sort(subLista,cmpArtworkByDateAcquired)
 #     elif sortType == "Shell":
-#         sorted_list= sa.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+#         sorted_list= sa.sort(subLista,cmpArtworkByDateAcquired)
 #     elif sortType == "Merge":
-#         sorted_list= ms.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+#         sorted_list= ms.sort(subLista,cmpArtworkByDateAcquired)
 #     elif sortType == "Quick":
-#         sorted_list= qs.sort(catalog['artworks'], cmpArtworkByDateAcquired)
+#         sorted_list= qs.sort(subLista, cmpArtworkByDateAcquired)
     
 #     med_time = time.process_time() # BORRAR
 #     elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
 #     print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
+#     print("TAMANO DE MUESTRA", lt.size(subLista))
 
-#     cont=0
-#     while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaInicial}) and cont<lt.size(sorted_list):
-#         cont+=1
-#     indiceInicial=cont+1
-#     while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaFinal}) and cont<lt.size(sorted_list):
-#         cont+=1
-#     indiceFinal=cont
-#     if(indiceInicial<=indiceFinal):
-#         sub_list = lt.subList(sorted_list, indiceInicial, indiceFinal-indiceInicial) 
-#         sub_list = sub_list.copy()
-#         sorted_list=sub_list
-#     else:
-#         sorted_list=None   
-    
 #     stop_time = time.process_time()
 #     elapsed_time_mseg = (stop_time - start_time)*1000
 #     return elapsed_time_mseg, sorted_list
 
+# NOTA: Esta función es la que está en implementación para la entrega final del reto.
+def sortArtworkV1(catalog,sortType,fechaInicial,fechaFinal):
+    """
+    Esta función permite ordernar las obras de arte (Artwork) dependiendo del tipo de ordenamiento
+    iterativo deseado (Insertion, Shell, Merge o Quick Sorts).
+    Args: catalog: estructura de datos con toda la información
+    sortType: string con el tipo de ordenamiento seleccionado por le usuario
+    fechaInicial: fecha de inicio del rango
+    fechaFinal: fecha final del rango de obras de arte
+    """
+    start_time = time.process_time()
+    if sortType == "Insertion":
+        sorted_list= ins.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+    elif sortType == "Shell":
+        sorted_list= sa.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+    elif sortType == "Merge":
+        sorted_list= ms.sort(catalog['artworks'],cmpArtworkByDateAcquired)
+    elif sortType == "Quick":
+        sorted_list= qs.sort(catalog['artworks'], cmpArtworkByDateAcquired)
+    
+    med_time = time.process_time() # BORRAR
+    elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
+    print("TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
 
+    cont=0
+    while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaInicial}) and cont<lt.size(sorted_list):
+        cont+=1
+    indiceInicial=cont+1
+    while cmpArtworkByDateAcquired(lt.getElement(sorted_list,cont),{"DateAcquired":fechaFinal}) and cont<lt.size(sorted_list):
+        cont+=1
+    indiceFinal=cont
+    print(indiceInicial, indiceFinal)
+    if(indiceInicial<=indiceFinal):
+        sub_list = lt.subList(sorted_list, indiceInicial, indiceFinal-indiceInicial) 
+        sub_list = sub_list.copy()
+        sorted_list=sub_list
+    else:
+        sorted_list=None   
+    
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg, sorted_list
 
-
-
+def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
+    """
+    La función primero agregará a una lista provisional (rango) las obras que tenga 
+    una fecha de aquisición dentro del rango deseado. A su vez, se irá 
+    contando cuantas de estas obras se adquirieron por "Purchase" o compra del museo,
+    además se tendrá un contador del total de obras dentro del rango de fechas.
+    Después de esto se hará un ordenamiento con insertation a la lista provisional (rango)
+    
+    """
+    start_time = time.process_time()
+    sorted_list=lt.newList("ARRAY_LIST") #Se agregarán obras que tengan una fecha de adquisión en el rango deseado
+    fechaInicialTi= time.strptime(fechaInicial,"%Y-%m-%d")
+    fechaFinalTi= time.strptime(fechaFinal,"%Y-%m-%d")
+    contadorRango=0
+    contadorPurchase=0
+    for obra in lt.iterator(catalog["artworks"]):
+        if len(obra["DateAcquired"])==10: #Se ignoran las fechas vacías
+            fecha=time.strptime(obra["DateAcquired"],"%Y-%m-%d")
+            if fecha>fechaInicialTi and fecha<fechaFinalTi: 
+                contadorRango+=1
+                lt.addLast(sorted_list,obra) #se agregan fechas que estén dentro del rango deseado
+            if obra["CreditLine"].startswith("Purchase"):
+                contadorPurchase+=1
+    
+    ins.sort(sorted_list,cmpArtworkByDateAcquired) #ordenamiento por insertion
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg,sorted_list,contadorRango,contadorPurchase
+    
 

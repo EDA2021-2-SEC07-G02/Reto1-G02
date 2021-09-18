@@ -117,14 +117,12 @@ def tuplaOrdIterativo(opcion):
         sortType="Quick"
     print("\nLa ordenación se hará con el tipo de ordenamiento "+sortType+" Sort")
 
-    porcentaje=float(input("Ingrese el porcentaje de registros del total de registros a organizar:"))
-    return sortType, porcentaje
-    """
+    #porcentaje=float(input("Ingrese el porcentaje de registros del total de registros a organizar:"))
+    #return sortType, porcentaje
     fecha_inicio=(input("\nIngrese la fecha de inicio del rango (YYYY-MM-DD): "))
-    #fecha_final=(input("\nIngrese la fecha final del rango (YYYY-MM-DD): "))
+    fecha_final=(input("\nIngrese la fecha final del rango (YYYY-MM-DD): "))
 
-    #return sortType, fecha_inicio, fecha_final
-    """
+    return sortType, fecha_inicio, fecha_final
 
 
 
@@ -200,7 +198,7 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if inputs.isnumeric() == True:
+    if inputs.isnumeric():
         if int(inputs[0]) == 1:
             
             printRepLista()
@@ -226,14 +224,16 @@ while True:
         elif int(inputs[0]) == 3:
             tupEntradasUsuario=tuplaOrdIterativo("opcion3")
             sortType=tupEntradasUsuario[0]
-            porcentaje=tupEntradasUsuario[1]
-            #fechaInicio=tupEntradasUsuario[1]
-            #fechaFinal=tupEntradasUsuario[2]
+            #porcentaje=tupEntradasUsuario[1]   
+            fechaInicio=tupEntradasUsuario[1]
+            fechaFinal=tupEntradasUsuario[2]
             
-            resultado= controller.SortArtWork(catalog, sortType, porcentaje)
-            #resultado= controller.SortArtWork(catalog, sortType, fechaInicio, fechaFinal)
+            #resultado= controller.SortArtWork(catalog, sortType, porcentaje)
+            resultado= controller.SortArtWork(catalog, sortType, fechaInicio, fechaFinal)
             print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
             printFirstLastsResultsArt(resultado[1]," ordenadas por fecha son:")
+            print("\nEl total de obras en el rango de fechas "+fechaInicio+" - "+fechaFinal+" es: "+str(resultado[2]))
+            print("\nEl total de obras compradadas ('Purchase' )en el rango de fechas "+fechaInicio+" - "+fechaFinal+" es: "+str(resultado[3]))
             
 
         elif int(inputs[0]) == 4:
