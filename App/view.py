@@ -130,37 +130,67 @@ def tuplaOrdIterativo(opcion):
 
 
 
-def printSortResults(ord_artwork, sample=3):
+def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
+    """
+    Esta función es usada para mostrar a las 3 primeras y últimas obras 
+    en distintas opciones del view. 
+    
+    Los parámetros son:
+    ord_artwork: Catalogo de obras de arte (Cargado por catalogo en la opción 1 o ordenado por fechas de la opción 3)
+    sample: Hace referencia a la cantidad de primeras y últimas obras que se quieren mostrar al usuario.
+    Su valor predeterminado es 3 por requisitos del proyecto.
+    cadenaOpcion: Es usado para imprimir si las obras fueron cargadas o ordenadas 
+    """
     size = lt.size(ord_artwork)
-    # if size > sample:
-    #     print("\nLas primeras ", sample, " obras ordenadas por fecha son:")
-    #     i=1
-    #     while i <= sample:
-    #         artwork = lt.getElement(ord_artwork,i)
-    #         print(i,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
-    #             artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
-    #         i+=1
-    #     print("\nLas últimas ", sample, " obras ordenadas por fecha son:")
-    #     j=size-(sample)+1
-    #     while j <= size:
-    #         artwork = lt.getElement(ord_artwork,j)
-    #         print(j,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
-    #             artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
-    #         j+=1
-    #tablePrimUlt.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL"]
+    print("\nLas "+ str(sample)+" primeras y últimas obras "+cadenaOpcion)
     artPretty=PrettyTable()
-    print("\nLas primeras ", sample, " obras ordenadas por fecha son:")
     artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL"]
-    #print("%-8s %-25s %-25s %-25s %-5s %-5s %s" %("ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL"))
+    artPretty.align="l"
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 25,"Medium":15,"Dimensions":25,"Date":12,"DateAcquired":12,"URL":15}
     i=1
     while i <= sample:
         artwork = lt.getElement(ord_artwork,i)
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL']))
         i+=1
-    artPretty.align="l"
-    artPretty._max_width = {"ObjectID" : 10, "Title" : 25,"Medium":15,"Dimensions":25,"Date":12,"DateAcquired":12,"URL":15}
+    j=size-(sample)+1
+    while j <= size:
+        artwork = lt.getElement(ord_artwork,j)
+        artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
+        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL']))
+        j+=1
     print(artPretty)
+
+def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
+    """
+    Esta función es usada para mostrar a los 3 primeros y últimos artistas 
+    en distintas opciones del view. 
+    
+    Los parámetros son:
+    ord_artist: Catalogo de artistas
+    sample: Hace referencia a la cantidad de primeras y últimas artistas que se quieren mostrar al usuario.
+    Su valor predeterminado es 3 por requisitos del proyecto.
+    cadenaOpcion: Es usado para imprimir si los artistas fueron cargados al catalogo o ordenadas 
+    """
+    size = lt.size(ord_artist)
+    print("\nLos "+ str(sample)+" primeros y últimos artistas "+cadenaOpcion)
+    artistPretty=PrettyTable()
+    artistPretty.field_names=["DisplayName","BeginDate","EndDate","Nationality","Gender"]
+    artistPretty.align="l"
+    artistPretty._max_width = {"DisplayName" : 25, "BeginDate" : 8,"EndDate":8,"Nationality":15,"Gender":12}
+    i=1
+    while i <= sample:
+        artist = lt.getElement(ord_artist,i)
+        artistPretty.add_row((artist['DisplayName'],artist['BeginDate'],artist['EndDate'],
+        artist['Nationality'],artist['Gender']))
+        i+=1
+    j=size-(sample)+1
+    while j <= size:
+        artist = lt.getElement(ord_artist,i)
+        artistPretty.add_row((artist['DisplayName'],artist['BeginDate'],artist['EndDate'],
+        artist['Nationality'],artist['Gender']))
+        j+=1
+    print(artistPretty)
 
 catalog = None
 
@@ -184,18 +214,9 @@ while True:
             loadData(catalog)
             print('\nAutores cargados: ' + str(lt.size(catalog['artists'])))
             print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
-            ultimasTresObras=lt.subList(catalog['artworks'],lt.size(catalog['artworks'])-2,3)
-            print('\nTres últimas obras: ')
-            print('  ',lt.removeFirst(ultimasTresObras)['Title'])
-            print('  ',lt.removeFirst(ultimasTresObras)['Title'])
-            print('  ',lt.removeFirst(ultimasTresObras)['Title'])
-            ultimosTresArtistas=lt.subList(catalog['artists'],lt.size(catalog['artists'])-2,3)
-            print('\nTres últimos artistas: ')
-            print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
-            print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
-            print('  ',lt.removeFirst(ultimosTresArtistas)['DisplayName'])
+            printFirstLastsResultsArt(catalog['artworks'],"cargadas al catalogo son:")
+            printFirstLastsResultsArtists(catalog['artists'],"cargados al catalogo son:")
             
-
         elif int(inputs[0]) == 2:
             tupEntradasUsuario=tuplaOrdIterativo("opcion2")
             if tupEntradasUsuario[0]==True:
@@ -212,7 +233,7 @@ while True:
             resultado= controller.SortArtWork(catalog, sortType, porcentaje)
             #resultado= controller.SortArtWork(catalog, sortType, fechaInicio, fechaFinal)
             print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
-            printSortResults(resultado[1])
+            printFirstLastsResultsArt(resultado[1]," ordenadas por fecha son:")
             
 
         elif int(inputs[0]) == 4:
