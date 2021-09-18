@@ -21,11 +21,14 @@
  """
 
 from time import process_time
+
+import prettytable
 import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+from prettytable import PrettyTable
 
 default_limit = 1000 
 sys.setrecursionlimit(default_limit*10)
@@ -129,21 +132,35 @@ def tuplaOrdIterativo(opcion):
 
 def printSortResults(ord_artwork, sample=3):
     size = lt.size(ord_artwork)
-    if size > sample:
-        print("\nLas primeras ", sample, " obras ordenadas por fecha son:")
-        i=1
-        while i <= sample:
-            artwork = lt.getElement(ord_artwork,i)
-            print(i,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
-                artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
-            i+=1
-        print("\nLas últimas ", sample, " obras ordenadas por fecha son:")
-        j=size-(sample)+1
-        while j <= size:
-            artwork = lt.getElement(ord_artwork,j)
-            print(j,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
-                artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
-            j+=1
+    # if size > sample:
+    #     print("\nLas primeras ", sample, " obras ordenadas por fecha son:")
+    #     i=1
+    #     while i <= sample:
+    #         artwork = lt.getElement(ord_artwork,i)
+    #         print(i,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
+    #             artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
+    #         i+=1
+    #     print("\nLas últimas ", sample, " obras ordenadas por fecha son:")
+    #     j=size-(sample)+1
+    #     while j <= size:
+    #         artwork = lt.getElement(ord_artwork,j)
+    #         print(j,') Titulo: ' + artwork['Title'] + ' Fecha de adquisición: ' +
+    #             artwork['DateAcquired']) #+ ' Medio: ' + artwork['Medium'] + 'Dimensiones: ' + artwork['Dimensions'])
+    #         j+=1
+    #tablePrimUlt.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL"]
+    artPretty=PrettyTable()
+    print("\nLas primeras ", sample, " obras ordenadas por fecha son:")
+    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL"]
+    #print("%-8s %-25s %-25s %-25s %-5s %-5s %s" %("ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL"))
+    i=1
+    while i <= sample:
+        artwork = lt.getElement(ord_artwork,i)
+        artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
+        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL']))
+        i+=1
+    artPretty.align="l"
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 25,"Medium":15,"Dimensions":25,"Date":12,"DateAcquired":12,"URL":15}
+    print(artPretty)
 
 catalog = None
 
