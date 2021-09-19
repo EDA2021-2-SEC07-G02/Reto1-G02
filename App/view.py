@@ -142,20 +142,24 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     size = lt.size(ord_artwork)
     print("\nLas "+ str(sample)+" primeras y últimas obras "+cadenaOpcion)
     artPretty=PrettyTable()
-    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL"]
+    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
     artPretty.align="l"
-    artPretty._max_width = {"ObjectID" : 10, "Title" : 25,"Medium":15,"Dimensions":25,"Date":12,"DateAcquired":12,"URL":15}
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":15,"Dimensions":15,"Date":12,"DateAcquired":12,"URL":10,"Name":6}
     i=1
     while i <= sample:
         artwork = lt.getElement(ord_artwork,i)
+        dispname_artwork=controller.getArtistName(catalog,artwork["ConstituentID"])[0]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
-        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL']))
+        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
+        dispname_artwork))
         i+=1
     j=size-(sample)+1
     while j <= size:
         artwork = lt.getElement(ord_artwork,j)
+        dispname_artwork=controller.getArtistName(catalog,artwork["ConstituentID"])[0]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
-        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL']))
+        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
+        dispname_artwork))
         j+=1
     print(artPretty)
 
@@ -214,6 +218,10 @@ while True:
             print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
             printFirstLastsResultsArt(catalog['artworks'],"cargadas al catalogo son:")
             printFirstLastsResultsArtists(catalog['artists'],"cargados al catalogo son:")
+            # ss=input("prueba:")
+            # if ss=="x":
+            #     controller.addInfo(catalog)
+            #     print(lt.subList(catalog["artworks"],0,3))
             
         elif int(inputs[0]) == 2:
             tupEntradasUsuario=tuplaOrdIterativo("opcion2")

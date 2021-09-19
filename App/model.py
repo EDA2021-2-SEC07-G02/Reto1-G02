@@ -71,47 +71,46 @@ def addArtwork(catalog, artwork):
 
 # Funciones para creacion de datos
 
-# def ConsID(ConsID,artista,nacionalidad):
-#     """
-#     Crea una nueva estructura para relacionar el 
-#     constituent id con el artista y su nacionalidad.
-#     """
-#     ConsID={"ConsID":"","Nombre Autor:":"","Nacionalidad":""}
-#     ConsID["Nombre Autor:"]=artista
-#     ConsID["Nacionalidad"]=nacionalidad
-#     ConsID["ConsID"]=ConsID
-
-
-# def AddConsId(catalog,ListType):
-#     """
-#     Relaciona el artist con su código de constituentID
-#     """
-#     Artists=catalog["artists"]
-#     infoArtists=lt.newList(ListType)
-#     ConsID=(id["ConstituentID"],id["DisplayName"],id["Nationality"])
-#     return lt.addLast(infoArtists,id)
 
 
 # # Funciones de consulta
 
-# def getArtistNameNationality(catalog,ConstituentID,Nationality): #req 2, 4
-#     """
-#     Retorna un artista de acuerdo a su constituentID
-#     """
-#     posartist = lt.isPresent(catalog['artists'], ConstituentID)
-#     posartist = lt.isPresent(catalog['artists'], ConstituentID)
-#     if posartist > 0:
-#         artist = lt.getElement(catalog['authors'], posartist)
-#         nationality = lt.getElement(catalog['authors'], posartist)
-#         return artist
-#     return None
+def getArtistNameNationality(catalog,ConstituentID): #req 2, 4
+    """
+    Retorna un artista (o artistas) junto a su nacionalidad de acuerdo a su constituentID.
+    En caso de que existan varios ConstituentID se retornara una tupla con dos listas, 
+    los nombres de los artistas y sus nacionalidades. De lo contrario, se retornará una tupla
+    con dos elementos, el nombre del artista y su nacionalidad, ambas cadenas de texto.
+    """
+    codigoNum=ConstituentID[1:-1]
+    dispname=[]
+    nationality=[]
+    if "," in ConstituentID:
+        codigoNumL=codigoNum.split(",")
+        codigoNum.replace(" ","")
+        for artist in lt.iterator(catalog['artists']):
+                # dispname=lt.newList("ARRAY_LIST")
+                # nationality=lt.newList("ARRAY_LIST")
+
+                for codigo in codigoNumL:
+                    if codigo==artist["ConstituentID"]:
+                        dispname.append(artist["DisplayName"])
+                        nationality.append(artist["Nationality"])
+                        # lt.addLast(dispname,artist["DisplayName"])
+                        # lt.addLast(nationality,artist["Nationality"])
+    else:
+        for artist in lt.iterator(catalog['artists']):
+            if codigoNum==artist["ConstituentID"]:
+                dispname.append(artist["DisplayName"])
+                nationality.append(artist["Nationality"]) ##QUITAR APPEND, SOLO ESTO ES DE PRUEBA!!
+    return dispname,nationality
+
 
 # def addInfoArtist(catalog):
 #     for artwork in lt.iterator(catalog["artworks"]):
-#         for artist in lt.iterator(catalog["artists"]):
-#             #print(artwork["ConstituentID"])
-#             if artwork["ConstituentID"]==artist["ConstituentID"]:
-#                 artwork["InfoArtist"]={"Name:":artist["DisplayName"],"Nationality":artist["Nationality"]}
+#         consID=artwork["ConstituentID"]
+#         infoArtist=getArtistNameNationality(catalog,consID)
+#         artwork["InfoArtist"]=infoArtist
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
