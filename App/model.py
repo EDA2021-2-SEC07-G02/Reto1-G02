@@ -231,23 +231,20 @@ def getNationality(catalog,ConstituentID):
 def NewNationalityArt(pais,artwork):
     adding={"Nationality":"","Cantidad":0,"Artworks": lt.newList("ARRAY_LIST",cmpNationalities)}
     adding["Nationality"]=pais
-    adding["Cantidad"]+=1
+    adding["Cantidad"]=1
     lt.addLast(adding["Artworks"],artwork)
     return adding
 
 
 def addNationality(countries,nationality,artwork):
     """
-    Se agregaran las nacionalidades junto a las obras a una lista provisional.
+    Se agregaran las nacionalidades con sus respectivas obras a una lista provisional.
     """
     posNationality=lt.isPresent(countries,nationality)
     if posNationality>0: ### ARREGLAR
-        pass
-        # cantidad=lt.getElement(countries,posNationality)["Cantidad"]
-        # artworksprevios=lt.getElement(countries,posNationality)["Artworks"]
-        # print(artworksprevios)
-        # artworkAdd=lt.addLast(artworksprevios,artwork)
-        # info={"Nationality":nationality,"Cantidad":cantidad+1,"Artworks":artworkAdd}
+        cantidad=lt.getElement(countries,posNationality)["Cantidad"]
+        artworksprevios=lt.getElement(countries,posNationality)["Artworks"]
+        artworkAdd=lt.addLast(artworksprevios,artwork)
         # lt.changeInfo(countries,posNationality,info)
     else:
         pais=NewNationalityArt(nationality,artwork)
@@ -296,7 +293,7 @@ def req4(catalog):
     
     sort=ins.sort(countries,cmpNationalities)
     primerlugar=lt.getElement(sort,1)
-    top10=lt.subList(countries,1,10)
+    top10=lt.subList(sort,1,10)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
 

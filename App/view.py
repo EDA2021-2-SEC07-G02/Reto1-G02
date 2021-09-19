@@ -252,9 +252,14 @@ while True:
             listaprovisional=controller.req4(catalog)
             print("tiempo de req4: ",listaprovisional[2])
             print("top10")
-            for pais in lt.iterator(listaprovisional[0]): ##HACER PRETTY TABLE DESPUESSS.....
-                print("Q: ",pais["Cantidad"],"Nationality: ",pais["Nationality"])
-            print("primer lugar",listaprovisional[1])
+            for pais in lt.iterator(listaprovisional[0]):
+                print(type(pais["Artworks"]))
+                try:
+                    print("Q: ",str(lt.size(pais["Artworks"]),"Nationality: ",pais["Nationality"])) ##modificar
+                except:
+                    print("Nationality: ",pais["Nationality"])
+            print("primer lugar",listaprovisional[1]["Nationality"]," q: ",str(lt.size(listaprovisional[1]["Artworks"])))
+            printFirstLastsResultsArt(listaprovisional[1]["Artworks"],"info primer lugar: ")
             listaprovisional=None ##Se borra la lista provisional
 
         elif int(inputs[0]) == 6:
