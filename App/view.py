@@ -144,11 +144,11 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     artPretty=PrettyTable()
     artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
     artPretty.align="l"
-    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":15,"Dimensions":15,"Date":12,"DateAcquired":12,"URL":10,"Name":6}
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,"Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
     i=1
     while i <= sample:
         artwork = lt.getElement(ord_artwork,i)
-        dispname_artwork=controller.getArtistName(catalog,artwork["ConstituentID"])[0]
+        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"])[0])[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
         dispname_artwork))
@@ -156,7 +156,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     j=size-(sample)+1
     while j <= size:
         artwork = lt.getElement(ord_artwork,j)
-        dispname_artwork=controller.getArtistName(catalog,artwork["ConstituentID"])[0]
+        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"])[0])[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
         dispname_artwork))

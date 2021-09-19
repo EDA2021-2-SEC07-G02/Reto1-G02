@@ -77,31 +77,25 @@ def addArtwork(catalog, artwork):
 
 def getArtistNameNationality(catalog,ConstituentID): #req 2, 4
     """
-    Retorna un artista (o artistas) junto a su nacionalidad de acuerdo a su constituentID.
-    En caso de que existan varios ConstituentID se retornara una tupla con dos listas, 
-    los nombres de los artistas y sus nacionalidades. De lo contrario, se retornará una tupla
-    con dos elementos, el nombre del artista y su nacionalidad, ambas cadenas de texto.
+    Se retornara una tupla con dos elementos, una cadena de texto con los nombres de los artistas y 
+    una lista con sus nacionalidades.
     """
     codigoNum=ConstituentID[1:-1]
-    dispname=[]
-    nationality=[]
+    dispname=""
+    nationality=[]# nationality=lt.newList("ARRAY_LIST")
     if "," in ConstituentID:
-        codigoNumL=codigoNum.split(",")
-        codigoNum.replace(" ","")
-        for artist in lt.iterator(catalog['artists']):
-                # dispname=lt.newList("ARRAY_LIST")
-                # nationality=lt.newList("ARRAY_LIST")
-
-                for codigo in codigoNumL:
-                    if codigo==artist["ConstituentID"]:
-                        dispname.append(artist["DisplayName"])
-                        nationality.append(artist["Nationality"])
-                        # lt.addLast(dispname,artist["DisplayName"])
+        codigoNum=codigoNum.split(",")
+        for codigo in codigoNum:
+                
+                for artist in lt.iterator(catalog['artists']):
+                    if codigo.strip()==artist["ConstituentID"].strip():
+                        dispname+=artist["DisplayName"]+","
+                        nationality.append(artist["Nationality"]) ##modificar despuessss
                         # lt.addLast(nationality,artist["Nationality"])
     else:
         for artist in lt.iterator(catalog['artists']):
             if codigoNum==artist["ConstituentID"]:
-                dispname.append(artist["DisplayName"])
+                dispname+= artist["DisplayName"] +","
                 nationality.append(artist["Nationality"]) ##QUITAR APPEND, SOLO ESTO ES DE PRUEBA!!
     return dispname,nationality
 
