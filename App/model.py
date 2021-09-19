@@ -95,82 +95,7 @@ def getArtistName(catalog,ConstituentID): #req 2, 4
                 dispname+= artist["DisplayName"] +","
     return dispname
 
-########## req4
-def getNationality(catalog,ConstituentID):
-    """
-    Se retornara las nacionalidades de los artistas.
-    """
-    codigoNum=ConstituentID[1:-1]
-    nationality=None
-    for artist in lt.iterator(catalog['artists']):
-        if codigoNum.strip()==artist["ConstituentID"].strip():
-            nationality=artist["Nationality"]
-    
-    return nationality
-            
-def newNationality(pais):
-    adding={"Nationality":"","Cantidad":0}
-    adding["Nationality"]=pais
-    adding["Cantidad"]=1
-    return adding
 
-def addNationality(countries,nationality):
-    """
-    Se agregaran las nacionalidades a una lista provisional.
-    """
-    posNationality=lt.isPresent(countries,nationality)
-    if posNationality>0:
-        cantidad=lt.getElement(countries,posNationality)["Cantidad"]
-        info={"Nationality":nationality,"Cantidad":cantidad+1}
-        lt.changeInfo(countries,posNationality,info)
-    else:
-        pais=newNationality(nationality)
-        lt.addLast(countries,pais)
-
-def compareNationalities(name, nationality):
-    """
-    Cmpfunction de lista provisional
-    """
-    if (name == nationality['Nationality']):
-        return 0
-    #elif (name > tag['name']):
-     #   return 1
-    return -1
-
-def cmpNationalities(nacionalidad1,nacionalidad2):
-    """
-    Retorna True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
-    De lo contario, False.
-    """
-    return nacionalidad1["Cantidad"]>nacionalidad2["Cantidad"]
-
-def req4(catalog):
-    """
-    Listas provisionales: 
-    1. countries: Nacionalidades de las obras y la cantidad de veces que se repiten
-    2. obrascountries: Lista de obras por cada nacionalidad
-
-    Retornos:
-    Top10 nacionalidades
-    Obras por nacionalidad del primer lugar
-    """
-    countries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)
-    obrascountries=lt.newList("ARRAY_LIST")# completarrrr
-    for obra in lt.iterator(catalog["artworks"]):
-        conID=obra["ConstituentID"]
-        if "," in conID:
-            codigoNum=conID.split(",")
-            for codigo in codigoNum:
-                nationality= getNationality(catalog,codigo)
-                addNationality(countries,nationality)
-        else:
-            nationality= getNationality(catalog,conID)
-            addNationality(countries,nationality)
-    sort=ins.sort(countries,cmpNationalities)
-    top10=lt.subList(countries,0,10)
-    return top10,lt.getElement(sort,0)
-
-###fin req 4
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpArtworkByDateAcquired(artwork1, artwork2):
@@ -290,4 +215,92 @@ def sortArtwork(catalog,sortType,fechaInicial,fechaFinal):
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg,sorted_list,contadorRango,contadorPurchase
     
+########## req4
+def getNationality(catalog,ConstituentID):
+    """
+    Se retornara las nacionalidades de los artistas.
+    """
+    codigoNum=ConstituentID[1:-1]
+    nationality=None
+    for artist in lt.iterator(catalog['artists']):
+        if codigoNum.strip()==artist["ConstituentID"].strip():
+            nationality=artist["Nationality"]
+    
+    return nationality
+            
+def NewNationalityArt(pais,artwork):
+    adding={"Nationality":"","Cantidad":0,"Artworks": lt.newList("ARRAY_LIST",cmpNationalities)}
+    adding["Nationality"]=pais
+    adding["Cantidad"]+=1
+    lt.addLast(adding["Artworks"],artwork)
+    return adding
 
+
+def addNationality(countries,nationality,artwork):
+    """
+    Se agregaran las nacionalidades junto a las obras a una lista provisional.
+    """
+    posNationality=lt.isPresent(countries,nationality)
+    if posNationality>0: ### ARREGLAR
+        pass
+        # cantidad=lt.getElement(countries,posNationality)["Cantidad"]
+        # artworksprevios=lt.getElement(countries,posNationality)["Artworks"]
+        # print(artworksprevios)
+        # artworkAdd=lt.addLast(artworksprevios,artwork)
+        # info={"Nationality":nationality,"Cantidad":cantidad+1,"Artworks":artworkAdd}
+        # lt.changeInfo(countries,posNationality,info)
+    else:
+        pais=NewNationalityArt(nationality,artwork)
+        lt.addLast(countries,pais)
+
+def compareNationalities(name, nationality):
+    """
+    Cmpfunction de lista provisional
+    """
+    if (name == nationality['Nationality']):
+        return 0
+    #elif (name > tag['name']):
+     #   return 1
+    return -1
+
+def cmpNationalities(nacionalidad1,nacionalidad2):
+    """
+    Retorna True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
+    De lo contario, False.
+    """
+    return nacionalidad1["Cantidad"]>nacionalidad2["Cantidad"]
+
+def req4(catalog):
+    """
+    Listas provisionales: 
+    1. countries: Nacionalidades de las obras y la cantidad de veces que se repiten
+    2. obrascountries: Lista de obras por cada nacionalidad
+
+    Retornos:
+    Top10 nacionalidades
+    Obras por nacionalidad del primer lugar
+    """
+    start_time = time.process_time()
+    countries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)
+    #obrascountries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)# completarrrr
+    for obra in lt.iterator(catalog["artworks"]):
+        conID=obra["ConstituentID"]
+        if "," in conID:
+            codigoNum=conID.split(",")
+            for codigo in codigoNum:
+                nationality= getNationality(catalog,codigo)
+                addNationality(countries,nationality,obra)
+        else:
+            nationality= getNationality(catalog,conID)
+            addNationality(countries,nationality,obra)
+    
+    sort=ins.sort(countries,cmpNationalities)
+    primerlugar=lt.getElement(sort,1)
+    top10=lt.subList(countries,1,10)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+
+
+    return top10,primerlugar,elapsed_time_mseg
+
+###fin req 4

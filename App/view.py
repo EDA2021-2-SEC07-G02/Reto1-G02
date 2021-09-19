@@ -248,17 +248,13 @@ while True:
             pass
         
         elif int(inputs[0]) == 5:
+            print("Cargando clasificación por nacionalidad de obras......")
             listaprovisional=controller.req4(catalog)
-            # print("sin ordenar")
-            # for pais in lt.iterator(listaprovisional[3]):
-            #     print(pais) 
-            # print("orden")
-            # for pais in lt.iterator(listaprovisional[0]):
-            #     print(pais)
+            print("tiempo de req4: ",listaprovisional[2])
             print("top10")
-            for pais in lt.iterator(listaprovisional[1]):
-                print(pais)
-            print("primer lugar",listaprovisional[2])
+            for pais in lt.iterator(listaprovisional[0]): ##HACER PRETTY TABLE DESPUESSS.....
+                print("Q: ",pais["Cantidad"],"Nationality: ",pais["Nationality"])
+            print("primer lugar",listaprovisional[1])
             listaprovisional=None ##Se borra la lista provisional
 
         elif int(inputs[0]) == 6:
