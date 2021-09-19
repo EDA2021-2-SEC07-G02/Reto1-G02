@@ -135,8 +135,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     
     Los parámetros son:
     ord_artwork: Catalogo de obras de arte (Cargado por catalogo en la opción 1 o ordenado por fechas de la opción 3)
-    sample: Hace referencia a la cantidad de primeras y últimas obras que se quieren mostrar al usuario.
-    Su valor predeterminado es 3 por requisitos del proyecto.
+    sample: Hace referencia a la cantidad de primeras y últimas obras que se quieren mostrar al usuario. Su valor predeterminado es 3 por requisitos del proyecto.
     cadenaOpcion: Es usado para imprimir si las obras fueron cargadas o ordenadas 
     """
     size = lt.size(ord_artwork)
@@ -148,7 +147,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     i=1
     while i <= sample:
         artwork = lt.getElement(ord_artwork,i)
-        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"])[0])[0:-1]
+        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
         dispname_artwork))
@@ -156,7 +155,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     j=size-(sample)+1
     while j <= size:
         artwork = lt.getElement(ord_artwork,j)
-        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"])[0])[0:-1]
+        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
         dispname_artwork))
@@ -245,8 +244,13 @@ while True:
             
 
         elif int(inputs[0]) == 4:
-            pass
-
+            # try: 
+            #     listaprovisional=controller.req4(catalog)
+            #     print(listaprovisional)
+            # except:
+            #     print("error req4")
+            listaprovisional=controller.req4(catalog)
+            print(listaprovisional)
         elif int(inputs[0]) == 5:
             pass
 

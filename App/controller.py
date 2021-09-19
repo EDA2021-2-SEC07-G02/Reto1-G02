@@ -69,7 +69,7 @@ def loadArtworks(catalog):
 #     model.addInfoArtist(catalog)
 
 def getArtistName(catalog, ID):
-    return model.getArtistNameNationality(catalog,ID)
+    return model.getArtistName(catalog,ID)
 # Funciones de ordenamiento
 
 # def SortArtWork(catalog,sortType,porcentaje):
@@ -85,4 +85,6 @@ def SortArtWork(catalog,sortType,fechaInicial,fechaFinal):
     return model.sortArtwork(catalog, sortType,fechaInicial,fechaFinal)
 
 #Funciones de consulta sobre el catálogo
-
+#req 4
+def req4(catalog):
+    return model.req4(catalog)

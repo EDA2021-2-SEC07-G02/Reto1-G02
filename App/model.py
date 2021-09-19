@@ -75,37 +75,94 @@ def addArtwork(catalog, artwork):
 
 # # Funciones de consulta
 
-def getArtistNameNationality(catalog,ConstituentID): #req 2, 4
+def getArtistName(catalog,ConstituentID): #req 2, 4
     """
     Se retornara una tupla con dos elementos, una cadena de texto con los nombres de los artistas y 
     una lista con sus nacionalidades.
     """
     codigoNum=ConstituentID[1:-1]
     dispname=""
-    nationality=[]# nationality=lt.newList("ARRAY_LIST")
     if "," in ConstituentID:
         codigoNum=codigoNum.split(",")
         for codigo in codigoNum:
-                
                 for artist in lt.iterator(catalog['artists']):
                     if codigo.strip()==artist["ConstituentID"].strip():
                         dispname+=artist["DisplayName"]+","
-                        nationality.append(artist["Nationality"]) ##modificar despuessss
                         # lt.addLast(nationality,artist["Nationality"])
     else:
         for artist in lt.iterator(catalog['artists']):
             if codigoNum==artist["ConstituentID"]:
                 dispname+= artist["DisplayName"] +","
-                nationality.append(artist["Nationality"]) ##QUITAR APPEND, SOLO ESTO ES DE PRUEBA!!
-    return dispname,nationality
+    return dispname
 
+########## req4
+def getNationality(catalog,ConstituentID):
+    """
+    Se retornara las nacionalidades de los artistas.
+    """
+    codigoNum=ConstituentID[1:-1]
+    nationality=""
+    for artist in lt.iterator(catalog['artists']):
+        if codigoNum.strip()==artist["ConstituentID"].strip():
+            nationality=artist["Nationality"]
+    
+    return nationality
+    # if "," in ConstituentID:
+    #     codigoNum=codigoNum.split(",")
+    #     for codigo in codigoNum:
+    #             for artist in lt.iterator(catalog['artists']):
+    #                 if codigo.strip()==artist["ConstituentID"].strip():
+    #                     return artist["Nationality"]
+    #                     #lt.addLast(nationality.append(artist["Nationality"])) ##modificar despuessss
+    #                     # lt.addLast(nationality,artist["Nationality"])
+    # else:
+    #     for artist in lt.iterator(catalog['artists']):
+    #         if codigoNum==artist["ConstituentID"]:
+    #             return artist["Nationality"]
+                
 
-# def addInfoArtist(catalog):
-#     for artwork in lt.iterator(catalog["artworks"]):
-#         consID=artwork["ConstituentID"]
-#         infoArtist=getArtistNameNationality(catalog,consID)
-#         artwork["InfoArtist"]=infoArtist
+def newNationality(pais):
+    adding={"Nationality":"","Cantidad":0}
+    adding["Nationality"]=pais
+    adding["Cantidad"]=1
+    return adding
 
+def addNationality(countries,nationality):
+    """
+    Se agregaran las nacionalidades a una lista provisional.
+    """
+    posNationality=lt.isPresent(countries,nationality)
+    if posNationality>0:
+        cantidad=lt.getElement(countries,posNationality)["Cantidad"]
+        info={"Nationality":nationality,"Cantidad":cantidad+1}
+        lt.changeInfo(countries,posNationality,info)
+    else:
+        pais=newNationality(nationality)
+        lt.addLast(countries,pais)
+
+def compareNationalities(name, nationality):
+    if (name == nationality['Nationality']):
+        return 0
+    #elif (name > tag['name']):
+     #   return 1
+    return -1
+
+def req4(catalog):
+    """
+    Lista provisional: Nacionalidades de las obras y la cantidad de veces que se repiten
+    """
+    countries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)
+    for obra in lt.iterator(catalog["artworks"]):
+        conID=obra["ConstituentID"]
+        if "," in conID:
+            codigoNum=conID.split(",")
+            for codigo in codigoNum:
+                nationality= getNationality(catalog,codigo)
+                addNationality(countries,nationality)
+        else:
+            nationality= getNationality(catalog,conID)
+            addNationality(countries,nationality)
+    return countries
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpArtworkByDateAcquired(artwork1, artwork2): 
