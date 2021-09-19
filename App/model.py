@@ -101,26 +101,13 @@ def getNationality(catalog,ConstituentID):
     Se retornara las nacionalidades de los artistas.
     """
     codigoNum=ConstituentID[1:-1]
-    nationality=""
+    nationality=None
     for artist in lt.iterator(catalog['artists']):
         if codigoNum.strip()==artist["ConstituentID"].strip():
             nationality=artist["Nationality"]
     
     return nationality
-    # if "," in ConstituentID:
-    #     codigoNum=codigoNum.split(",")
-    #     for codigo in codigoNum:
-    #             for artist in lt.iterator(catalog['artists']):
-    #                 if codigo.strip()==artist["ConstituentID"].strip():
-    #                     return artist["Nationality"]
-    #                     #lt.addLast(nationality.append(artist["Nationality"])) ##modificar despuessss
-    #                     # lt.addLast(nationality,artist["Nationality"])
-    # else:
-    #     for artist in lt.iterator(catalog['artists']):
-    #         if codigoNum==artist["ConstituentID"]:
-    #             return artist["Nationality"]
-                
-
+            
 def newNationality(pais):
     adding={"Nationality":"","Cantidad":0}
     adding["Nationality"]=pais
@@ -141,17 +128,34 @@ def addNationality(countries,nationality):
         lt.addLast(countries,pais)
 
 def compareNationalities(name, nationality):
+    """
+    Cmpfunction de lista provisional
+    """
     if (name == nationality['Nationality']):
         return 0
     #elif (name > tag['name']):
      #   return 1
     return -1
 
+def cmpNationalities(nacionalidad1,nacionalidad2):
+    """
+    Retorna True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
+    De lo contario, False.
+    """
+    return nacionalidad1["Cantidad"]>nacionalidad2["Cantidad"]
+
 def req4(catalog):
     """
-    Lista provisional: Nacionalidades de las obras y la cantidad de veces que se repiten
+    Listas provisionales: 
+    1. countries: Nacionalidades de las obras y la cantidad de veces que se repiten
+    2. obrascountries: Lista de obras por cada nacionalidad
+
+    Retornos:
+    Top10 nacionalidades
+    Obras por nacionalidad del primer lugar
     """
     countries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)
+    obrascountries=lt.newList("ARRAY_LIST")# completarrrr
     for obra in lt.iterator(catalog["artworks"]):
         conID=obra["ConstituentID"]
         if "," in conID:
@@ -162,10 +166,14 @@ def req4(catalog):
         else:
             nationality= getNationality(catalog,conID)
             addNationality(countries,nationality)
-    return countries
+    sort=ins.sort(countries,cmpNationalities)
+    top10=lt.subList(countries,0,10)
+    return top10,lt.getElement(sort,0)
+
+###fin req 4
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-def cmpArtworkByDateAcquired(artwork1, artwork2): 
+def cmpArtworkByDateAcquired(artwork1, artwork2):
     """ 
     Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de artwork2 
     Args: artwork1: informacion de la primera obra que incluye su valor 'DateAcquired'

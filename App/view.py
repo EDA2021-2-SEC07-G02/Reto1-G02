@@ -21,6 +21,7 @@
  """
 
 from time import process_time
+from typing import Iterator
 
 import prettytable
 import config as cf
@@ -244,15 +245,21 @@ while True:
             
 
         elif int(inputs[0]) == 4:
-            # try: 
-            #     listaprovisional=controller.req4(catalog)
-            #     print(listaprovisional)
-            # except:
-            #     print("error req4")
-            listaprovisional=controller.req4(catalog)
-            print(listaprovisional)
-        elif int(inputs[0]) == 5:
             pass
+        
+        elif int(inputs[0]) == 5:
+            listaprovisional=controller.req4(catalog)
+            # print("sin ordenar")
+            # for pais in lt.iterator(listaprovisional[3]):
+            #     print(pais) 
+            # print("orden")
+            # for pais in lt.iterator(listaprovisional[0]):
+            #     print(pais)
+            print("top10")
+            for pais in lt.iterator(listaprovisional[1]):
+                print(pais)
+            print("primer lugar",listaprovisional[2])
+            listaprovisional=None ##Se borra la lista provisional
 
         elif int(inputs[0]) == 6:
             pass
