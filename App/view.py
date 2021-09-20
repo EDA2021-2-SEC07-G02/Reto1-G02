@@ -85,19 +85,20 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     size = lt.size(ord_artwork)
     print("\nLas "+ str(sample)+" primeras y últimas obras "+cadenaOpcion)
     artPretty=PrettyTable(hrules=prettytable.ALL)
-    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
+    artPretty.field_names=["ObjectID","Title","Artists Names","Medium",
+                            "Dimensions","Date","DateAcquired","URL"]
     artPretty.align="l"
-    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,"Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Artists Names":16,"Medium":13,
+                            "Dimensions":15,"Date":12,"DateAcquired":11,"URL":10}
 
     for i in list(range(sample))+list(range(size-sample,size)):
         artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
-        artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
-        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
-        dispname_artwork))
+        artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
+                        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL']))
     print(artPretty)
 
-def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=10):
+def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
     # TODO: documentación parámetros, problema posible OutOfRange
     """
     Esta función es usada para mostrar a los 3 primeros y últimos artistas 
@@ -112,14 +113,26 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=10):
     size = lt.size(ord_artist)
     print("\nLos "+ str(sample)+" primeros y últimos artistas "+cadenaOpcion)
     artistPretty=PrettyTable(hrules=prettytable.ALL)
-    artistPretty.field_names=["DisplayName","BeginDate","EndDate","Nationality","Gender"]
+    artistPretty.field_names=["ConstituentID","DisplayName","BeginDate","Nationality",
+                            "Gender","ArtistBio","Wiki QID","ULAN"]
     artistPretty.align="l"
-    artistPretty._max_width = {"DisplayName" : 25, "BeginDate" : 8,"EndDate":8,"Nationality":15,"Gender":12}
+    artistPretty._max_width = {"ConstituentID":7,"DisplayName":15, "BeginDate":8,
+                                "Nationality":15,"Gender":12, "ArtistBio":15,"Wiki QID":10,"ULAN":15}
 
     for i in list(range(sample))+list(range(size-sample,size)):
         artist = lt.getElement(ord_artist,i)
-        artistPretty.add_row((artist['DisplayName'],artist['BeginDate'],artist['EndDate'],
-        artist['Nationality'],artist['Gender']))
+        ArtistBio=artist["Nationality"]+"- Unknown"
+        NacimientoInt=int(artist["BeginDate"])
+        FallecimientoInt=int(artist["EndDate"])
+        if NacimientoInt!=0: #se excluyen los artistas con fechas vacias/iguales a cero
+            if FallecimientoInt==0 and NacimientoInt<1950: #Suponemos que si nacieron antes de 1950 ya fallecieron
+                ArtistBio=artist["Nationality"]+", born "+artist['BeginDate']
+            elif FallecimientoInt==0 and NacimientoInt>=1950:
+                ArtistBio=artist["Nationality"]+", est. "+artist['BeginDate']
+            else:
+                ArtistBio=artist["Nationality"]+", "+artist['BeginDate']+" - "+artist['EndDate']
+        artistPretty.add_row((artist['ConstituentID'], artist['DisplayName'],artist['BeginDate'],artist['Nationality'],
+                            artist['Gender'],ArtistBio,artist['Wiki QID'],artist['ULAN']))
     print(artistPretty)
 
 catalog = None

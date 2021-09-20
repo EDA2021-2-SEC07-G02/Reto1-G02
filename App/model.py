@@ -87,7 +87,7 @@ def cmpArtistDate(artist1,artist2): #req 1
     """
     if artist1["BeginDate"]==artist2["BeginDate"]: #se verifica si nacieron en el mismo año
         #se pasa a comparar por su fecha de fallecimiento.
-        comparacion=artist1["EndDate"]<=artist2["EndDate"] #CORREGIR #true si el artist1 falleció antes (o en el mismo año) que artist2
+        comparacion=artist1["EndDate"]<=artist2["EndDate"] #true si el artist1 falleció antes (o en el mismo año) que artist2
     else:
         comparacion=artist1["BeginDate"]<artist2["BeginDate"]
     return comparacion
@@ -102,11 +102,9 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
         Devuelve verdadero (True) si artwork1 es menor en fecha que artwork2, si tienen la misma 
         fecha retorna falso (False)
     """
-    comparacion=False
-    if len(artwork1["DateAcquired"])>0 and len(artwork2["DateAcquired"])>0: #La función dará False si la lista es vacía o posee un formato de fecha distinto, es decir fecha de artwork2 < artwork1
-        fecha1=time.strptime(artwork1["DateAcquired"],"%Y-%m-%d")
-        fecha2=time.strptime(artwork2["DateAcquired"],"%Y-%m-%d")
-        comparacion=fecha1<fecha2
+    fecha1=time.strptime(artwork1["DateAcquired"],"%Y-%m-%d")
+    fecha2=time.strptime(artwork2["DateAcquired"],"%Y-%m-%d")
+    comparacion=fecha1<fecha2
     return comparacion
 
 
