@@ -23,7 +23,6 @@
 from time import process_time
 from typing import Iterator
 
-import prettytable
 import config as cf
 import sys
 import controller
@@ -43,93 +42,36 @@ operación solicitada
 """
 
 def printMenu():
+    # TODO: documentación
     print("-"*50)
     print("Bienvenido")
     print("Opciones:")
-    print("1- Cargar información en el catálogo")
-    print("2- Listar cronológicamente los artistas")
-    print("3- Listar cronológicamente las adquisiciones")
-    print("4- Clasificar las obras de un artista por técnica")
-    print("5- Clasificar las obras por la nacionalidad de sus creadores")
-    print("6- Transportar obras de un departamento")
-    print("7- Proponer una nueva exposición en el museo")
-    print("0- Salir")
+    print("0 - Cargar información en el catálogo")
+    print("1 - Listar cronológicamente los artistas")
+    print("2 - Listar cronológicamente las adquisiciones")
+    print("3 - Clasificar las obras de un artista por técnica")
+    print("4 - Clasificar las obras por la nacionalidad de sus creadores")
+    print("5 - Transportar obras de un departamento")
+    print("6 - Proponer una nueva exposición en el museo")
+    print("7 - Salir")
     print("-"*50)
 
 def initCatalog(ListType):
+    # TODO: documentación parámetros
     """
     Inicializa el catalogo de libros
     """
     return controller.initCatalog(ListType)
 
 def loadData(catalog):
+    # TODO: documentación parámetros
     """
     Carga los artistas en la estructura de datos
     """
     controller.loadData(catalog)
 
-def printRepLista():
-    """
-    Opciones de representación de lista que se pueden escoger
-    al seleccionar la opción (1) de cargar información al catálogo.
-    La representación de lista posibles son: (1) ARRAY_LIST o (2)LINKED_LIST
-    """
-    print("\n¿Qué representación de lista desea para la carga del catálogo?")
-    print("1- ARRAY_LIST")
-    print("2- LINKED_LIST")
-
-def printOrdIterativo():
-    """
-    Opciones de ordenamiento iterativativo que se pueden escoger
-    al seleccionar las opciones: (3) listar cronológicamente las adquisiciones o
-    (2) listar cronológicamente los artistas
-    Los agloritmos de ordenamientos posibles son: (1) Insertion, (2)Shell, (3) Merge o (4) Quick Sorts
-    """
-    print("\n¿Cuál tipo de algoritmo de ordenamiento iterativo quiere escoger?")
-    print("1- Insertion Sort")
-    print("2- Shell Sort")
-    print("3- Merge Sort")
-    print("4- Quick Sort")
-
-def tuplaOrdIterativo(opcion):
-    """
-    Esta función será usada en las opciones (2) y (3). 
-    Su parámetro de entrada puede ser "opcion2" o "opcion3" dependiendo en que opción sea utilizado
-
-    La función le pedirá al usuario dos datos:
-    1. Un entero representando el tipo de algoritmo de ordenamiento deseado
-    2. Un entero con el tamaño de la muestra que quiere ordenar
-
-    Los retorno de la función será una tupla que contega:
-    1. Un booleano que comprueba si el tamaño de la muestra no superá al tamaño del catalogo correspondiente a la opción
-    2. Una cadena de str correspondiente al tipo de ordenamiento que quiere por el usuario.
-    3. Entero que representa el tamaño de la lista
-    """
-    printOrdIterativo()
-    Tipo_ord=int(input("\nSeleccione el tipo de algoritmo de ordenamiento: "))
-    sortType=None 
-    if Tipo_ord==1:
-        sortType="Insertion"
-    elif Tipo_ord==2:
-        sortType="Shell"
-    elif Tipo_ord==3:
-        sortType="Merge"
-    else:#Opción número 4. Asimismo, queda por defecto Quick Sort en caso de que se haya digitado otra opción por equivocación
-        sortType="Quick"
-    print("\nLa ordenación se hará con el tipo de ordenamiento "+sortType+" Sort")
-
-    #porcentaje=float(input("Ingrese el porcentaje de registros del total de registros a organizar:"))
-    #return sortType, porcentaje
-    fecha_inicio=(input("\nIngrese la fecha de inicio del rango (YYYY-MM-DD): "))
-    fecha_final=(input("\nIngrese la fecha final del rango (YYYY-MM-DD): "))
-
-    return sortType, fecha_inicio, fecha_final
-
-
-
-
-
 def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
+    # TODO: documentación pasar a formáto estándar
     """
     Esta función es usada para mostrar a las 3 primeras y últimas obras 
     en distintas opciones del view. 
@@ -145,25 +87,17 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
     artPretty.align="l"
     artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,"Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
-    i=1
-    while i <= sample:
+
+    for i in list(range(sample))+list(range(size-sample,size)):
         artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
         dispname_artwork))
-        i+=1
-    j=size-(sample)+1
-    while j <= size:
-        artwork = lt.getElement(ord_artwork,j)
-        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
-        artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
-        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
-        dispname_artwork))
-        j+=1
     print(artPretty)
 
 def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
+    # TODO: documentación parámetros
     """
     Esta función es usada para mostrar a los 3 primeros y últimos artistas 
     en distintas opciones del view. 
@@ -180,18 +114,11 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
     artistPretty.field_names=["DisplayName","BeginDate","EndDate","Nationality","Gender"]
     artistPretty.align="l"
     artistPretty._max_width = {"DisplayName" : 25, "BeginDate" : 8,"EndDate":8,"Nationality":15,"Gender":12}
-    i=1
-    while i <= sample:
+
+    for i in list(range(sample))+list(range(size-sample,size)):
         artist = lt.getElement(ord_artist,i)
         artistPretty.add_row((artist['DisplayName'],artist['BeginDate'],artist['EndDate'],
         artist['Nationality'],artist['Gender']))
-        i+=1
-    j=size-(sample)+1
-    while j <= size:
-        artist = lt.getElement(ord_artist,i)
-        artistPretty.add_row((artist['DisplayName'],artist['BeginDate'],artist['EndDate'],
-        artist['Nationality'],artist['Gender']))
-        j+=1
     print(artistPretty)
 
 catalog = None
@@ -203,14 +130,9 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if inputs.isnumeric():
-        if int(inputs[0]) == 1:
-            
-            printRepLista()
-            Tipo_Lista=int(input("Seleccione el tipo de representación de la lista: "))
+        # Opción 0: Carga de datos
+        if int(inputs[0]) == 0:
             ListType="ARRAY_LIST" #Opción número 1. Asimismo, queda por defecto ARRAY_LIST en caso de que se haya digitado otra opción por equivocación
-            if Tipo_Lista==2:
-                ListType="LINKED_LIST"
-
             print("\n\nCargando información de los archivos con representación de lista: " + ListType + " .....")
             catalog = initCatalog(ListType)
             loadData(catalog)
@@ -218,36 +140,28 @@ while True:
             print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
             printFirstLastsResultsArt(catalog['artworks'],"cargadas al catalogo son:")
             printFirstLastsResultsArtists(catalog['artists'],"cargados al catalogo son:")
-            # ss=input("prueba:")
-            # if ss=="x":
-            #     controller.addInfo(catalog)
-            #     print(lt.subList(catalog["artworks"],0,3))
-            
-        elif int(inputs[0]) == 2:
-            tupEntradasUsuario=tuplaOrdIterativo("opcion2")
-            if tupEntradasUsuario[0]==True:
-                pass
-            pass
-
-        elif int(inputs[0]) == 3:
-            tupEntradasUsuario=tuplaOrdIterativo("opcion3")
-            sortType=tupEntradasUsuario[0]
-            #porcentaje=tupEntradasUsuario[1]   
-            fechaInicio=tupEntradasUsuario[1]
-            fechaFinal=tupEntradasUsuario[2]
-            
-            #resultado= controller.SortArtWork(catalog, sortType, porcentaje)
-            resultado= controller.SortArtWork(catalog, sortType, fechaInicio, fechaFinal)
-            print("\nEl tiempo de ejecución (mseg) fue: "+str(resultado[0]))
-            printFirstLastsResultsArt(resultado[1]," ordenadas por fecha son:")
-            print("\nEl total de obras en el rango de fechas "+fechaInicio+" - "+fechaFinal+" es: "+str(resultado[2]))
-            print("\nEl total de obras compradadas ('Purchase' )en el rango de fechas "+fechaInicio+" - "+fechaFinal+" es: "+str(resultado[3]))
-            
-
-        elif int(inputs[0]) == 4:
-            pass
         
-        elif int(inputs[0]) == 5:
+        # Opción 1: Listar cronológicamente los artistas (Requerimiento 1)
+        elif int(inputs[0]) == 1:
+            pass
+
+        # Opción 2: Listar cronológicamente las obras adquiridas (Requerimiento 2)
+        elif int(inputs[0]) == 2:  
+            fechaInicial=input("\nIngrese la fecha inicial: ")
+            fechaFinal=input("\nIngrese la fecha final: ")
+            resultado= controller.listarAdquisicionesCronologicamente(catalog, fechaInicial, fechaFinal)
+            printFirstLastsResultsArt(resultado[0]," ordenadas por fecha son:")
+            print("\nEl total de obras en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
+            print("\nEl total de obras compradadas ('Purchase') en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[2]))
+            
+        # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
+        elif int(inputs[0]) == 3:
+            nombreArtista=input("Ingrese el nombre del artista: ")
+            
+            pass
+
+        # Opción 4: Clasificar las obras por la nacionalidad de un artista (Requerimiento 4)
+        elif int(inputs[0]) == 4:
             print("Cargando clasificación por nacionalidad de obras......")
             listaprovisional=controller.req4(catalog)
             print("tiempo de req4: ",listaprovisional[2])
@@ -262,13 +176,16 @@ while True:
             printFirstLastsResultsArt(listaprovisional[1]["Artworks"],"info primer lugar: ")
             listaprovisional=None ##Se borra la lista provisional
 
+        # Opción 5: Transportar obras de un departamento (Requerimiento 5)
+        elif int(inputs[0]) == 5:
+            pass
+        
+        # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)
         elif int(inputs[0]) == 6:
             pass
 
+        # Opción 7: Salir
         elif int(inputs[0]) == 7:
-            pass
-
-        elif int(inputs[0]) == 0:
             sys.exit(0)
         else:
             print("Seleccione una opción válida") 

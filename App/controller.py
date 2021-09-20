@@ -30,7 +30,9 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo 
+
 def initCatalog(ListType):
+    # TODO: documentación parámetros retorno
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
@@ -40,6 +42,7 @@ def initCatalog(ListType):
 # Funciones para la carga de datos
 
 def loadData(catalog):
+    # TODO: documentación parámetros retorno
     """
     Carga los artistas y obras al catalogo
     """
@@ -47,6 +50,7 @@ def loadData(catalog):
     loadArtworks(catalog)
 
 def loadArtists(catalog):
+    # TODO: documentación parámetros retorno
     """
     Carga los artistas en una lista dado un nombre de archivo
     """
@@ -56,6 +60,7 @@ def loadArtists(catalog):
         model.addArtist(catalog, artist)
 
 def loadArtworks(catalog):
+    # TODO: documentación parámetros retorno
     """
     Carga las obras en una lista dado un nombre de archivo
     """
@@ -64,27 +69,24 @@ def loadArtworks(catalog):
     for artwork in inputFile:
         model.addArtwork(catalog, artwork)
 
-
-# def addInfo(catalog):
-#     model.addInfoArtist(catalog)
+# Funciones de Consulta
 
 def getArtistName(catalog, ID):
+    # TODO: Documentación
     return model.getArtistName(catalog,ID)
-# Funciones de ordenamiento
 
-# def SortArtWork(catalog,sortType,porcentaje):
-#     """
-#     Ordena el artwork dependiendo la fecha de adquisición
-#     """
-#     return model.sortArtwork(catalog, sortType,porcentaje,)
-
-def SortArtWork(catalog,sortType,fechaInicial,fechaFinal):
+def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
+    # TODO: Documentación
     """
-    Ordena el artwork dependiendo la fecha de adquisición
+    Retorna un
     """
-    return model.sortArtwork(catalog, sortType,fechaInicial,fechaFinal)
+    return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal)
 
-#Funciones de consulta sobre el catálogo
-#req 4
+def tecnicasObrasPorArtistas(catalog, nombre):
+    # TODO: Documentación
+    return tecnicasObrasPorArtistas(catalog,nombre)
+
+#TODO: cambiar nombre
 def req4(catalog):
+    # TODO: Documentación
     return model.req4(catalog)
