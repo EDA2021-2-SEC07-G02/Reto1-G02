@@ -82,9 +82,9 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     """
     return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal)
 
-def tecnicasObrasPorArtistas(catalog, nombre):
+def tecnicasObrasPorArtista(catalog, nombre):
     # TODO: Documentación
-    return tecnicasObrasPorArtistas(catalog,nombre)
+    return model.tecnicasObrasPorArtista(catalog,nombre)
 
 #TODO: cambiar nombre
 def req4(catalog):

@@ -71,7 +71,7 @@ def loadData(catalog):
     controller.loadData(catalog)
 
 def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
-    # TODO: documentación pasar a formáto estándar
+    # TODO: documentación pasar a formáto estándar, problema posible OutOfRange
     """
     Esta función es usada para mostrar a las 3 primeras y últimas obras 
     en distintas opciones del view. 
@@ -97,7 +97,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     print(artPretty)
 
 def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
-    # TODO: documentación parámetros
+    # TODO: documentación parámetros, problema posible OutOfRange
     """
     Esta función es usada para mostrar a los 3 primeros y últimos artistas 
     en distintas opciones del view. 
@@ -120,6 +120,36 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
         artistPretty.add_row((artist['DisplayName'],artist['BeginDate'],artist['EndDate'],
         artist['Nationality'],artist['Gender']))
     print(artistPretty)
+
+catalog = None
+
+def printResultsArtworks(ord_artwork):
+    artPretty=PrettyTable()
+    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
+    artPretty.align="l"
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,"Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
+
+    for artwork in lt.iterator(ord_artwork):
+        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
+        artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
+        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
+        dispname_artwork))
+    print(artPretty)
+
+def printMediums(ord_mediums,top=5):
+    medPretty=PrettyTable()
+    medPretty.field_names=["Tecnica","Cantidad"]
+    medPretty.align="l"
+    medPretty._max_width = {"Tecnica" : 15, "Cantidad" : 5}
+    cont=0
+    for tecnica in lt.iterator(ord_mediums):
+        nombreTecnica=lt.getElement(tecnica,0)["Medium"]
+        medPretty.add_row((nombreTecnica,str(lt.size(tecnica))))
+        cont+=1
+        if(cont>top):
+            break
+    print(medPretty)
+
 
 catalog = None
 
@@ -157,8 +187,21 @@ while True:
         # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
         elif int(inputs[0]) == 3:
             nombreArtista=input("Ingrese el nombre del artista: ")
-            
-            pass
+            respuesta=controller.tecnicasObrasPorArtista(catalog,nombreArtista)
+            tecnicas=respuesta[0]
+            totalObras=respuesta[1]
+            if totalObras!=0:
+                obrasTecnica=lt.getElement(tecnicas,0)
+                tecnica=lt.getElement(obrasTecnica,0)["Medium"]
+                print("El artista",str(nombreArtista),"tiene",totalObras,"obras en total. De las",lt.size(tecnicas),"ténicas empleadas la más utilizada es",\
+                    str(tecnica)+".\n")
+                print("La lista de las 5 técnica más utilizadas")
+                printMediums(tecnicas)
+                print("A continuación se presentan la lista de las obras realizadas con la técnica",str(tecnica)+":")
+                printResultsArtworks(obrasTecnica)
+            else:
+                print("El artista",nombreArtista,"no existe en la base de datos o no tiene ninguna obra.")
+
 
         # Opción 4: Clasificar las obras por la nacionalidad de un artista (Requerimiento 4)
         elif int(inputs[0]) == 4:

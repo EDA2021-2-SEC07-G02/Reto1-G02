@@ -253,15 +253,67 @@ def tecnicasObrasPorArtista(catalog,nombre):
     for artista in lt.iterator(catalog["artists"]):
         if nombre==artista["DisplayName"]:
             constituentID=artista["ConstituentID"]
-    for obraArte in lt.iterator(catalog["artists"]):
+    for obraArte in lt.iterator(catalog["artworks"]):
         if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
             lt.addLast(obras,obraArte)
-    for obraArtista in lt.iterator(obraArte):
+    for obraArtista in lt.iterator(obras):
         if obraArtista["Medium"] in tecnicas:
             lt.addLast(tecnicas[obraArtista["Medium"]],obraArtista)
         else:
             tecnicas[obraArtista["Medium"]]=lt.newList()
-    print(tecnicas)
+            
+    print(tecnicas.keys())
+
+def tecnicasObrasPorArtista2(catalog,nombre):
+    constituentID=-1
+    obras=lt.newList()
+    tecnicas={}
+    for artista in lt.iterator(catalog["artists"]):
+        if nombre==artista["DisplayName"]:
+            constituentID=artista["ConstituentID"]
+    for obraArte in lt.iterator(catalog["artworks"]):
+        if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
+            lt.addLast(obras,obraArte)
+    for obraArtista in lt.iterator(obras):
+        if obraArtista["Medium"] in tecnicas:
+            lt.addLast(tecnicas[obraArtista["Medium"]],obraArtista)
+        else:
+            tecnicas[obraArtista["Medium"]]=lt.newList()
+            
+    print(tecnicas.keys())
+
+def cmpFunctionTecnicasArtista(tecnica1,tecnica2):
+    if lt.size(tecnica1)>lt.size(tecnica2):
+        return True
+    else:
+        return False
+
+def tecnicasObrasPorArtista(catalog,nombre):
+    constituentID=-1
+    obras=lt.newList()
+    tecnicas=lt.newList() # cada técnica es una lista tipo lt que contiene las obras de esa técnica
+    for artista in lt.iterator(catalog["artists"]):
+        if nombre==artista["DisplayName"]:
+            constituentID=artista["ConstituentID"]
+    if constituentID!=-1:
+        for obraArte in lt.iterator(catalog["artworks"]):
+            if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
+                lt.addLast(obras,obraArte)
+        for obraArtista in lt.iterator(obras):
+            encontro=False
+            for tecnica in lt.iterator(tecnicas):
+                if obraArtista["Medium"] == lt.getElement(tecnica,0)["Medium"]:
+                    lt.addLast(tecnica,obraArtista)
+                    encontro=True
+            if not encontro:
+                lt.addLast(tecnicas,lt.newList())
+                lt.addLast(lt.lastElement(tecnicas),obraArtista)
+        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista)
+        totalObras=lt.size(obras)
+    else:
+        totalObras=0
+        sortedList=lt.newList()
+    return sortedList, totalObras
 
     
     
