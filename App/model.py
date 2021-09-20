@@ -246,73 +246,55 @@ def req4(catalog):
 ###fin req 4
 
 #Requerimiento 3
-def tecnicasObrasPorArtista(catalog,nombre):
-    constituentID=-1
-    obras=lt.newList()
-    tecnicas={}
-    for artista in lt.iterator(catalog["artists"]):
-        if nombre==artista["DisplayName"]:
-            constituentID=artista["ConstituentID"]
-    for obraArte in lt.iterator(catalog["artworks"]):
-        if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
-            lt.addLast(obras,obraArte)
-    for obraArtista in lt.iterator(obras):
-        if obraArtista["Medium"] in tecnicas:
-            lt.addLast(tecnicas[obraArtista["Medium"]],obraArtista)
-        else:
-            tecnicas[obraArtista["Medium"]]=lt.newList()
-            
-    print(tecnicas.keys())
-
-def tecnicasObrasPorArtista2(catalog,nombre):
-    constituentID=-1
-    obras=lt.newList()
-    tecnicas={}
-    for artista in lt.iterator(catalog["artists"]):
-        if nombre==artista["DisplayName"]:
-            constituentID=artista["ConstituentID"]
-    for obraArte in lt.iterator(catalog["artworks"]):
-        if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
-            lt.addLast(obras,obraArte)
-    for obraArtista in lt.iterator(obras):
-        if obraArtista["Medium"] in tecnicas:
-            lt.addLast(tecnicas[obraArtista["Medium"]],obraArtista)
-        else:
-            tecnicas[obraArtista["Medium"]]=lt.newList()
-            
-    print(tecnicas.keys())
-
 def cmpFunctionTecnicasArtista(tecnica1,tecnica2):
-    if lt.size(tecnica1)>lt.size(tecnica2):
+    """ 
+    Compara dos técnicas por su cantiadad de obras
+    Parámetros: 
+        tecnica1: lista de obras de una tecnica
+        tecnica2: lista de obras de otra tecnica
+    Retorno:
+        retorna verdader (True) si la lista tecnica 1 tiene más elementos que la lista de la tecnica 2
+    """
+    if lt.size(tecnica1)>lt.size(tecnica2): # comparación con orden ascendente
         return True
     else:
         return False
 
 def tecnicasObrasPorArtista(catalog,nombre):
+    """ 
+    Clasifica las obras de un artista por técnica dado un nombre
+    Parámetros: 
+        catalog: estructura de datos con el catalogo de artistas y obras
+        nombre: nombre del artista
+    Retorno:
+        sortedList: lista de técnicas en donde cada elemento es una lista de obras de cada técnica
+        totalObras: número total de obras del artista
+    """
     constituentID=-1
     obras=lt.newList()
     tecnicas=lt.newList() # cada técnica es una lista tipo lt que contiene las obras de esa técnica
+    # encontrar el constituentID
     for artista in lt.iterator(catalog["artists"]):
         if nombre==artista["DisplayName"]:
             constituentID=artista["ConstituentID"]
-    if constituentID!=-1:
-        for obraArte in lt.iterator(catalog["artworks"]):
+    if constituentID!=-1: # verifica que haya encontrado el id
+        for obraArte in lt.iterator(catalog["artworks"]): # se añaden las obras del artista en una lista
             if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
                 lt.addLast(obras,obraArte)
-        for obraArtista in lt.iterator(obras):
+        for obraArtista in lt.iterator(obras): # se van añadiendo cada obra a una lista con la obras de cada tecnica alojada a su vez en una lista de tecnicas
             encontro=False
-            for tecnica in lt.iterator(tecnicas):
+            for tecnica in lt.iterator(tecnicas): # busca si la tecnica existe en la lista de tecnicas
                 if obraArtista["Medium"] == lt.getElement(tecnica,0)["Medium"]:
-                    lt.addLast(tecnica,obraArtista)
+                    lt.addLast(tecnica,obraArtista) # si existe la añade la obra a la técnica
                     encontro=True
-            if not encontro:
-                lt.addLast(tecnicas,lt.newList())
-                lt.addLast(lt.lastElement(tecnicas),obraArtista)
-        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista)
-        totalObras=lt.size(obras)
+            if not encontro: # si no existe
+                lt.addLast(tecnicas,lt.newList()) # crea una técnica (lista de obras) en la lista de tecnicas
+                lt.addLast(lt.lastElement(tecnicas),obraArtista) # añade la lista de obras de esa tecnica
+        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista) # utiliza la función de comparación con orden ascendente
+        totalObras=lt.size(obras) # retorna el número total de obras
     else:
-        totalObras=0
-        sortedList=lt.newList()
+        totalObras=0 # en el caso de que no encuentre el artista no hay obras
+        sortedList=lt.newList() # se inicializa una lista para evitar posibles errores
     return sortedList, totalObras
 
     
