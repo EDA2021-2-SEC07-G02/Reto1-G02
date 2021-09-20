@@ -28,6 +28,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+import prettytable
 from prettytable import PrettyTable
 
 default_limit = 1000 
@@ -83,7 +84,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     """
     size = lt.size(ord_artwork)
     print("\nLas "+ str(sample)+" primeras y últimas obras "+cadenaOpcion)
-    artPretty=PrettyTable()
+    artPretty=PrettyTable(hrules=prettytable.ALL)
     artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
     artPretty.align="l"
     artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,"Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
@@ -110,7 +111,7 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
     """
     size = lt.size(ord_artist)
     print("\nLos "+ str(sample)+" primeros y últimos artistas "+cadenaOpcion)
-    artistPretty=PrettyTable()
+    artistPretty=PrettyTable(hrules=prettytable.ALL)
     artistPretty.field_names=["DisplayName","BeginDate","EndDate","Nationality","Gender"]
     artistPretty.align="l"
     artistPretty._max_width = {"DisplayName" : 25, "BeginDate" : 8,"EndDate":8,"Nationality":15,"Gender":12}
@@ -124,7 +125,7 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
 catalog = None
 
 def printResultsArtworks(ord_artwork):
-    artPretty=PrettyTable()
+    artPretty=PrettyTable(hrules=prettytable.ALL)
     artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
     artPretty.align="l"
     artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,"Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
@@ -137,7 +138,7 @@ def printResultsArtworks(ord_artwork):
     print(artPretty)
 
 def printMediums(ord_mediums,top=5):
-    medPretty=PrettyTable()
+    medPretty=PrettyTable(hrules=prettytable.ALL)
     medPretty.field_names=["Tecnica","Cantidad"]
     medPretty.align="l"
     medPretty._max_width = {"Tecnica" : 15, "Cantidad" : 5}
@@ -149,6 +150,15 @@ def printMediums(ord_mediums,top=5):
         if(cont>top):
             break
     print(medPretty)
+
+def printNationalityArt(ord_Nationality):
+    NationalityPretty=PrettyTable(hrules=prettytable.ALL)
+    NationalityPretty.field_names=["Nationality","ArtWorks"]
+    NationalityPretty.align="l"
+    NationalityPretty._max_width = {"Nationality" : 15, "ArtWorks" : 5}
+    for nationality in lt.iterator(ord_Nationality):
+        NationalityPretty.add_row((nationality["Nationality"],nationality["Artworks"]["size"]))
+    print(NationalityPretty)
 
 
 catalog = None
@@ -209,15 +219,16 @@ while True:
             listaprovisional=controller.req4(catalog)
             print("tiempo de req4: ",listaprovisional[2])
             print("top10")
-            for pais in lt.iterator(listaprovisional[0]):
-                print(type(pais["Artworks"]))
-                try:
-                    print("Q: ",str(lt.size(pais["Artworks"]),"Nationality: ",pais["Nationality"])) ##modificar
-                except:
-                    print("Nationality: ",pais["Nationality"])
+            # for pais in lt.iterator(listaprovisional[0]):
+            #     print(type(pais["Artworks"]))
+            #     try:
+            #         print("Q: ",pais["Artworks"]["size"],"Nationality: ",pais["Nationality"]) ##modificar
+            #     except:
+            #         print("Nationality: ",pais["Nationality"])
+            printNationalityArt(listaprovisional[0])
             print("primer lugar",listaprovisional[1]["Nationality"]," q: ",str(lt.size(listaprovisional[1]["Artworks"])))
             printFirstLastsResultsArt(listaprovisional[1]["Artworks"],"info primer lugar: ")
-            listaprovisional=None ##Se borra la lista provisional
+            controller.limpiarVar(listaprovisional) ##Se borra la lista provisional
 
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
         elif int(inputs[0]) == 5:

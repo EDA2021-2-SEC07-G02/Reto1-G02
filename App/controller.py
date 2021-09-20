@@ -90,3 +90,9 @@ def tecnicasObrasPorArtista(catalog, nombre):
 def req4(catalog):
     # TODO: Documentación
     return model.req4(catalog)
+
+def limpiarVar(dato):
+    """
+    Llama a la función limpiarvar
+    """
+    return model.limpiarVar(dato)

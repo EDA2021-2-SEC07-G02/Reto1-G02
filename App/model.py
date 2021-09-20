@@ -33,6 +33,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as ms
 from DISClib.Algorithms.Sorting import quicksort as qs
 import time
+import sys
 assert cf
 
 # Constantes
@@ -173,7 +174,6 @@ def NewNationalityArt(pais,artwork):
     # TODO: documentación
     adding={"Nationality":"","Cantidad":0,"Artworks": lt.newList("ARRAY_LIST",cmpNationalities)}
     adding["Nationality"]=pais
-    adding["Cantidad"]=1
     lt.addLast(adding["Artworks"],artwork)
     return adding
 
@@ -185,9 +185,8 @@ def addNationality(countries,nationality,artwork):
     """
     posNationality=lt.isPresent(countries,nationality)
     if posNationality>0: ### ARREGLAR
-        cantidad=lt.getElement(countries,posNationality)["Cantidad"]
         artworksprevios=lt.getElement(countries,posNationality)["Artworks"]
-        artworkAdd=lt.addLast(artworksprevios,artwork)
+        lt.addLast(artworksprevios,artwork)
         # lt.changeInfo(countries,posNationality,info)
     else:
         pais=NewNationalityArt(nationality,artwork)
@@ -210,7 +209,7 @@ def cmpNationalities(nacionalidad1,nacionalidad2):
     Retorna True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
     De lo contario, False.
     """
-    return nacionalidad1["Cantidad"]>nacionalidad2["Cantidad"]
+    return nacionalidad1["Artworks"]["size"]>nacionalidad2["Artworks"]["size"]
 
 def req4(catalog):
     # TODO: documentación parámetros
@@ -225,12 +224,11 @@ def req4(catalog):
     """
     start_time = time.process_time()
     countries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)
-    #obrascountries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)# completarrrr
     for obra in lt.iterator(catalog["artworks"]):
         conID=obra["ConstituentID"]
         if "," in conID:
             codigoNum=conID.split(",")
-            for codigo in codigoNum:
+            for codigo in codigoNum: #Se hace un recorrido cuando una obra fue hecha por más de un autor
                 nationality= getNationality(catalog,codigo)
                 addNationality(countries,nationality,obra)
         else:
@@ -329,8 +327,17 @@ def tecnicasObrasPorArtista(catalog,nombre):
         sortedList=lt.newList() # se inicializa una lista para evitar posibles errores
     return sortedList, totalObras
 
-    
-    
-
-
-
+def limpiarVar(dato):
+    """
+    Esta función limpia cualquier tipo de dato que tenga como párametro de entrada.
+    Se utilizará cuando el programa este ejecutando datos provisionales que no necesiten
+    ser guardados, esto con el objetivo de optimizar el uso de memoria ram.
+    Parámetros:
+        dato: Dato de cualquier tipo (str, listas, entre otros)
+    Retorno:
+        dato: Dato en None
+    """
+    #print("La ocupación inicial en memoria del dato era:" + str(sys.getsizeof(dato)))
+    dato=None
+    #print("La ocupación final en memoria del dato es:" + str(sys.getsizeof(dato)))
+    return dato
