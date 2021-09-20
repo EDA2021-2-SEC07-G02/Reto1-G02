@@ -48,7 +48,11 @@ def newCatalog(ListType):
     """
     Inicializa el catálogo. Se crea dos listas vacía, una para guardar a los artistas, otra para las obras de arte.
     
-    Parámetro ListType: La representación de las listas que fue escogida por el usuario(ARRAY_LIST o LINKED_LIST)
+    Parámetros:
+        ListType: La representación de las listas que fue escogida por el usuario(ARRAY_LIST o LINKED_LIST)
+
+    Retorno:
+        catalog: Catalogo inicializado
     """
     catalog = {'artists': None,
                'artworks': None}
@@ -62,16 +66,25 @@ def newCatalog(ListType):
 # Funciones para agregar informacion al catalogo
 
 def addArtist(catalog, artist):
-    # TODO: Documentación parámetros
     """
     Se agrega el artista entregado por parámetro en la última posición de la lista de artistas del catalogo.
+    Párametros:
+        catalog: catalogo de artistas y obras
+        artist: artista a añadir
+    
+    Se añade el artista en la última posición del catalogo con lt.addLast() 
     """
     lt.addLast(catalog['artists'], artist)
 
 def addArtwork(catalog, artwork):
-    # TODO: Documentación parámetros y return
     """
     Se agrega la obra entregada por parámetro en la última posición de la lista de obras del catalogo.
+    Párametros:
+        catalog: catalogo de artistas y obras
+        artist: artista a añadir
+    
+    Se añade el artista en la última posición del catalogo con lt.addLast() 
+
     """
     lt.addLast(catalog['artworks'], artwork)
 
@@ -112,7 +125,6 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
 # Funciones de ordenamiento
 
 def sortList(lista,cmpFunction):
-    # TODO: documentación
     """
     Función de ordenamiento con insertation que se usará en distintos requerimientos
     Parámetros: 
@@ -127,16 +139,22 @@ def sortList(lista,cmpFunction):
 
 def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
     """
-    ###### LLENAR Descripción
+    Esta función se usará para el Requerimiento 2. Primero agregarán los artistas
+    a una nueva array list (ListaNac) dependiendo un rango de fechas ingresado por el usuario
+    que representa la fecha de nacimiento (fechaInicial) y la fecha de fallecimiento
+    del artista (fechaFinal).
+    Al mismo tiempo contará cuantos artistas hay en el rango de fechas deseado.
+    
     Parámetros: 
         catalog: catalogo con obras y artistas
         fechaInicial: fecha inicial ingresada por el usuario
         fechaFinal: fecha final ingresada por el usuario
+    
     Retorno:
         sortedList: lista de obras ordenada cronologicamente 
         contadorArtistas: número de artistas en el rango de fechas deseado
     """
-    lista=lt.newList("ARRAY_LIST") #Se agregarán artistas que estén en el rango adecuado
+    listaNac=lt.newList("ARRAY_LIST") #Se agregarán artistas que estén en el rango adecuado
     contador=0
     for artist in lt.iterator(catalog["artists"]):
         if len(artist["BeginDate"])==4: #Se ignoran si su fecha de nacimiento es vacía
@@ -144,19 +162,19 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
             fallecimiento=int(artist["EndDate"])
             #"BeginDate","EndDate"
             if (nacimiento>= fechaInicial and nacimiento<=fechaFinal) and (fallecimiento<=fechaFinal):
-                lt.addLast(lista,artist)
+                lt.addLast(listaNac,artist)
                 contador+=1
-    sortList(lista,cmpArtistDate)
-    return lista,contador
+    sortList(listaNac,cmpArtistDate)
+    return listaNac,contador
 
 def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     # TODO: documentación parámetros y return
     """
-    La función primero agregará a una lista provisional (rango) las obras que tenga 
+    La función primero agregará a una nueva array list (listaAdq) las obras que tengan
     una fecha de aquisición dentro del rango deseado. A su vez, se va a ir 
     contando cuantas de estas obras se adquirieron por "Purchase" o compra del museo,
     además se tendrá un contador del total de obras dentro del rango de fechas.
-    Después de esto se hará un ordenamiento con insertion a la lista provisional.
+    Después de esto se hará un ordenamiento con insertion a listaAdq.
 
     Parámetros: 
         catalog: catalogo con obras y artistas
@@ -168,7 +186,7 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
         del rango de fechas 
         contadorRango: total de obras en el rango de fechas
     """
-    lista=lt.newList("ARRAY_LIST") #Se agregarán obras que tengan una fecha de adquisión en el rango deseado
+    listaAdq=lt.newList("ARRAY_LIST") #Se agregarán obras que tengan una fecha de adquisión en el rango deseado
     fechaInicialTi= time.strptime(fechaInicial,"%Y-%m-%d")
     fechaFinalTi= time.strptime(fechaFinal,"%Y-%m-%d")
     contadorRango=0
@@ -178,12 +196,12 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
             fecha=time.strptime(obra["DateAcquired"],"%Y-%m-%d")
             if fecha>fechaInicialTi and fecha<fechaFinalTi: 
                 contadorRango+=1
-                lt.addLast(lista,obra) #se agregan fechas que estén dentro del rango deseado
+                lt.addLast(listaAdq,obra) #se agregan fechas que estén dentro del rango deseado
             if obra["CreditLine"].startswith("Purchase"):
                 contadorPurchase+=1
     
-    sortList(lista,cmpArtworkByDateAcquired) #ordenamiento por insertion
-    return lista, contadorPurchase, contadorRango
+    sortList(listaAdq,cmpArtworkByDateAcquired) #ordenamiento por insertion
+    return listaAdq, contadorPurchase, contadorRango
 
 
 def getArtistName(catalog,ConstituentID): #req 2
