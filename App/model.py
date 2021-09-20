@@ -128,7 +128,11 @@ def cmpArtworkByPrice(obra1,obra2): # req 5
         return False
 
 def cmpArtworkByDate(obra1,obra2): # req 5
-    comparacion=obra1["Date"]<obra2["date"]
+    fecha1=obra1["Date"]
+    fecha2=obra2["Date"]
+    comparacion=False
+    if fecha1.isnumeric() and fecha2.isnumeric(): #Se comprueba que la fecha no sea vacía
+        comparacion=int(obra1["Date"])<int(obra2["Date"])
     return comparacion
 
 
@@ -251,12 +255,13 @@ def getNationality(catalog,ConstituentID):
     """
     Se retornara las nacionalidades de los artistas.
     """
-    codigoNum=ConstituentID[1:-1]
-    nationality=None
-    for artist in lt.iterator(catalog['artists']):
-        if codigoNum.strip()==artist["ConstituentID"].strip():
-            nationality=artist["Nationality"]
     
+    nationality=""
+    for artist in lt.iterator(catalog['artists']):
+        if ConstituentID.strip()==artist["ConstituentID"].strip():
+            nationality=artist["Nationality"]
+    if nationality=="Nationality unknown" or nationality=="":
+        nationality="Unknown" 
     return nationality
             
 def NewNationalityArt(pais,artwork):
@@ -314,7 +319,7 @@ def req4(catalog):
     start_time = time.process_time()
     countries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)
     for obra in lt.iterator(catalog["artworks"]):
-        conID=obra["ConstituentID"]
+        conID=obra["ConstituentID"][1:-1]
         if "," in conID:
             codigoNum=conID.split(",")
             for codigo in codigoNum: #Se hace un recorrido cuando una obra fue hecha por más de un autor
@@ -341,7 +346,7 @@ def transportarObrasDespartamento(catalog,departamento):
     obrasDepartamento=lt.newList()
     precioTotalEnvio=0
     peso=0
-    for obra in lt.iterator(catalog["artwork"]):
+    for obra in lt.iterator(catalog["artworks"]):
         if str(departamento)==obra["Department"]:
             altura=obra["Height (cm)"]
             ancho=obra["Width (cm)"]

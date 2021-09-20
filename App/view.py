@@ -20,7 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-from DISClib.DataStructures.arraylist import size
+#from DISClib.DataStructures.arraylist import size
 from time import process_time
 from typing import Iterator
 
@@ -294,7 +294,7 @@ while True:
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
         elif int(inputs[0]) == 5:
             nombreDepartamento=input("\nIngrese el nombre del departamento: ")
-            respuesta=controller.tecnicasObrasPorArtista(catalog,nombreDepartamento)
+            respuesta=controller.transportarObrasDespartamento(catalog,nombreDepartamento)
             listaObrasDepartamentoPrecio=respuesta[0]
             listaObrasDepartamentoAntiguedad=respuesta[1]
             precioTotal=respuesta[2]
