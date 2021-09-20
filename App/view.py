@@ -61,13 +61,25 @@ def initCatalog(ListType):
     # TODO: documentación parámetros
     """
     Inicializa el catalogo de libros
+
+    Párametros:
+        ListType: Tipo de lista con la que se hará el catalogo (ARRAY_LIST o LINKED_LIST)
+
+    Retorno:
+        Catalogo inicializado
     """
     return controller.initCatalog(ListType)
 
 def loadData(catalog):
     # TODO: documentación parámetros
     """
-    Carga los artistas en la estructura de datos
+    Carga los artistas y obras en la estructura de datos
+    
+    Párametros:
+        Catalog: Catalogo en donde se añadirán obras y artistas
+    
+    Retorno:
+        Catalogo cardgado con obras y artistas
     """
     controller.loadData(catalog)
 
@@ -77,10 +89,14 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     Esta función es usada para mostrar a las 3 primeras y últimas obras 
     en distintas opciones del view. 
     
-    Los parámetros son:
-    ord_artwork: Catalogo de obras de arte (Cargado por catalogo en la opción 1 o ordenado por fechas de la opción 3)
-    sample: Hace referencia a la cantidad de primeras y últimas obras que se quieren mostrar al usuario. Su valor predeterminado es 3 por requisitos del proyecto.
-    cadenaOpcion: Es usado para imprimir si las obras fueron cargadas o ordenadas 
+    Parámetros:
+        ord_artwork: Catalogo de obras de arte (Cargado por catalogo en la opción 1 o ordenado por fechas de la opción 3)
+        sample: Hace referencia a la cantidad de primeras y últimas obras que se quieren mostrar al usuario. 
+                Su valor predeterminado es 3 por requisitos del proyecto.
+        cadenaOpcion: Es usado para imprimir si las obras fueron cargadas o ordenadas 
+    
+    print(artPretty) >> Imprime la tabla
+    controller.limpiarVar(artPretty) >> Borra la tabla hecha. Dato provisional
     """
     size = lt.size(ord_artwork)
     print("\nLas "+ str(sample)+" primeras y últimas obras "+cadenaOpcion)
@@ -97,6 +113,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
                         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL']))
     print(artPretty)
+    controller.limpiarVar(artPretty) #Se elimina la tabla dado que es un dato provisional
 
 def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
     # TODO: documentación parámetros, problema posible OutOfRange
@@ -104,11 +121,14 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
     Esta función es usada para mostrar a los 3 primeros y últimos artistas 
     en distintas opciones del view. 
     
-    Los parámetros son:
-    ord_artist: Catalogo de artistas
-    sample: Hace referencia a la cantidad de primeras y últimas artistas que se quieren mostrar al usuario.
-    Su valor predeterminado es 3 por requisitos del proyecto.
-    cadenaOpcion: Es usado para imprimir si los artistas fueron cargados al catalogo o ordenadas 
+    Parámetros:
+        ord_artist: Catalogo de artistas
+        sample: Hace referencia a la cantidad de primeras y últimas artistas que se quieren mostrar al usuario.
+                Su valor predeterminado es 3 por requisitos del proyecto.
+        cadenaOpcion: Es usado para imprimir si los artistas fueron cargados al catalogo o ordenadas 
+    
+    Print(artistPretty) >> Imprime la tabla
+    controller.limpiarVar(artistPretty) >> Borra la tabla hecha. Dato provisional
     """
     size = lt.size(ord_artist)
     print("\nLos "+ str(sample)+" primeros y últimos artistas "+cadenaOpcion)
@@ -134,6 +154,7 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
         artistPretty.add_row((artist['ConstituentID'], artist['DisplayName'],artist['BeginDate'],artist['Nationality'],
                             artist['Gender'],ArtistBio,artist['Wiki QID'],artist['ULAN']))
     print(artistPretty)
+    controller.limpiarVar(artistPretty) #Se elimina la tabla dado que es un dato provisional
 
 catalog = None
 
@@ -165,6 +186,15 @@ def printMediums(ord_mediums,top=5):
     print(medPretty)
 
 def printNationalityArt(ord_Nationality):
+    """
+    Imprime los resultados del requerimiento 4
+
+    Parámetros:
+        ord_Nationality:lista con países y sus obras de arte
+    
+    print(NationalityPretty) >> Imprime la tabla hecha por medio de PrettyTable
+    controller.limpiarVar(NationalityPretty) >> Limpia la tabla hecha (dato provisional)
+    """
     NationalityPretty=PrettyTable(hrules=prettytable.ALL)
     NationalityPretty.field_names=["Nationality","ArtWorks"]
     NationalityPretty.align="l"
@@ -172,7 +202,7 @@ def printNationalityArt(ord_Nationality):
     for nationality in lt.iterator(ord_Nationality):
         NationalityPretty.add_row((nationality["Nationality"],nationality["Artworks"]["size"]))
     print(NationalityPretty)
-
+    controller.limpiarVar(NationalityPretty)
 
 catalog = None
 
@@ -201,6 +231,7 @@ while True:
             resultado= controller.listarArtistasCronologicamente(catalog, fechaInicial, fechaFinal)
             printFirstLastsResultsArtists(resultado[0]," ordenadas por año son:")
             print("\nEl total de artistas en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
+            controller.limpiarVar(resultado)  #Se borra el resultado - Dato provisional
 
         # Opción 2: Listar cronológicamente las obras adquiridas (Requerimiento 2)
         elif int(inputs[0]) == 2:  
@@ -210,6 +241,7 @@ while True:
             printFirstLastsResultsArt(resultado[0]," ordenadas por fecha son:")
             print("\nEl total de obras en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
             print("\nEl total de obras compradadas ('Purchase') en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[2]))
+            controller.limpiarVar(resultado) #Se borra el resultado - Dato provisional
             
         # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
         elif int(inputs[0]) == 3:
@@ -235,16 +267,11 @@ while True:
             print("Cargando clasificación por nacionalidad de obras......")
             listaprovisional=controller.req4(catalog)
             print("tiempo de req4: ",listaprovisional[2])
-            print("top10")
-            # for pais in lt.iterator(listaprovisional[0]):
-            #     print(type(pais["Artworks"]))
-            #     try:
-            #         print("Q: ",pais["Artworks"]["size"],"Nationality: ",pais["Nationality"]) ##modificar
-            #     except:
-            #         print("Nationality: ",pais["Nationality"])
+            print("Top 10 nacionalidades de acuerdo a su cantidad de obras de arte")
             printNationalityArt(listaprovisional[0])
-            print("primer lugar",listaprovisional[1]["Nationality"]," q: ",str(lt.size(listaprovisional[1]["Artworks"])))
-            printFirstLastsResultsArt(listaprovisional[1]["Artworks"],"info primer lugar: ")
+            print("-"*25 + " Primer lugar " +"-"*25)
+            print("\nPrimer lugar: \nNacionalidad: ",listaprovisional[1]["Nationality"],"\nCantidad obras: ",str(lt.size(listaprovisional[1]["Artworks"])))
+            printFirstLastsResultsArt(listaprovisional[1]["Artworks"],"de arte del primer lugar son: ")
             controller.limpiarVar(listaprovisional) ##Se borra la lista provisional
 
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
