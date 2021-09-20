@@ -162,9 +162,11 @@ catalog = None
 def printResultsArtworks(ord_artwork):
     # TODO: documentación y que de exactamente lo que da el requerimiento 3
     artPretty=PrettyTable(hrules=prettytable.ALL)
-    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
+    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date",
+                            "DateAcquired","URL","Artists Names"]
     artPretty.align="l"
-    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,"Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,
+                            "Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
 
     for artwork in lt.iterator(ord_artwork):
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
@@ -175,17 +177,17 @@ def printResultsArtworks(ord_artwork):
 
 def printTableTransPricesArtworks(ord_artwork, sample=5):
     artPretty=PrettyTable(hrules=prettytable.ALL)
-    artPretty.field_names=["ObjectID","Title","ArtistsNames","Medium","Date","Dimensions","Classification","TransCost (USD)","URL"]
+    artPretty.field_names=["ObjectID","Title","ArtistsNames","Medium",
+                            "Date","Dimensions","Classification","TransCost (USD)","URL"]
     artPretty.align="l"
-    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"ArtistsNames":13,"Medium":15,"Date":12,"Dimensions":10,"Classification":11,"TransCost (USD)":11,"URL":10}
-    cont=0
-
-    for artwork in lt.iterator(ord_artwork):
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"ArtistsNames":13,"Medium":15,
+                            "Date":12,"Dimensions":10,"Classification":11,"TransCost (USD)":11,"URL":10}
+    for i in range(sample):
+        artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
-        artwork['Date'],artwork['Dimensions'],artwork['Classification'],artwork['TransCost (USD)'],artwork['URL'] ))
-        if(cont>sample):
-            break
+                            artwork['Date'],artwork['Dimensions'],artwork['Classification'],
+                            artwork['TransCost (USD)'],artwork['URL'] ))
     print(artPretty)
 
 def printMediums(ord_mediums,top=5):
