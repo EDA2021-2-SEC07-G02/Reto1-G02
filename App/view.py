@@ -183,7 +183,11 @@ while True:
         
         # Opción 1: Listar cronológicamente los artistas (Requerimiento 1)
         elif int(inputs[0]) == 1:
-            pass
+            fechaInicial=input("\nIngrese el año inicial: ")
+            fechaFinal=input("\nIngrese el año final: ")
+            resultado= controller.listarArtistasCronologicamente(catalog, fechaInicial, fechaFinal)
+            printFirstLastsResultsArtists(resultado[0]," ordenadas por año son:")
+            print("\nEl total de artistas en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
 
         # Opción 2: Listar cronológicamente las obras adquiridas (Requerimiento 2)
         elif int(inputs[0]) == 2:  

@@ -75,10 +75,16 @@ def getArtistName(catalog, ID):
     # TODO: Documentación
     return model.getArtistName(catalog,ID)
 
+def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal):
+    """
+    ##llenar
+    """
+    return model.listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal)
+
 def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     # TODO: Documentación
     """
-    Retorna un
+    llenar
     """
     return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal)
 

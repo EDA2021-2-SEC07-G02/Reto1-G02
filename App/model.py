@@ -85,7 +85,11 @@ def cmpArtistDate(artist1,artist2): #req 1
     Retorno:
         Devuelve verdadero (True) si artist1 es menor en fecha que artist2, de lo contrario (False)
     """
-    comparacion=artist1["BeginDate"]<artist2["BeginDate"]
+    if artist1["BeginDate"]==artist2["BeginDate"]: #se verifica si nacieron en el mismo año
+        #se pasa a comparar por su fecha de fallecimiento.
+        comparacion=artist1["EndDate"]<=artist2["EndDate"] #CORREGIR #true si el artist1 falleció antes (o en el mismo año) que artist2
+    else:
+        comparacion=artist1["BeginDate"]<artist2["BeginDate"]
     return comparacion
 
 def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
@@ -122,6 +126,28 @@ def sortList(lista,cmpFunction):
     return ins.sort(lista,cmpFunction)
 
 # Funciones de Consulta
+
+def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
+    """
+    ###### LLENAR Descripción
+    Parámetros: 
+        catalog: catalogo con obras y artistas
+        fechaInicial: fecha inicial ingresada por el usuario
+        fechaFinal: fecha final ingresada por el usuario
+    Retorno:
+        sortedList: lista de obras ordenada cronologicamente 
+        contadorArtistas: número de artistas en el rango de fechas deseado
+    """
+    lista=lt.newList("ARRAY_LIST") #Se agregarán artistas que estén en el rango adecuado
+    contador=0
+    for artist in lt.iterator(catalog["artists"]):
+        if len(artist["BeginDate"])==4: #Se ignoran si su fecha de nacimiento es vacía
+            #"BeginDate","EndDate"
+            if artist["BeginDate"]>= fechaInicial and artist["EndDate"]<=fechaFinal:
+                lt.addLast(lista,artist)
+                contador+=1
+    sortList(lista,cmpArtistDate)
+    return lista,contador
 
 def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     # TODO: documentación parámetros y return
@@ -160,7 +186,7 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     return lista, contadorPurchase, contadorRango
 
 
-def getArtistName(catalog,ConstituentID): #req 2, 4
+def getArtistName(catalog,ConstituentID): #req 2
     # TODO: documentación parámetros y return
     """
     Se retornara el nombre de un artista de acuerdo a su ConstituentID.
@@ -269,9 +295,9 @@ def req4(catalog):
             nationality= getNationality(catalog,conID)
             addNationality(countries,nationality,obra)
     
-    sort=ins.sort(countries,cmpNationalities)
-    primerlugar=lt.getElement(sort,1)
-    top10=lt.subList(sort,1,10)
+    sortList(countries,cmpNationalities)
+    primerlugar=lt.getElement(countries,1)
+    top10=lt.subList(countries,1,10)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
 
