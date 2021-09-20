@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.DataStructures.arraylist import size
 from time import process_time
 from typing import Iterator
 
@@ -159,6 +160,7 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
 catalog = None
 
 def printResultsArtworks(ord_artwork):
+    # TODO: documentación y que de exactamente lo que da el requerimiento 3
     artPretty=PrettyTable(hrules=prettytable.ALL)
     artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date","DateAcquired","URL","Artists Names"]
     artPretty.align="l"
@@ -169,6 +171,21 @@ def printResultsArtworks(ord_artwork):
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
         artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
         dispname_artwork))
+    print(artPretty)
+
+def printTableTransPricesArtworks(ord_artwork, sample=5):
+    artPretty=PrettyTable(hrules=prettytable.ALL)
+    artPretty.field_names=["ObjectID","Title","ArtistsNames","Medium","Date","Dimensions","Classification","TransCost (USD)","URL"]
+    artPretty.align="l"
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"ArtistsNames":13,"Medium":15,"Date":12,"Dimensions":10,"Classification":11,"TransCost (USD)":11,"URL":10}
+    cont=0
+
+    for artwork in lt.iterator(ord_artwork):
+        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
+        artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
+        artwork['Date'],artwork['Dimensions'],artwork['Classification'],artwork['TransCost (USD)'],artwork['URL'] ))
+        if(cont>sample):
+            break
     print(artPretty)
 
 def printMediums(ord_mediums,top=5):
@@ -245,7 +262,7 @@ while True:
             
         # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
         elif int(inputs[0]) == 3:
-            nombreArtista=input("Ingrese el nombre del artista: ")
+            nombreArtista=input("\nIngrese el nombre del artista: ")
             respuesta=controller.tecnicasObrasPorArtista(catalog,nombreArtista)
             tecnicas=respuesta[0]
             totalObras=respuesta[1]
@@ -276,7 +293,19 @@ while True:
 
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
         elif int(inputs[0]) == 5:
-            
+            nombreDepartamento=input("\nIngrese el nombre del departamento: ")
+            respuesta=controller.tecnicasObrasPorArtista(catalog,nombreDepartamento)
+            listaObrasDepartamentoPrecio=respuesta[0]
+            listaObrasDepartamentoAntiguedad=respuesta[1]
+            precioTotal=respuesta[2]
+            pesoTotal=respuesta[3]
+            print("MoMA trasnportará",lt.size(listaObrasDepartamentoPrecio),"obras del departamento de",nombreDepartamento)
+            print("\nEl peso total estimado es",str(pesoTotal)+"kg")
+            print("El precio estimado de transportar todas las obras del departamento es",str(precioTotal)+"USD")
+            print("\nTOP 5 de las obras más costosas de transportar")
+            printTableTransPricesArtworks(listaObrasDepartamentoPrecio)
+            print("\nTOP 5 de las obras más antiguas a transportar")
+            printTableTransPricesArtworks(listaObrasDepartamentoAntiguedad)
             pass
         
         # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)

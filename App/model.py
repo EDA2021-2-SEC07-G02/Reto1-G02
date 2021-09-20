@@ -89,6 +89,7 @@ def addArtwork(catalog, artwork):
     lt.addLast(catalog['artworks'], artwork)
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
 def cmpArtistDate(artist1,artist2): #req 1
     """
     Compara la fecha de dos artistas
@@ -118,6 +119,16 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
     fecha1=time.strptime(artwork1["DateAcquired"],"%Y-%m-%d")
     fecha2=time.strptime(artwork2["DateAcquired"],"%Y-%m-%d")
     comparacion=fecha1<fecha2
+    return comparacion
+
+def cmpArtworkByPrice(obra1,obra2): # req 5
+    if obra1["TransCost (USD)"]>obra2["TransCost (USD)"]: # orden descendentes
+        return True
+    else:
+        return False
+
+def cmpArtworkByDate(obra1,obra2): # req 5
+    comparacion=obra1["Date"]<obra2["date"]
     return comparacion
 
 
@@ -325,15 +336,11 @@ def req4(catalog):
 ###fin req 4
 
 #Requerimiento 5
-def cmpFunctionPrecioDesc(obra1,obra2):
-    if obra1["PriceUPS (USD)"]>obra2["PriceUPS (USD)"]:
-        return True
-    else:
-        return False
 
 def transportarObrasDespartamento(catalog,departamento):
     obrasDepartamento=lt.newList()
     precioTotalEnvio=0
+    peso=0
     for obra in lt.iterator(catalog["artwork"]):
         if str(departamento)==obra["Department"]:
             altura=obra["Height (cm)"]
@@ -346,12 +353,15 @@ def transportarObrasDespartamento(catalog,departamento):
             precioEnvio=max(precioPorM2,precioPorM3,precioPorPeso)
             if precioEnvio==0:
                 precioEnvio=PRECIO_ENVIO_FIJO
-            obra["PriceUPS (USD)"]=precioEnvio
+            obra["TransCost (USD)"]=precioEnvio
             precioTotalEnvio+=precioEnvio
+            if (len(peso)>0):
+                peso+=float(peso)
             # preguntar por peso estimado xdd
             lt.addLast(obrasDepartamento,obra)
-    sortedList=sortList(obrasDepartamento,cmpFunctionPrecioDesc)
-    pass
+    fechaSortedList=sortList(obrasDepartamento,cmpArtworkByDate)
+    precioSortedList=sortList(obrasDepartamento,cmpArtworkByPrice)
+    return precioSortedList, fechaSortedList, precioTotalEnvio, peso
 
 #Requerimiento 3
 def cmpFunctionTecnicasArtista(tecnica1,tecnica2):

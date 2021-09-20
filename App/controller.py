@@ -92,6 +92,11 @@ def tecnicasObrasPorArtista(catalog, nombre):
     # TODO: Documentación
     return model.tecnicasObrasPorArtista(catalog,nombre)
 
+def transportarObrasDespartamento(catalog, departamento):
+    # TODO: Documentación
+    return model.transportarObrasDespartamento(catalog,departamento)
+
+
 #TODO: cambiar nombre
 def req4(catalog):
     # TODO: Documentación
