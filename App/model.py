@@ -76,8 +76,19 @@ def addArtwork(catalog, artwork):
     lt.addLast(catalog['artworks'], artwork)
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def cmpArtistDate(artist1,artist2): #req 1
+    """
+    Compara la fecha de dos artistas
+    Parámetros: 
+        artist1: informacion del primer artista y su valor 'BeginDate'
+        artist1: informacion del primer artista y su valor 'BeginDate'
+    Retorno:
+        Devuelve verdadero (True) si artist1 es menor en fecha que artist2, de lo contrario (False)
+    """
+    comparacion=artist1["BeginDate"]<artist2["BeginDate"]
+    return comparacion
 
-def cmpArtworkByDateAcquired(artwork1, artwork2):
+def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
     """ 
     Compara las fechas de dos obras de arte
     Parámetros: 
@@ -94,10 +105,20 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
         comparacion=fecha1<fecha2
     return comparacion
 
+
+    
 # Funciones de ordenamiento
 
 def sortList(lista,cmpFunction):
     # TODO: documentación
+    """
+    Función de ordenamiento con insertation que se usará en distintos requerimientos
+    Parámetros: 
+        lista: lista que se ordenara
+        cmpFunction: función de comparación
+    Retorno:
+        lista ordenada por insertion
+    """
     return ins.sort(lista,cmpFunction)
 
 # Funciones de Consulta
@@ -106,11 +127,20 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     # TODO: documentación parámetros y return
     """
     La función primero agregará a una lista provisional (rango) las obras que tenga 
-    una fecha de aquisición dentro del rango deseado. A su vez, se irá 
+    una fecha de aquisición dentro del rango deseado. A su vez, se va a ir 
     contando cuantas de estas obras se adquirieron por "Purchase" o compra del museo,
     además se tendrá un contador del total de obras dentro del rango de fechas.
-    Después de esto se hará un ordenamiento con insertation a la lista provisional (rango)
-    
+    Después de esto se hará un ordenamiento con insertion a la lista provisional.
+
+    Parámetros: 
+        catalog: catalogo con obras y artistas
+        fechaInicial: fecha inicial ingresada por el usuario
+        fechaFinal: fecha final ingresada por el usuario
+    Retorno:
+        sortedList: lista de obras ordenada cronologicamente 
+        contadorPurchase: entero que representa las obras compradas (purchase)dentro
+        del rango de fechas 
+        contadorRango: total de obras en el rango de fechas
     """
     lista=lt.newList("ARRAY_LIST") #Se agregarán obras que tengan una fecha de adquisión en el rango deseado
     fechaInicialTi= time.strptime(fechaInicial,"%Y-%m-%d")
@@ -126,25 +156,29 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
             if obra["CreditLine"].startswith("Purchase"):
                 contadorPurchase+=1
     
-    sortedList=sortList(lista,cmpArtworkByDateAcquired) #ordenamiento por insertion
-    return sortedList, contadorPurchase, contadorRango
+    sortList(lista,cmpArtworkByDateAcquired) #ordenamiento por insertion
+    return lista, contadorPurchase, contadorRango
 
 
 def getArtistName(catalog,ConstituentID): #req 2, 4
     # TODO: documentación parámetros y return
     """
-    Se retornara una tupla con dos elementos, una cadena de texto con los nombres de los artistas y 
-    una lista con sus nacionalidades.
+    Se retornara el nombre de un artista de acuerdo a su ConstituentID.
+    Parámetros: 
+        catalog: catalogo con obras y artistas
+        ConstituentID: código del artista. Relaciona a una obra dentro del catalogo["artworks"]
+        con su artista correspondiente en catalogo["DisplayName"]
+    Retorno:
+        dispname: cadena de texto con el/los nombre/s de los artistas
     """
     codigoNum=ConstituentID[1:-1]
     dispname=""
-    if "," in ConstituentID:
-        codigoNum=codigoNum.split(",")
+    if "," in ConstituentID: #Significa que hay más de un artista en el ConstituentID
+        codigoNum=codigoNum.split(",") #Hace split de la cadena de texto con los distintos códigos
         for codigo in codigoNum:
                 for artist in lt.iterator(catalog['artists']):
                     if codigo.strip()==artist["ConstituentID"].strip():
                         dispname+=artist["DisplayName"]+","
-                        # lt.addLast(nationality,artist["Nationality"])
     else:
         for artist in lt.iterator(catalog['artists']):
             if codigoNum==artist["ConstituentID"]:
