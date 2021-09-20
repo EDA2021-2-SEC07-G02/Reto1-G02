@@ -35,7 +35,10 @@ from DISClib.Algorithms.Sorting import quicksort as qs
 import time
 assert cf
 
+# Constantes
 
+PRECIO_ENVIO_UNIDAD=72
+PRECIO_ENVIO_FIJO=48
 
 # Construccion de modelos
 
@@ -244,6 +247,35 @@ def req4(catalog):
     return top10,primerlugar,elapsed_time_mseg
 
 ###fin req 4
+
+#Requerimiento 5
+def cmpFunctionPrecioDesc(obra1,obra2):
+    if obra1["PriceUPS (USD)"]>obra2["PriceUPS (USD)"]:
+        return True
+    else:
+        return False
+
+def transportarObrasDespartamento(catalog,departamento):
+    obrasDepartamento=lt.newList()
+    precioTotalEnvio=0
+    for obra in lt.iterator(catalog["artwork"]):
+        if str(departamento)==obra["Department"]:
+            altura=obra["Height (cm)"]
+            ancho=obra["Width (cm)"]
+            peso=obra["Weight (kg)"]
+            profundidad=obra["Depth (cm)"]
+            precioPorPeso=PRECIO_ENVIO_UNIDAD*float(peso) if len(peso)>0 else 0
+            precioPorM2=PRECIO_ENVIO_UNIDAD*(float(altura)/100)*(float(ancho)/100) if len(peso)>0 else 0
+            precioPorM3=PRECIO_ENVIO_UNIDAD*(float(altura)/100)*(float(ancho)/100)*(float(profundidad)/100) if len(peso)>0 else 0
+            precioEnvio=max(precioPorM2,precioPorM3,precioPorPeso)
+            if precioEnvio==0:
+                precioEnvio=PRECIO_ENVIO_FIJO
+            obra["PriceUPS (USD)"]=precioEnvio
+            precioTotalEnvio+=precioEnvio
+            # preguntar por peso estimado xdd
+            lt.addLast(obrasDepartamento,obra)
+    sortedList=sortList(obrasDepartamento,cmpFunctionPrecioDesc)
+    pass
 
 #Requerimiento 3
 def cmpFunctionTecnicasArtista(tecnica1,tecnica2):

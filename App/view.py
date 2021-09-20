@@ -221,6 +221,7 @@ while True:
 
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
         elif int(inputs[0]) == 5:
+            
             pass
         
         # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)
