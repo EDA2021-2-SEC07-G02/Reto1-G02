@@ -33,13 +33,10 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as ms
 from DISClib.Algorithms.Sorting import quicksort as qs
 import time
+import datetime
 import sys
 assert cf
 
-# Constantes
-
-PRECIO_ENVIO_UNIDAD=72
-PRECIO_ENVIO_FIJO=48
 
 # Construccion de modelos
 
@@ -122,18 +119,17 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
     return comparacion
 
 def cmpArtworkByPrice(obra1,obra2): # req 5
-    if obra1["TransCost (USD)"]>obra2["TransCost (USD)"]: # orden descendentes
-        return True
-    else:
-        return False
+    return obra1["TransCost (USD)"]>obra2["TransCost (USD)"] # orden descendentes
+    
 
 def cmpArtworkByDate(obra1,obra2): # req 5
-    fecha1=obra1["Date"]
-    fecha2=obra2["Date"]
-    comparacion=False
-    if fecha1.isnumeric() and fecha2.isnumeric(): #Se comprueba que la fecha no sea vacía
-        comparacion=int(obra1["Date"])<int(obra2["Date"])
-    return comparacion
+    fecha1=2022 #año actual +1
+    fecha2=2022 
+    if len(obra1["Date"])>0:
+        fecha1=int(obra1["Date"])
+    if len(obra2["Date"])>0:
+        fecha2=int(obra2["Date"]) 
+    return fecha1<fecha2
 
 
     
@@ -343,30 +339,48 @@ def req4(catalog):
 #Requerimiento 5
 
 def transportarObrasDespartamento(catalog,departamento):
+    # Constantes
+    PRECIO_ENVIO_UNIDAD=72
+    PRECIO_ENVIO_FIJO=48
     obrasDepartamento=lt.newList()
     precioTotalEnvio=0
-    peso=0
+    pesoTotal=0
     for obra in lt.iterator(catalog["artworks"]):
         if str(departamento)==obra["Department"]:
             altura=obra["Height (cm)"]
             ancho=obra["Width (cm)"]
             peso=obra["Weight (kg)"]
             profundidad=obra["Depth (cm)"]
-            precioPorPeso=PRECIO_ENVIO_UNIDAD*float(peso) if len(peso)>0 else 0
-            precioPorM2=PRECIO_ENVIO_UNIDAD*(float(altura)/100)*(float(ancho)/100) if len(peso)>0 else 0
-            precioPorM3=PRECIO_ENVIO_UNIDAD*(float(altura)/100)*(float(ancho)/100)*(float(profundidad)/100) if len(peso)>0 else 0
+            precioPorPeso=0
+            precioPorM2=0
+            precioPorM3=0
+            if peso.isnumeric(): #KG   #se comprueba que peso no sea una cadena vacia 
+                precioPorPeso=PRECIO_ENVIO_UNIDAD*float(peso) #if len(peso)>0 else 0
+                pesoTotal+=peso
+            #Se comprueban si cada una de las medidas es una cadena de str vacía. Si alguno de ellos es verdad se cambia a 100 dado que son cm
+            if len(altura)==0:
+                altura=100
+            if len(ancho)==0:
+                ancho=100
+            if len(profundidad)==0:
+                profundidad=100
+            precioPorM2=PRECIO_ENVIO_UNIDAD*(float(altura)/100)*(float(ancho)/100) #if len(peso)>0 else 0
+            precioPorM3=PRECIO_ENVIO_UNIDAD*(float(altura)/100)*(float(ancho)/100)*(float(profundidad)/100) #if len(peso)>0 else 0
             precioEnvio=max(precioPorM2,precioPorM3,precioPorPeso)
             if precioEnvio==0:
                 precioEnvio=PRECIO_ENVIO_FIJO
             obra["TransCost (USD)"]=precioEnvio
             precioTotalEnvio+=precioEnvio
-            if (len(peso)>0):
-                peso+=float(peso)
+            # if (len(peso)>0):
+            #     peso+=float(peso)
             # preguntar por peso estimado xdd
             lt.addLast(obrasDepartamento,obra)
-    fechaSortedList=sortList(obrasDepartamento,cmpArtworkByDate)
-    precioSortedList=sortList(obrasDepartamento,cmpArtworkByPrice)
-    return precioSortedList, fechaSortedList, precioTotalEnvio, peso
+    
+    size=obrasDepartamento["size"]
+    precioSortedList=lt.subList(obrasDepartamento,0,size) #se copia la lista 
+    sortList(precioSortedList,cmpArtworkByPrice)
+    sortList(obrasDepartamento,cmpArtworkByDate)#lista ordenada por fecha
+    return precioSortedList, obrasDepartamento, precioTotalEnvio, pesoTotal
 
 #Requerimiento 3
 def cmpFunctionTecnicasArtista(tecnica1,tecnica2):

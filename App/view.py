@@ -187,7 +187,7 @@ def printTableTransPricesArtworks(ord_artwork, sample=5):
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
                             artwork['Date'],artwork['Dimensions'],artwork['Classification'],
-                            artwork['TransCost (USD)'],artwork['URL'] ))
+                            round(artwork['TransCost (USD)'],3),artwork['URL'] ))
     print(artPretty)
 
 def printMediums(ord_mediums,top=5):
