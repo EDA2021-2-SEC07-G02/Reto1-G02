@@ -97,7 +97,7 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
         dispname_artwork))
     print(artPretty)
 
-def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
+def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=10):
     # TODO: documentación parámetros, problema posible OutOfRange
     """
     Esta función es usada para mostrar a los 3 primeros y últimos artistas 

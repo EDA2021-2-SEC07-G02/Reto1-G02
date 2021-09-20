@@ -142,8 +142,10 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
     contador=0
     for artist in lt.iterator(catalog["artists"]):
         if len(artist["BeginDate"])==4: #Se ignoran si su fecha de nacimiento es vacía
+            nacimiento=int(artist["BeginDate"])
+            fallecimiento=int(artist["EndDate"])
             #"BeginDate","EndDate"
-            if artist["BeginDate"]>= fechaInicial and artist["EndDate"]<=fechaFinal:
+            if (nacimiento>= fechaInicial and nacimiento<=fechaFinal) and (fallecimiento<=fechaFinal):
                 lt.addLast(lista,artist)
                 contador+=1
     sortList(lista,cmpArtistDate)

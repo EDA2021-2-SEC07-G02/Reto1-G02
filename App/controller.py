@@ -79,7 +79,7 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal):
     """
     ##llenar
     """
-    return model.listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal)
+    return model.listarArtistasCronologicamente(catalog,int(fechaInicial),int(fechaFinal))
 
 def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     # TODO: Documentación
