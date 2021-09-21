@@ -31,6 +31,7 @@ from DISClib.ADT import list as lt
 assert cf
 import prettytable
 from prettytable import PrettyTable
+import time
 
 default_limit = 1000 
 sys.setrecursionlimit(default_limit*10)
@@ -269,6 +270,7 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar: ')
+    tiempoInicial=time.process_time()
     if inputs.isnumeric():
         # Opción 0: Carga de datos
         if int(inputs[0]) == 0:
@@ -282,37 +284,40 @@ while True:
             printFirstLastsResultsArtists(catalog['artists'],"cargados al catalogo son:")
         
         # Caso cuando no hay datos cargados
-        if catalog==None and int(inputs[0])!=7:
+        elif catalog==None and int(inputs[0])!=7:
             print("\nPara correr la funciones cargue la información primero.")
         
         # Opción 1: Listar cronológicamente los artistas (Requerimiento 1)
         elif int(inputs[0]) == 1:
-            fechaInicial=input("\nIngrese el año inicial: ")
-            fechaFinal=input("\nIngrese el año final: ")
+            fechaInicial=input("\nIngrese el año inicial (AAAA): ")
+            fechaFinal=input("\nIngrese el año final (AAAA): ")
+            tiempoInicial=time.process_time()
             resultado= controller.listarArtistasCronologicamente(catalog, fechaInicial, fechaFinal)
             if resultado[1] > 0:
                 printFirstLastsResultsArtists(resultado[0]," ordenadas por año son:")
                 print("\nEl total de artistas en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
             else:
-                print("\nNo se encontraron artistas que cumplan con el rango de fechas ingresado")
+                print("\nNo se encontraron artistas que cumplan con el rango de fechas ingresado, o los años ingresados no siguen el formato propuesto.")
             controller.limpiarVar(resultado)  #Se borra el resultado - Dato provisional
 
         # Opción 2: Listar cronológicamente las obras adquiridas (Requerimiento 2)
         elif int(inputs[0]) == 2:  
-            fechaInicial=input("\nIngrese la fecha inicial: ")
-            fechaFinal=input("\nIngrese la fecha final: ")
+            fechaInicial=input("\nIngrese la fecha inicial (AAAA-MM-DD): ")
+            fechaFinal=input("\nIngrese la fecha final (AAAA-MM-DD): ")
+            tiempoInicial=time.process_time()
             resultado= controller.listarAdquisicionesCronologicamente(catalog, fechaInicial, fechaFinal)
             if resultado[2] > 0:
                 printFirstLastsResultsArt(resultado[0]," ordenadas por fecha son:")
                 print("\nEl total de obras en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
                 print("\nEl total de obras compradadas ('Purchase') en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[2]))
             else:
-                print("\nNo  existe ninguna obra en las base de datos que haya sido registrada entre",fechaInicial,"y",fechaFinal)
+                print("\nNo  existe ninguna obra en las base de datos que haya sido registrada entre",fechaInicial,"y",fechaFinal,"o las fechas ingresadas no siguen el formato correcto.")
             controller.limpiarVar(resultado) #Se borra el resultado - Dato provisional
             
         # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
         elif int(inputs[0]) == 3:
             nombreArtista=input("\nIngrese el nombre del artista: ")
+            tiempoInicial=time.process_time()
             respuesta=controller.tecnicasObrasPorArtista(catalog,nombreArtista)
             tecnicas=respuesta[0]
             totalObras=respuesta[1]
@@ -344,6 +349,7 @@ while True:
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
         elif int(inputs[0]) == 5:
             nombreDepartamento=input("\nIngrese el nombre del departamento: ")
+            tiempoInicial=time.process_time()
             respuesta=controller.transportarObrasDespartamento(catalog,nombreDepartamento)
             listaObrasDepartamentoPrecio=respuesta[0]
             listaObrasDepartamentoAntiguedad=respuesta[1]
@@ -364,8 +370,9 @@ while True:
         # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)
         elif int(inputs[0]) == 6:
             areaExpo=float(input("Ingrese el área total disponible (m^2): "))
-            fechaInicial=int(input("Ingrese el año inicial: "))
-            fechaFinal=int(input("Ingrese el año final: "))
+            fechaInicial=int(input("Ingrese el año inicial (AAAA-MM-DD): "))
+            fechaFinal=int(input("Ingrese el año final (AAAA-MM-DD): "))
+            tiempoInicial=time.process_time()
             print("Eligiendo obras de arte para la exposición........")
             resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
             if resultado[0]>0:
@@ -376,12 +383,14 @@ while True:
                     if artwork["ObjectID"]=="147116":
                         print(artwork)
             else:
-                print("Imposible proponer exposición, no hay obras en el rango de fechas seleccionado")
+                print("Imposible proponer exposición, no hay obras en el rango de fechas seleccionado o las fechas ingresadas no siguen el formato.")
 
         # Opción 7: Salir
         elif int(inputs[0]) == 7:
             sys.exit(0)
         else:
-            print("Seleccione una opción válida") 
+            print("Seleccione una opción válid") 
     else:
-        print("Seleccione una opción válida")
+        print("Seleccione una opción válidu")
+    input("\nDuración: "+str((time.process_time()-tiempoInicial)*1000)+"ms\nPresione enter para continuar...")
+    print("")

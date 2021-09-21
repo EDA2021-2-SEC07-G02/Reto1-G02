@@ -36,6 +36,7 @@ from DISClib.Algorithms.Sorting import quicksort as qs
 import time
 import datetime
 import sys
+import re
 assert cf
 
 
@@ -205,7 +206,7 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
     sortList(listaNac,cmpArtistDate)
     return listaNac,contador
 
-def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
+def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal): # req2
     """
     La función primero agregará a una nueva array list (listaAdq) las obras que tengan
     una fecha de aquisición dentro del rango deseado. A su vez, se va a ir 
@@ -224,20 +225,22 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
         contadorRango: total de obras en el rango de fechas
     """
     listaAdq=lt.newList("ARRAY_LIST") #Se agregarán obras que tengan una fecha de adquisión en el rango deseado
-    fechaInicialTi= time.strptime(fechaInicial,"%Y-%m-%d")
-    fechaFinalTi= time.strptime(fechaFinal,"%Y-%m-%d")
+    pattern = re.compile("[0-9][0-9][0-9][0-9]-([1][0-2]|[0][1-9])-([3][1]|[0-2][0-9])")
     contadorRango=0
     contadorPurchase=0
-    for obra in lt.iterator(catalog["artworks"]):
-        if len(obra["DateAcquired"])==10: #Se ignoran las fechas vacías
-            fecha=time.strptime(obra["DateAcquired"],"%Y-%m-%d")
-            if fecha>=fechaInicialTi and fecha<=fechaFinalTi: 
-                contadorRango+=1
-                lt.addLast(listaAdq,obra) #se agregan fechas que estén dentro del rango deseado
-            if obra["CreditLine"].startswith("Purchase"):
-                contadorPurchase+=1
-    
-    sortList(listaAdq,cmpArtworkByDateAcquired) #ordenamiento por insertion
+    if pattern.match(fechaInicial) and pattern.match(fechaFinal):
+        fechaInicialTi= time.strptime(fechaInicial,"%Y-%m-%d")
+        fechaFinalTi= time.strptime(fechaFinal,"%Y-%m-%d")
+        for obra in lt.iterator(catalog["artworks"]):
+            if len(obra["DateAcquired"])==10: #Se ignoran las fechas vacías
+                fecha=time.strptime(obra["DateAcquired"],"%Y-%m-%d")
+                if fecha>=fechaInicialTi and fecha<=fechaFinalTi: 
+                    contadorRango+=1
+                    lt.addLast(listaAdq,obra) #se agregan fechas que estén dentro del rango deseado
+                    if obra["CreditLine"].startswith("Purchase"):
+                        contadorPurchase+=1
+        
+        sortList(listaAdq,cmpArtworkByDateAcquired) #ordenamiento por insertion
     return listaAdq, contadorPurchase, contadorRango
 
 
@@ -460,7 +463,9 @@ def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
     cantidad=0
     size=lt.size(catalog["artworks"])
     i=0
-    while areaTotalObras<areaExpo and i<size:
+    pattern=re.compile("[0-9][0-9][0-9][0-9]")
+    fechasCorrectas=True if pattern.match(fechaFinal) and pattern.match(fechaInicial) else False
+    while areaTotalObras<areaExpo and i<size and fechasCorrectas:
         artwork=lt.getElement(catalog["artworks"],i)
         #el siguiente condicional ignorará obras que tengan datos como su fecha, largo,ancho vacíos. Dado que si alguna
         #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
