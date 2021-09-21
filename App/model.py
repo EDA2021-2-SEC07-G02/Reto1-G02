@@ -28,6 +28,7 @@
 from DISClib.DataStructures.arraylist import subList
 import config as cf
 from DISClib.ADT import list as lt
+from DISClib.ADT import queue
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as ms
@@ -452,6 +453,29 @@ def tecnicasObrasPorArtista(catalog,nombre):
         totalObras=0 # en el caso de que no encuentre el artista no hay obras
         sortedList=lt.newList() # se inicializa una lista para evitar posibles errores
     return sortedList, totalObras
+
+####req 6
+def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
+    obrasExpo=queue.newQueue() #estructura de cola // hay que verificar si es más eficiente que un arraylist
+    areaObras=0
+    cantidad=0
+    while areaObras<=areaExpo:
+        for artwork in lt.iterator(catalog["artworks"]):
+            #el siguiente condicional ignorará obras que tengan datos como su fecha, largo,ancho vacíos. Dado que si alguna
+            #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
+            #no se podrá utilizar la obra para la exposcisión por época
+            if artwork["Date"].isnumeric() and artwork["Height (cm)"].isnumeric() and artwork["Width (cm)"].isnumeric():
+                dateArt=int(artwork["Date"])
+                clasificacion=artwork["Classification"]
+                if dateArt>=fechaInicial and dateArt<=fechaFinal and (clasificacion=="Drawing" or clasificacion=="Print"):
+                    altura=float(artwork["Height (cm)"])
+                    ancho=float(artwork["Width (cm)"])
+                    areaArt=(altura*ancho)/100
+                    areaObras+=areaArt
+                    cantidad+=1
+                    artwork["EstArea (m^2)"]=areaArt
+                    queue.enqueue(obrasExpo,artwork)
+    return cantidad,areaObras
 
 def limpiarVar(dato):
     """

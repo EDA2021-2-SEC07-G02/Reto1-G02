@@ -311,7 +311,12 @@ while True:
         
         # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)
         elif int(inputs[0]) == 6:
-            pass
+            areaExpo=float(input("Ingrese el área total disponible (m^2): "))
+            fechaInicial=int(input("Ingrese el año inicial: "))
+            fechaFinal=int(input("Ingrese el año final: "))
+            resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
+            print("Área utilizada por las obras: ",resultado[1])
+            print("Total de obras: ",resultado[0])
 
         # Opción 7: Salir
         elif int(inputs[0]) == 7:

@@ -102,6 +102,9 @@ def req4(catalog):
     # TODO: Documentación
     return model.req4(catalog)
 
+def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal): #req 6
+    return model.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
+
 def limpiarVar(dato):
     """
     Llama a la función limpiarvar
