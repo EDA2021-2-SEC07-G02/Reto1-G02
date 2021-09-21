@@ -114,6 +114,20 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
     comparacion=fecha1<fecha2
     return comparacion
 
+def cmpFunctionTecnicasArtista(tecnica1,tecnica2): # req3
+    """ 
+    Compara dos técnicas por su cantiadad de obras
+    Parámetros: 
+        tecnica1: lista de obras de una tecnica
+        tecnica2: lista de obras de otra tecnica
+    Retorno:
+        retorna verdader (True) si la lista tecnica 1 tiene más elementos que la lista de la tecnica 2
+    """
+    if lt.size(tecnica1)>lt.size(tecnica2): # comparación con orden ascendente
+        return True
+    else:
+        return False
+
 def cmpArtworkByPrice(obra1,obra2): # req 5
     """
     Función de comparación por el costo de transporte de artworks.
@@ -192,7 +206,6 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
     return listaNac,contador
 
 def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
-    # TODO: documentación parámetros y return
     """
     La función primero agregará a una nueva array list (listaAdq) las obras que tengan
     una fecha de aquisición dentro del rango deseado. A su vez, se va a ir 
@@ -218,7 +231,7 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     for obra in lt.iterator(catalog["artworks"]):
         if len(obra["DateAcquired"])==10: #Se ignoran las fechas vacías
             fecha=time.strptime(obra["DateAcquired"],"%Y-%m-%d")
-            if fecha>fechaInicialTi and fecha<fechaFinalTi: 
+            if fecha>=fechaInicialTi and fecha<=fechaFinalTi: 
                 contadorRango+=1
                 lt.addLast(listaAdq,obra) #se agregan fechas que estén dentro del rango deseado
             if obra["CreditLine"].startswith("Purchase"):
@@ -229,7 +242,6 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
 
 
 def getArtistName(catalog,ConstituentID): #req 2
-    # TODO: documentación parámetros y return
     """
     Se retornara el nombre de un artista de acuerdo a su ConstituentID.
     Parámetros: 
@@ -252,6 +264,44 @@ def getArtistName(catalog,ConstituentID): #req 2
             if codigoNum==artist["ConstituentID"]:
                 dispname+= artist["DisplayName"] +","
     return dispname
+
+#Requerimiento 3
+def tecnicasObrasPorArtista(catalog,nombre):
+    """ 
+    Clasifica las obras de un artista por técnica dado un nombre
+    Parámetros: 
+        catalog: estructura de datos con el catalogo de artistas y obras
+        nombre: nombre del artista
+    Retorno:
+        sortedList: lista de técnicas en donde cada elemento es una lista de obras de cada técnica
+        totalObras: número total de obras del artista
+    """
+    constituentID=-1
+    obras=lt.newList()
+    tecnicas=lt.newList() # cada técnica es una lista tipo lt que contiene las obras de esa técnica
+    # encontrar el constituentID
+    for artista in lt.iterator(catalog["artists"]):
+        if nombre==artista["DisplayName"]:
+            constituentID=artista["ConstituentID"]
+    if constituentID!=-1: # verifica que haya encontrado el id
+        for obraArte in lt.iterator(catalog["artworks"]): # se añaden las obras del artista en una lista
+            if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
+                lt.addLast(obras,obraArte)
+        for obraArtista in lt.iterator(obras): # se van añadiendo cada obra a una lista con la obras de cada tecnica alojada a su vez en una lista de tecnicas
+            encontro=False
+            for tecnica in lt.iterator(tecnicas): # busca si la tecnica existe en la lista de tecnicas
+                if obraArtista["Medium"] == lt.getElement(tecnica,0)["Medium"]:
+                    lt.addLast(tecnica,obraArtista) # si existe la añade la obra a la técnica
+                    encontro=True
+            if not encontro: # si no existe
+                lt.addLast(tecnicas,lt.newList()) # crea una técnica (lista de obras) en la lista de tecnicas
+                lt.addLast(lt.lastElement(tecnicas),obraArtista) # añade la lista de obras de esa tecnica
+        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista) # utiliza la función de comparación con orden ascendente
+        totalObras=lt.size(obras) # retorna el número total de obras
+    else:
+        totalObras=0 # en el caso de que no encuentre el artista no hay obras
+        sortedList=lt.newList() # se inicializa una lista para evitar posibles errores
+    return sortedList, totalObras
     
 ########## req4
 def getNationality(catalog,ConstituentID):
@@ -399,66 +449,16 @@ def transportarObrasDespartamento(catalog,departamento):
     precioSortedList=lt.subList(obrasDepartamento,0,size) #se copia la lista 
     sortList(precioSortedList,cmpArtworkByPrice)
     sortList(obrasDepartamento,cmpArtworkByDate)#lista ordenada por fecha
-    return precioSortedList, obrasDepartamento, precioTotalEnvio, pesoTotal
+    return precioSortedList, obrasDepartamento, precioTotalEnvio, pesoTotal, lt.size(obrasDepartamento)
 
-#Requerimiento 3
-def cmpFunctionTecnicasArtista(tecnica1,tecnica2):
-    """ 
-    Compara dos técnicas por su cantiadad de obras
-    Parámetros: 
-        tecnica1: lista de obras de una tecnica
-        tecnica2: lista de obras de otra tecnica
-    Retorno:
-        retorna verdader (True) si la lista tecnica 1 tiene más elementos que la lista de la tecnica 2
-    """
-    if lt.size(tecnica1)>lt.size(tecnica2): # comparación con orden ascendente
-        return True
-    else:
-        return False
 
-def tecnicasObrasPorArtista(catalog,nombre):
-    """ 
-    Clasifica las obras de un artista por técnica dado un nombre
-    Parámetros: 
-        catalog: estructura de datos con el catalogo de artistas y obras
-        nombre: nombre del artista
-    Retorno:
-        sortedList: lista de técnicas en donde cada elemento es una lista de obras de cada técnica
-        totalObras: número total de obras del artista
-    """
-    constituentID=-1
-    obras=lt.newList()
-    tecnicas=lt.newList() # cada técnica es una lista tipo lt que contiene las obras de esa técnica
-    # encontrar el constituentID
-    for artista in lt.iterator(catalog["artists"]):
-        if nombre==artista["DisplayName"]:
-            constituentID=artista["ConstituentID"]
-    if constituentID!=-1: # verifica que haya encontrado el id
-        for obraArte in lt.iterator(catalog["artworks"]): # se añaden las obras del artista en una lista
-            if str(constituentID) in obraArte["ConstituentID"].strip("[]").split(","):
-                lt.addLast(obras,obraArte)
-        for obraArtista in lt.iterator(obras): # se van añadiendo cada obra a una lista con la obras de cada tecnica alojada a su vez en una lista de tecnicas
-            encontro=False
-            for tecnica in lt.iterator(tecnicas): # busca si la tecnica existe en la lista de tecnicas
-                if obraArtista["Medium"] == lt.getElement(tecnica,0)["Medium"]:
-                    lt.addLast(tecnica,obraArtista) # si existe la añade la obra a la técnica
-                    encontro=True
-            if not encontro: # si no existe
-                lt.addLast(tecnicas,lt.newList()) # crea una técnica (lista de obras) en la lista de tecnicas
-                lt.addLast(lt.lastElement(tecnicas),obraArtista) # añade la lista de obras de esa tecnica
-        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista) # utiliza la función de comparación con orden ascendente
-        totalObras=lt.size(obras) # retorna el número total de obras
-    else:
-        totalObras=0 # en el caso de que no encuentre el artista no hay obras
-        sortedList=lt.newList() # se inicializa una lista para evitar posibles errores
-    return sortedList, totalObras
 
 ####req 6
 def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
     obrasExpo= lt.newList("ARRAY_LIST")#queue.newQueue() #estructura de cola // hay que verificar si es más eficiente que un arraylist
     areaTotalObras=0
     cantidad=0
-    size=catalog["artworks"]["size"]
+    size=lt.size(catalog["artworks"])
     i=0
     while areaTotalObras<areaExpo and i<size:
         artwork=lt.getElement(catalog["artworks"],i)
@@ -466,6 +466,7 @@ def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
         #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
         #no se podrá utilizar la obra para la exposcisión por época
         if artwork["Date"].isnumeric() and artwork["Height (cm)"].isnumeric() and artwork["Width (cm)"].isnumeric():
+            print("paso")
             print(artwork["ObjectID"], "cumple")
             dateArt=int(artwork["Date"])
             clasificacion=artwork["Classification"]

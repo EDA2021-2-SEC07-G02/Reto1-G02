@@ -43,49 +43,9 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
-def printMenu():
-    # TODO: documentación
-    print("-"*50)
-    print("Bienvenido")
-    print("Opciones:")
-    print("0 - Cargar información en el catálogo")
-    print("1 - Listar cronológicamente los artistas")
-    print("2 - Listar cronológicamente las adquisiciones")
-    print("3 - Clasificar las obras de un artista por técnica")
-    print("4 - Clasificar las obras por la nacionalidad de sus creadores")
-    print("5 - Transportar obras de un departamento")
-    print("6 - Proponer una nueva exposición en el museo")
-    print("7 - Salir")
-    print("-"*50)
-
-def initCatalog(ListType):
-    # TODO: documentación parámetros
-    """
-    Inicializa el catalogo de libros
-
-    Párametros:
-        ListType: Tipo de lista con la que se hará el catalogo (ARRAY_LIST o LINKED_LIST)
-
-    Retorno:
-        Catalogo inicializado
-    """
-    return controller.initCatalog(ListType)
-
-def loadData(catalog):
-    # TODO: documentación parámetros
-    """
-    Carga los artistas y obras en la estructura de datos
-    
-    Párametros:
-        Catalog: Catalogo en donde se añadirán obras y artistas
-    
-    Retorno:
-        Catalogo cardgado con obras y artistas
-    """
-    controller.loadData(catalog)
+# Funciones complementaria para mostrar datos en tablas (prettyTable)
 
 def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
-    # TODO: documentación pasar a formáto estándar, problema posible OutOfRange
     """
     Esta función es usada para mostrar a las 3 primeras y últimas obras 
     en distintas opciones del view. 
@@ -109,6 +69,8 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
                             "Dimensions":15,"Date":12,"DateAcquired":11,"URL":10}
 
     for i in list(range(sample))+list(range(size-sample,size)):
+        if i >= lt.size(ord_artwork):
+            break
         artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
@@ -117,7 +79,6 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     controller.limpiarVar(artPretty) #Se elimina la tabla dado que es un dato provisional
 
 def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
-    # TODO: documentación parámetros, problema posible OutOfRange
     """
     Esta función es usada para mostrar a los 3 primeros y últimos artistas 
     en distintas opciones del view. 
@@ -141,6 +102,8 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
                                 "Nationality":15,"Gender":12, "ArtistBio":15,"Wiki QID":10,"ULAN":15}
 
     for i in list(range(sample))+list(range(size-sample,size)):
+        if i >= lt.size(ord_artist):
+            break
         artist = lt.getElement(ord_artist,i)
         ArtistBio=artist["Nationality"]+"- Unknown"
         NacimientoInt=int(artist["BeginDate"])
@@ -182,6 +145,8 @@ def printTableTransPricesArtworks(ord_artwork, sample=5):
     artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"ArtistsNames":13,"Medium":15,
                             "Date":12,"Dimensions":10,"Classification":11,"TransCost (USD)":11,"URL":10}
     for i in range(sample):
+        if i >= lt.size(ord_artwork):
+            break
         artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
@@ -223,7 +188,6 @@ def printNationalityArt(ord_Nationality):
     controller.limpiarVar(NationalityPretty)
 
 def printFirstLastsResultsExpo(ord_artwork, sample=5):
-    # TODO: documentación pasar a formáto estándar, problema posible OutOfRange
     """
     Esta función es usada para mostrar a las 5 primeras y últimas obras del requisito 6.
     
@@ -245,6 +209,8 @@ def printFirstLastsResultsExpo(ord_artwork, sample=5):
                             "Dimensions":5,"Date":12,"DateAcquired":11,"Classification":10,"EstArea (m^2)":6, "URL":10}
     posiciones=list(range(sample))+list(range(size-sample,size))
     for i in posiciones:
+        if i >= lt.size(ord_artwork):
+            break
         artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         ExpoPretty.add_row((i,artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
@@ -253,12 +219,56 @@ def printFirstLastsResultsExpo(ord_artwork, sample=5):
     controller.limpiarVar(ExpoPretty)
 catalog = None
 
+# Funciones de inicialización de catalogo y carga de datos
+
+def initCatalog(ListType):
+    """
+    Inicializa el catalogo de libros
+
+    Párametros:
+        ListType: Tipo de lista con la que se hará el catalogo (ARRAY_LIST o LINKED_LIST)
+
+    Retorno:
+        Catalogo inicializado
+    """
+    return controller.initCatalog(ListType)
+
+def loadData(catalog):
+    """
+    Carga los artistas y obras en la estructura de datos
+    
+    Párametros:
+        Catalog: Catalogo en donde se añadirán obras y artistas
+    
+    Retorno:
+        Catalogo cardgado con obras y artistas
+    """
+    controller.loadData(catalog)
+
+# Funciones de menú
+
+def printMenu():
+    # TODO: documentación
+    print("-"*50)
+    print("Bienvenido")
+    print("Opciones:")
+    print("0 - Cargar información en el catálogo")
+    print("1 - Listar cronológicamente los artistas")
+    print("2 - Listar cronológicamente las adquisiciones")
+    print("3 - Clasificar las obras de un artista por técnica")
+    print("4 - Clasificar las obras por la nacionalidad de sus creadores")
+    print("5 - Transportar obras de un departamento")
+    print("6 - Proponer una nueva exposición en el museo")
+    print("7 - Salir")
+    print("-"*50)
+
 """
 Menu principal
 """
+
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
+    inputs = input('Seleccione una opción para continuar: ')
     if inputs.isnumeric():
         # Opción 0: Carga de datos
         if int(inputs[0]) == 0:
@@ -271,13 +281,20 @@ while True:
             printFirstLastsResultsArt(catalog['artworks'],"cargadas al catalogo son:")
             printFirstLastsResultsArtists(catalog['artists'],"cargados al catalogo son:")
         
+        # Caso cuando no hay datos cargados
+        if catalog==None and int(inputs[0])!=7:
+            print("\nPara correr la funciones cargue la información primero.")
+        
         # Opción 1: Listar cronológicamente los artistas (Requerimiento 1)
         elif int(inputs[0]) == 1:
             fechaInicial=input("\nIngrese el año inicial: ")
             fechaFinal=input("\nIngrese el año final: ")
             resultado= controller.listarArtistasCronologicamente(catalog, fechaInicial, fechaFinal)
-            printFirstLastsResultsArtists(resultado[0]," ordenadas por año son:")
-            print("\nEl total de artistas en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
+            if resultado[1] > 0:
+                printFirstLastsResultsArtists(resultado[0]," ordenadas por año son:")
+                print("\nEl total de artistas en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
+            else:
+                print("\nNo se encontraron artistas que cumplan con el rango de fechas ingresado")
             controller.limpiarVar(resultado)  #Se borra el resultado - Dato provisional
 
         # Opción 2: Listar cronológicamente las obras adquiridas (Requerimiento 2)
@@ -285,9 +302,12 @@ while True:
             fechaInicial=input("\nIngrese la fecha inicial: ")
             fechaFinal=input("\nIngrese la fecha final: ")
             resultado= controller.listarAdquisicionesCronologicamente(catalog, fechaInicial, fechaFinal)
-            printFirstLastsResultsArt(resultado[0]," ordenadas por fecha son:")
-            print("\nEl total de obras en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
-            print("\nEl total de obras compradadas ('Purchase') en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[2]))
+            if resultado[2] > 0:
+                printFirstLastsResultsArt(resultado[0]," ordenadas por fecha son:")
+                print("\nEl total de obras en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
+                print("\nEl total de obras compradadas ('Purchase') en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[2]))
+            else:
+                print("\nNo  existe ninguna obra en las base de datos que haya sido registrada entre",fechaInicial,"y",fechaFinal)
             controller.limpiarVar(resultado) #Se borra el resultado - Dato provisional
             
         # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
@@ -306,7 +326,7 @@ while True:
                 print("A continuación se presentan la lista de las obras realizadas con la técnica",str(tecnica)+":")
                 printResultsArtworks(obrasTecnica)
             else:
-                print("El artista",nombreArtista,"no existe en la base de datos o no tiene ninguna obra.")
+                print("El artista",nombreArtista,"no existe en la base de datos o no tiene ninguna obra registrada.")
 
 
         # Opción 4: Clasificar las obras por la nacionalidad de un artista (Requerimiento 4)
@@ -329,14 +349,17 @@ while True:
             listaObrasDepartamentoAntiguedad=respuesta[1]
             precioTotal=respuesta[2]
             pesoTotal=respuesta[3]
-            print("MoMA trasnportará",lt.size(listaObrasDepartamentoPrecio),"obras del departamento de",nombreDepartamento)
-            print("\nEl peso total estimado es",str(pesoTotal)+"kg")
-            print("El precio estimado de transportar todas las obras del departamento es",str(precioTotal)+"USD")
-            print("\nTOP 5 de las obras más costosas de transportar")
-            printTableTransPricesArtworks(listaObrasDepartamentoPrecio)
-            print("\nTOP 5 de las obras más antiguas a transportar")
-            printTableTransPricesArtworks(listaObrasDepartamentoAntiguedad)
-            pass
+            sizeLista=respuesta[4]
+            if sizeLista>0:
+                print("MoMA trasnportará",lt.size(listaObrasDepartamentoPrecio),"obras del departamento de",nombreDepartamento)
+                print("\nEl peso total estimado es",str(pesoTotal)+"kg")
+                print("El precio estimado de transportar todas las obras del departamento es",str(precioTotal)+"USD")
+                print("\nTOP 5 de las obras más costosas de transportar")
+                printTableTransPricesArtworks(listaObrasDepartamentoPrecio)
+                print("\nTOP 5 de las obras más antiguas a transportar")
+                printTableTransPricesArtworks(listaObrasDepartamentoAntiguedad)
+            else:
+                print("El departamento",nombreDepartamento,"no existe o no tiene obras registradas.")
         
         # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)
         elif int(inputs[0]) == 6:
@@ -345,15 +368,15 @@ while True:
             fechaFinal=int(input("Ingrese el año final: "))
             print("Eligiendo obras de arte para la exposición........")
             resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
-            print("\nÁrea utilizada por las obras: ",resultado[1])
-            print("Total de obras: ",resultado[0])
-            try:
+            if resultado[0]>0:
+                print("\nÁrea utilizada por las obras: ",resultado[1])
+                print("Total de obras: ",resultado[0])
                 printFirstLastsResultsExpo(resultado[2])
-            except:
-                print("ERROR")
-            for artwork in lt.iterator(catalog["artworks"]):
-                if artwork["ObjectID"]=="147116":
-                    print(artwork)
+                for artwork in lt.iterator(catalog["artworks"]):
+                    if artwork["ObjectID"]=="147116":
+                        print(artwork)
+            else:
+                print("Imposible proponer exposición, no hay obras en el rango de fechas seleccionado")
 
         # Opción 7: Salir
         elif int(inputs[0]) == 7:
