@@ -222,6 +222,35 @@ def printNationalityArt(ord_Nationality):
     print(NationalityPretty)
     controller.limpiarVar(NationalityPretty)
 
+def printFirstLastsResultsExpo(ord_artwork, sample=5):
+    # TODO: documentación pasar a formáto estándar, problema posible OutOfRange
+    """
+    Esta función es usada para mostrar a las 5 primeras y últimas obras del requisito 6.
+    
+    Parámetros:
+        ord_artwork: Catalogo de obras de arte de la exposición propuesta para el museo.
+        sample: Hace referencia a la cantidad de primeras y últimas obras que se quieren mostrar al museo. 
+                Su valor predeterminado es 5 por requisitos del proyecto.
+    
+    print(ExpoPretty) >> Imprime la tabla
+    controller.limpiarVar(artPretty) >> Borra la tabla hecha. Dato provisional
+    """
+    size = lt.size(ord_artwork)
+    print("\nLas "+ str(sample)+" primeras y últimas obras propuestas para el MOMA son: ")
+    ExpoPretty=PrettyTable(hrules=prettytable.ALL)
+    ExpoPretty.field_names=["i","ObjectID","Title","Artists Names","Medium",
+                            "Dimensions","Date","DateAcquired","Classification","EstArea (m^2)", "URL"]
+    ExpoPretty.align="l"
+    ExpoPretty._max_width = {"i":3,"ObjectID" : 10, "Title" : 15,"Artists Names":16,"Medium":13,
+                            "Dimensions":15,"Date":12,"DateAcquired":11,"Classification":10,"EstArea (m^2)":6, "URL":10}
+    posiciones=list(range(sample))+list(range(size-sample,size))
+    for i in posiciones:
+        artwork = lt.getElement(ord_artwork,i)
+        dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
+        ExpoPretty.add_row((i,artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
+                        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork["Classification"], round(artwork["EstArea (m^2)"],3),artwork['URL']))
+    print(ExpoPretty)
+    controller.limpiarVar(ExpoPretty)
 catalog = None
 
 """
@@ -314,9 +343,11 @@ while True:
             areaExpo=float(input("Ingrese el área total disponible (m^2): "))
             fechaInicial=int(input("Ingrese el año inicial: "))
             fechaFinal=int(input("Ingrese el año final: "))
+            print("Eligiendo obras de arte para la exposición........")
             resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
-            print("Área utilizada por las obras: ",resultado[1])
+            print("\nÁrea utilizada por las obras: ",resultado[1])
             print("Total de obras: ",resultado[0])
+            printFirstLastsResultsExpo(resultado[2])
 
         # Opción 7: Salir
         elif int(inputs[0]) == 7:

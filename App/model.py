@@ -456,11 +456,13 @@ def tecnicasObrasPorArtista(catalog,nombre):
 
 ####req 6
 def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
-    obrasExpo=queue.newQueue() #estructura de cola // hay que verificar si es más eficiente que un arraylist
-    areaObras=0
+    obrasExpo= lt.newList("ARRAY_LIST")#queue.newQueue() #estructura de cola // hay que verificar si es más eficiente que un arraylist
+    areaTotalObras=0
     cantidad=0
-    while areaObras<=areaExpo:
-        for artwork in lt.iterator(catalog["artworks"]):
+    size=catalog["artworks"]["size"]
+    while areaTotalObras<areaExpo:
+        for i in range(0,size):
+            artwork=lt.getElement(catalog["artworks"],i)
             #el siguiente condicional ignorará obras que tengan datos como su fecha, largo,ancho vacíos. Dado que si alguna
             #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
             #no se podrá utilizar la obra para la exposcisión por época
@@ -468,14 +470,22 @@ def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
                 dateArt=int(artwork["Date"])
                 clasificacion=artwork["Classification"]
                 if dateArt>=fechaInicial and dateArt<=fechaFinal and (clasificacion=="Drawing" or clasificacion=="Print"):
-                    altura=float(artwork["Height (cm)"])
-                    ancho=float(artwork["Width (cm)"])
-                    areaArt=(altura*ancho)/100
-                    areaObras+=areaArt
+                    altura=float(artwork["Height (cm)"])/100
+                    ancho=float(artwork["Width (cm)"])/100
+                    areaArt=altura*ancho
+                    areaprov=areaTotalObras+areaArt #se comprueba si con esta obra se supera el área
+                    if areaprov>areaExpo: #esto significa que ya se sobrepasa el área si se añade esta obra
+                        print("!! Área obra:",areaArt,"Prueba, Object ID:",artwork["ObjectID"], "A prov", areaprov)
+                        diferencia=areaExpo-areaTotalObras
+                        print("AT",areaTotalObras,"dif",diferencia)
+                        areaArt=diferencia #areaExpo-areaTotalObras #se "corta" esta obra para que quepa en el área
+                    areaTotalObras+=areaArt
                     cantidad+=1
                     artwork["EstArea (m^2)"]=areaArt
-                    queue.enqueue(obrasExpo,artwork)
-    return cantidad,areaObras
+                    lt.addLast(obrasExpo,artwork)
+                    #queue.enqueue(obrasExpo,artwork)
+                    
+    return cantidad,areaTotalObras,obrasExpo
 
 def limpiarVar(dato):
     """
