@@ -241,8 +241,8 @@ def printFirstLastsResultsExpo(ord_artwork, sample=5):
     ExpoPretty.field_names=["i","ObjectID","Title","Artists Names","Medium",
                             "Dimensions","Date","DateAcquired","Classification","EstArea (m^2)", "URL"]
     ExpoPretty.align="l"
-    ExpoPretty._max_width = {"i":3,"ObjectID" : 10, "Title" : 15,"Artists Names":16,"Medium":13,
-                            "Dimensions":15,"Date":12,"DateAcquired":11,"Classification":10,"EstArea (m^2)":6, "URL":10}
+    ExpoPretty._max_width = {"i":3,"ObjectID" : 10, "Title" : 15,"Artists Names":16,"Medium":5,
+                            "Dimensions":5,"Date":12,"DateAcquired":11,"Classification":10,"EstArea (m^2)":6, "URL":10}
     posiciones=list(range(sample))+list(range(size-sample,size))
     for i in posiciones:
         artwork = lt.getElement(ord_artwork,i)
@@ -347,7 +347,10 @@ while True:
             resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
             print("\nÁrea utilizada por las obras: ",resultado[1])
             print("Total de obras: ",resultado[0])
-            printFirstLastsResultsExpo(resultado[2])
+            try:
+                printFirstLastsResultsExpo(resultado[2])
+            except:
+                print("ERROR")
 
         # Opción 7: Salir
         elif int(inputs[0]) == 7:

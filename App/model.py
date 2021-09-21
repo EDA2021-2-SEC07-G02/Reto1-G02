@@ -460,31 +460,31 @@ def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
     areaTotalObras=0
     cantidad=0
     size=catalog["artworks"]["size"]
-    while areaTotalObras<areaExpo:
-        for i in range(0,size):
-            artwork=lt.getElement(catalog["artworks"],i)
-            #el siguiente condicional ignorará obras que tengan datos como su fecha, largo,ancho vacíos. Dado que si alguna
-            #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
-            #no se podrá utilizar la obra para la exposcisión por época
-            if artwork["Date"].isnumeric() and artwork["Height (cm)"].isnumeric() and artwork["Width (cm)"].isnumeric():
-                dateArt=int(artwork["Date"])
-                clasificacion=artwork["Classification"]
-                if dateArt>=fechaInicial and dateArt<=fechaFinal and (clasificacion=="Drawing" or clasificacion=="Print"):
-                    altura=float(artwork["Height (cm)"])/100
-                    ancho=float(artwork["Width (cm)"])/100
-                    areaArt=altura*ancho
-                    areaprov=areaTotalObras+areaArt #se comprueba si con esta obra se supera el área
-                    if areaprov>areaExpo: #esto significa que ya se sobrepasa el área si se añade esta obra
-                        print("!! Área obra:",areaArt,"Prueba, Object ID:",artwork["ObjectID"], "A prov", areaprov)
-                        diferencia=areaExpo-areaTotalObras
-                        print("AT",areaTotalObras,"dif",diferencia)
-                        areaArt=diferencia #areaExpo-areaTotalObras #se "corta" esta obra para que quepa en el área
-                    areaTotalObras+=areaArt
-                    cantidad+=1
-                    artwork["EstArea (m^2)"]=areaArt
-                    lt.addLast(obrasExpo,artwork)
-                    #queue.enqueue(obrasExpo,artwork)
-                    
+    i=0
+    while areaTotalObras<areaExpo and i<size:
+        artwork=lt.getElement(catalog["artworks"],i)
+        #el siguiente condicional ignorará obras que tengan datos como su fecha, largo,ancho vacíos. Dado que si alguna
+        #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
+        #no se podrá utilizar la obra para la exposcisión por época
+        if artwork["Date"].isnumeric() and artwork["Height (cm)"].isnumeric() and artwork["Width (cm)"].isnumeric():
+            dateArt=int(artwork["Date"])
+            clasificacion=artwork["Classification"]
+            if dateArt>=fechaInicial and dateArt<=fechaFinal and (clasificacion=="Drawing" or clasificacion=="Print"):
+                altura=float(artwork["Height (cm)"])/100
+                ancho=float(artwork["Width (cm)"])/100
+                areaArt=altura*ancho
+                areaprov=areaTotalObras+areaArt #se comprueba si con esta obra se supera el área
+                if areaprov>areaExpo: #esto significa que ya se sobrepasa el área si se añade esta obra
+                    print("!! Área obra:",areaArt,"Prueba, Object ID:",artwork["ObjectID"], "A prov", areaprov)
+                    diferencia=areaExpo-areaTotalObras
+                    print("AT",areaTotalObras,"dif",diferencia)
+                    areaArt=diferencia #areaExpo-areaTotalObras #se "corta" esta obra para que quepa en el área
+                areaTotalObras+=areaArt
+                cantidad+=1
+                artwork["EstArea (m^2)"]=areaArt
+                lt.addLast(obrasExpo,artwork)
+                #queue.enqueue(obrasExpo,artwork)
+        i+=1               
     return cantidad,areaTotalObras,obrasExpo
 
 def limpiarVar(dato):
