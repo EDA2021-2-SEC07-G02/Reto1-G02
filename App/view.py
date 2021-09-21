@@ -351,6 +351,9 @@ while True:
                 printFirstLastsResultsExpo(resultado[2])
             except:
                 print("ERROR")
+            for artwork in lt.iterator(catalog["artworks"]):
+                if artwork["ObjectID"]=="147116":
+                    print(artwork)
 
         # Opción 7: Salir
         elif int(inputs[0]) == 7:

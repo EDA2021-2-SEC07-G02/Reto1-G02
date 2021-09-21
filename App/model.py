@@ -184,9 +184,8 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
     for artist in lt.iterator(catalog["artists"]):
         if len(artist["BeginDate"])==4: #Se ignoran si su fecha de nacimiento es vacía
             nacimiento=int(artist["BeginDate"])
-            fallecimiento=int(artist["EndDate"])
             #"BeginDate","EndDate"
-            if (nacimiento>= fechaInicial and nacimiento<=fechaFinal) and (fallecimiento<=fechaFinal):
+            if (nacimiento>= fechaInicial and nacimiento<=fechaFinal):
                 lt.addLast(listaNac,artist)
                 contador+=1
     sortList(listaNac,cmpArtistDate)
@@ -467,9 +466,10 @@ def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
         #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
         #no se podrá utilizar la obra para la exposcisión por época
         if artwork["Date"].isnumeric() and artwork["Height (cm)"].isnumeric() and artwork["Width (cm)"].isnumeric():
+            print(artwork["ObjectID"], "cumple")
             dateArt=int(artwork["Date"])
             clasificacion=artwork["Classification"]
-            if dateArt>=fechaInicial and dateArt<=fechaFinal and (clasificacion=="Drawing" or clasificacion=="Print"):
+            if dateArt>=fechaInicial and dateArt<=fechaFinal: #and (clasificacion=="Drawing" or clasificacion=="Print"):
                 altura=float(artwork["Height (cm)"])/100
                 ancho=float(artwork["Width (cm)"])/100
                 areaArt=altura*ancho
