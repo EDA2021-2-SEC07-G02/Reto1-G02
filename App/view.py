@@ -157,7 +157,6 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
     print(artistPretty)
     controller.limpiarVar(artistPretty) #Se elimina la tabla dado que es un dato provisional
 
-catalog = None
 
 def printResultsArtworks(ord_artwork):
     # TODO: documentación y que de exactamente lo que da el requerimiento 3

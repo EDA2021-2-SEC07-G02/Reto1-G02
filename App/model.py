@@ -53,11 +53,8 @@ def newCatalog(ListType):
     """
     catalog = {'artists': None,
                'artworks': None}
-
     catalog['artists'] = lt.newList(ListType)
-    
     catalog['artworks'] = lt.newList(ListType)
-
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -79,9 +76,7 @@ def addArtwork(catalog, artwork):
     Párametros:
         catalog: catalogo de artistas y obras
         artist: artista a añadir
-    
     Se añade el artista en la última posición del catalogo con lt.addLast() 
-
     """
     lt.addLast(catalog['artworks'], artwork)
 
@@ -119,10 +114,30 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
     return comparacion
 
 def cmpArtworkByPrice(obra1,obra2): # req 5
+    """
+    Función de comparación por el costo de transporte de artworks.
+    Parámetros:
+        obra1: primera obra, contiene el valor "TransCost (USD)"
+        obra2: segunda obra, contiene el valor "TransCost (USD)"
+    Retorno:
+        True si la obra1 tiene un costo en USD mayor que la obra2
+    """
     return obra1["TransCost (USD)"]>obra2["TransCost (USD)"] # orden descendentes
     
 
 def cmpArtworkByDate(obra1,obra2): # req 5
+    """
+    Función de comparación por fechas de artworks.
+    Si alguna de las dos fechas es vacía se toma como valor de referencia el
+    entero 2022. Esto se hace con el objetivo de dejar las fechas vacías de 
+    últimas al ordenar.
+    Parámetros:
+        obra1: primera obra, contiene el valor "Date"
+        obra2: segunda obra, contiene el valor "Date"
+    Retorno:
+        True si la obra1 tiene una fecha menor que la fecha2.
+        False en el caso contrario.
+    """
     fecha1=2022 #año actual +1
     fecha2=2022 
     if len(obra1["Date"])>0:
@@ -130,9 +145,7 @@ def cmpArtworkByDate(obra1,obra2): # req 5
     if len(obra2["Date"])>0:
         fecha2=int(obra2["Date"]) 
     return fecha1<fecha2
-
-
-    
+   
 # Funciones de ordenamiento
 
 def sortList(lista,cmpFunction):
@@ -239,17 +252,17 @@ def getArtistName(catalog,ConstituentID): #req 2
             if codigoNum==artist["ConstituentID"]:
                 dispname+= artist["DisplayName"] +","
     return dispname
-
-
-
-
-
     
 ########## req4
 def getNationality(catalog,ConstituentID):
-    # TODO: documentación parámetros retorno
     """
-    Se retornara las nacionalidades de los artistas.
+    Se retornara las nacionalidades de los artistas de acuerdo a su ConstituentID.
+    Parámetros: 
+        catalog: catalogo con obras y artistas
+        ConstituentID: código del artista. Relaciona a una obra dentro del catalogo["artworks"]
+        con su nacionalidad correspondiente en catalogo["DisplayName"]
+    Retorno:
+        nationality: nacionalidad del artista que realizó la obra de arte
     """
     
     nationality=""
@@ -274,30 +287,38 @@ def addNationality(countries,nationality,artwork):
     Se agregaran las nacionalidades con sus respectivas obras a una lista provisional.
     """
     posNationality=lt.isPresent(countries,nationality)
-    if posNationality>0: ### ARREGLAR
-        artworksprevios=lt.getElement(countries,posNationality)["Artworks"]
-        lt.addLast(artworksprevios,artwork)
-        # lt.changeInfo(countries,posNationality,info)
+    if posNationality>0: #si el país ya se encuentra en la lista se agregará solamente la obra a artworks
+        lt.addLast(lt.getElement(countries,posNationality)["Artworks"],artwork)
     else:
         pais=NewNationalityArt(nationality,artwork)
         lt.addLast(countries,pais)
 
 def compareNationalities(name, nationality):
-    # TODO: documentación parámetros retorno
     """
-    Cmpfunction de lista provisional
+    Función de comparación usada al crear la array list de countries en el requerimiento 4.
+    Se usa para acceder a las llaves de cada país.
+    Parámetros:
+        name: ######
+        nationality: ###
+    Retorno:
+        0:  #####
+        -1: #####
     """
     if (name == nationality['Nationality']):
         return 0
-    #elif (name > tag['name']):
-     #   return 1
-    return -1
+    else:
+        return -1
 
 def cmpNationalities(nacionalidad1,nacionalidad2):
-    # TODO: documentación descripción parámetros
     """
-    Retorna True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
-    De lo contario, False.
+    Función de comparación por cantidad de artworks por nacionalidad.
+    
+    Parámetros:
+        obra1: primera nacionalidad, contiene el valor "size" dado que artworks es un array list
+        obra2: segunda nacionalidad, contiene el valor "size" dado que artworks es un array list
+    Retorno:
+        True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
+        De lo contario, False.
     """
     return nacionalidad1["Artworks"]["size"]>nacionalidad2["Artworks"]["size"]
 
@@ -327,11 +348,9 @@ def req4(catalog):
     
     sortList(countries,cmpNationalities)
     primerlugar=lt.getElement(countries,1)
-    top10=lt.subList(countries,1,10)
+    top10=lt.subList(countries,1,10) #Corregir. Ecuador sale en la pos=0
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
-
-
     return top10,primerlugar,elapsed_time_mseg
 
 ###fin req 4
