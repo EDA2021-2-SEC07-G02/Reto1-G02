@@ -41,30 +41,30 @@ def initCatalog(ListType):
 
 # Funciones para la carga de datos
 
-def loadData(catalog):
+def loadData(catalog,muestra):
     # TODO: documentación parámetros retorno
     """
     Carga los artistas y obras al catalogo
     """
-    loadArtists(catalog)
-    loadArtworks(catalog)
+    loadArtists(catalog,muestra)
+    loadArtworks(catalog,muestra)
 
-def loadArtists(catalog):
+def loadArtists(catalog,muestra): ##MODIFICADO PARA HACER PRUEBAS
     # TODO: documentación parámetros retorno
     """
     Carga los artistas en una lista dado un nombre de archivo
     """
-    artistsFilename = cf.data_dir + 'MOMA\\Artists-utf8-small.csv'
+    artistsFilename = cf.data_dir + 'MOMA\\Artists-utf8-'+muestra+'.csv'
     inputFile= csv.DictReader(open(artistsFilename, encoding='utf-8'))
     for artist in inputFile:
         model.addArtist(catalog, artist)
 
-def loadArtworks(catalog):
+def loadArtworks(catalog,muestra="small"):
     # TODO: documentación parámetros retorno
     """
     Carga las obras en una lista dado un nombre de archivo
     """
-    artworksFilename = cf.data_dir + 'MOMA\\Artworks-utf8-small.csv'
+    artworksFilename = cf.data_dir + 'MOMA\\Artworks-utf8-'+muestra+'.csv'
     inputFile= csv.DictReader(open(artworksFilename, encoding='utf-8'))
     for artwork in inputFile:
         model.addArtwork(catalog, artwork)
@@ -75,32 +75,32 @@ def getArtistName(catalog, ID):
     # TODO: Documentación
     return model.getArtistName(catalog,ID)
 
-def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal):
+def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType):
     """
     ##llenar
     """
-    return model.listarArtistasCronologicamente(catalog,int(fechaInicial),int(fechaFinal))
+    return model.listarArtistasCronologicamente(catalog,int(fechaInicial),int(fechaFinal),sortType)
 
-def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
+def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType):
     # TODO: Documentación
     """
     llenar
     """
-    return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal)
+    return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType)
 
 def tecnicasObrasPorArtista(catalog, nombre):
     # TODO: Documentación
     return model.tecnicasObrasPorArtista(catalog,nombre)
 
-def transportarObrasDespartamento(catalog, departamento):
+def transportarObrasDespartamento(catalog, departamento,sortType):
     # TODO: Documentación
-    return model.transportarObrasDespartamento(catalog,departamento)
+    return model.transportarObrasDespartamento(catalog,departamento,sortType)
 
 
 #TODO: cambiar nombre
-def req4(catalog):
+def req4(catalog,sortType):
     # TODO: Documentación
-    return model.req4(catalog)
+    return model.req4(catalog,sortType)
 
 def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal): #req 6
     return model.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)

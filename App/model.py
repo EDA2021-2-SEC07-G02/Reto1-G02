@@ -164,8 +164,9 @@ def cmpArtworkByDate(obra1,obra2): # req 5
    
 # Funciones de ordenamiento
 
-def sortList(lista,cmpFunction):
+def sortList(lista,cmpFunction,sortType):
     """
+    ####### FUNCIÓN MODIFICADA PARA HACER PRUEBAS #####
     Función de ordenamiento con insertation que se usará en distintos requerimientos
     Parámetros: 
         lista: lista que se ordenara
@@ -173,11 +174,29 @@ def sortList(lista,cmpFunction):
     Retorno:
         lista ordenada por insertion
     """
-    return ins.sort(lista,cmpFunction)
+    start_time = time.process_time()
+    #cantidad_registros= ((porcentaje/100)*lt.size(catalog['artworks']))//1
+    #subLista=lt.subList(catalog['artworks'],0,cantidad_registros)
+    if sortType == "Insertion":
+        sorted_list= ins.sort(lista,cmpFunction)
+    elif sortType == "Shell":
+        sorted_list= sa.sort(lista,cmpFunction)
+    elif sortType == "Merge":
+        sorted_list= ms.sort(lista,cmpFunction)
+    elif sortType == "Quick":
+        sorted_list= qs.sort(lista, cmpFunction)
+    
+    med_time = time.process_time() # BORRAR
+    elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
+    print(sortType,"TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
+
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg, sorted_list
 
 # Funciones de Consulta
 
-def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
+def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType): #req1
     """
     Esta función se usará para el Requerimiento 2. Primero agregarán los artistas
     a una nueva array list (ListaNac) dependiendo un rango de fechas ingresado por el usuario
@@ -202,10 +221,10 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
             if (nacimiento>= fechaInicial and nacimiento<=fechaFinal):
                 lt.addLast(listaNac,artist)
                 contador+=1
-    sortList(listaNac,cmpArtistDate)
+    sortList(listaNac,cmpArtistDate,sortType)
     return listaNac,contador
 
-def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal): # req2
+def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType): # req2
     """
     La función primero agregará a una nueva array list (listaAdq) las obras que tengan
     una fecha de aquisición dentro del rango deseado. A su vez, se va a ir 
@@ -239,7 +258,7 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal): # req2
                     if obra["CreditLine"].startswith("Purchase"):
                         contadorPurchase+=1
         
-        sortList(listaAdq,cmpArtworkByDateAcquired) #ordenamiento por insertion
+        sortList(listaAdq,cmpArtworkByDateAcquired,sortType) #ordenamiento por insertion
     return listaAdq, contadorPurchase, contadorRango
 
 
@@ -374,7 +393,7 @@ def cmpNationalities(nacionalidad1,nacionalidad2):
     """
     return nacionalidad1["Artworks"]["size"]>nacionalidad2["Artworks"]["size"]
 
-def req4(catalog):
+def req4(catalog,sortType):
     # TODO: documentación parámetros
     """
     Listas provisionales: 
@@ -398,7 +417,7 @@ def req4(catalog):
             nationality= getNationality(catalog,conID)
             addNationality(countries,nationality,obra)
     
-    sortList(countries,cmpNationalities)
+    sortList(countries,cmpNationalities,sortType)
     primerlugar=lt.getElement(countries,1)
     top10=lt.subList(countries,1,10)
     stop_time = time.process_time()
@@ -409,7 +428,7 @@ def req4(catalog):
 
 #Requerimiento 5
 
-def transportarObrasDespartamento(catalog,departamento):
+def transportarObrasDespartamento(catalog,departamento,sortType):
     # Constantes
     PRECIO_ENVIO_UNIDAD=72
     PRECIO_ENVIO_FIJO=48
@@ -449,8 +468,8 @@ def transportarObrasDespartamento(catalog,departamento):
     
     size=obrasDepartamento["size"]
     precioSortedList=lt.subList(obrasDepartamento,0,size) #se copia la lista 
-    sortList(precioSortedList,cmpArtworkByPrice)
-    sortList(obrasDepartamento,cmpArtworkByDate)#lista ordenada por fecha
+    sortList(precioSortedList,cmpArtworkByPrice,sortType)
+    sortList(obrasDepartamento,cmpArtworkByDate,sortType)#lista ordenada por fecha
     return precioSortedList, obrasDepartamento, precioTotalEnvio, pesoTotal, lt.size(obrasDepartamento)
 
 
