@@ -266,7 +266,11 @@ def loadData(catalog,muestra):
     Retorno:
         Catalogo cardgado con obras y artistas
     """
-    controller.loadData(catalog,muestra)
+    try:
+        controller.loadData(catalog,muestra)
+    except:
+        print("Error en la carga de información, verifique que los archivos de la base de dato estén en el\
+            directorio correcto")
 
 # Funciones de menú
 
@@ -397,8 +401,8 @@ while True:
         # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)
         elif int(inputs[0]) == 6:
             areaExpo=float(input("Ingrese el área total disponible (m^2): "))
-            fechaInicial=input("Ingrese el año inicial (AAAA-MM-DD): ")
-            fechaFinal=input("Ingrese el año final (AAAA-MM-DD): ")
+            fechaInicial=input("Ingrese el año inicial (AAAA): ")
+            fechaFinal=input("Ingrese el año final (AAAA): ")
             tiempoInicial=time.process_time()
             print("Eligiendo obras de arte para la exposición........")
             resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
@@ -418,8 +422,8 @@ while True:
         elif int(inputs[0]) == 7:
             sys.exit(0)
         else:
-            print("Seleccione una opción válid") 
+            print("Seleccione una opción válida") 
     else:
-        print("Seleccione una opción válidu")
+        print("Seleccione una opción válida")
     input("\nDuración: "+str((time.process_time()-tiempoInicial)*1000)+"ms\nPresione enter para continuar...")
     print("")
