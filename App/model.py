@@ -199,7 +199,6 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal): #req1
     for artist in lt.iterator(catalog["artists"]):
         if len(artist["BeginDate"])==4: #Se ignoran si su fecha de nacimiento es vacía
             nacimiento=int(artist["BeginDate"])
-            #"BeginDate","EndDate"
             if (nacimiento>= fechaInicial and nacimiento<=fechaFinal):
                 lt.addLast(listaNac,artist)
                 contador+=1
@@ -401,7 +400,7 @@ def req4(catalog):
     
     sortList(countries,cmpNationalities)
     primerlugar=lt.getElement(countries,1)
-    top10=lt.subList(countries,1,10) #Corregir. Ecuador sale en la pos=0
+    top10=lt.subList(countries,1,10)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return top10,primerlugar,elapsed_time_mseg
@@ -457,41 +456,56 @@ def transportarObrasDespartamento(catalog,departamento):
 
 
 ####req 6
-def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal):
+def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt):
     obrasExpo= lt.newList("ARRAY_LIST")#queue.newQueue() #estructura de cola // hay que verificar si es más eficiente que un arraylist
     areaTotalObras=0
     cantidad=0
     size=lt.size(catalog["artworks"])
     i=0
+    x=0 ##Borrar
+    obraCortada=""
     pattern=re.compile("[0-9][0-9][0-9][0-9]")
-    fechasCorrectas=True if pattern.match(fechaFinal) and pattern.match(fechaInicial) else False
+    fechasCorrectas=False
+    if pattern.match(fechaFinalSt) and pattern.match(fechaInicialSt):
+        fechasCorrectas=True
+        fechaInicial=int(fechaInicialSt)
+        fechaFinal=int(fechaFinalSt)
     while areaTotalObras<areaExpo and i<size and fechasCorrectas:
         artwork=lt.getElement(catalog["artworks"],i)
-        #el siguiente condicional ignorará obras que tengan datos como su fecha, largo,ancho vacíos. Dado que si alguna
-        #de sus dimensiones es vacia, significa que su área es 0 (no estará en dos dimensiones). Al igual si la fecha es vacía
-        #no se podrá utilizar la obra para la exposcisión por época
-        if artwork["Date"].isnumeric() and artwork["Height (cm)"].isnumeric() and artwork["Width (cm)"].isnumeric():
-            print("paso")
-            print(artwork["ObjectID"], "cumple")
+        #el siguiente condicional ignorará obras que tengan datos como su fecha, largo o ancho vacíos. Si la fecha es vacía
+        #no se podrá utilizar la obra para la exposición por época. Pero si la obra tiene ancho y/o largo se podrá utilizar en la exposición.
+
+        #!!!!!!!!! Decidir que hacemos con Depth (cm)
+        if artwork["Date"].isnumeric() and (artwork["Height (cm)"].isnumeric() or artwork["Width (cm)"].isnumeric()) and len(artwork["Depth (cm)"])==0:
+            #print(x, "paso", artwork["ObjectID"], "cumple")
+            x+=1
+            # print()
             dateArt=int(artwork["Date"])
-            clasificacion=artwork["Classification"]
-            if dateArt>=fechaInicial and dateArt<=fechaFinal: #and (clasificacion=="Drawing" or clasificacion=="Print"):
-                altura=float(artwork["Height (cm)"])/100
-                ancho=float(artwork["Width (cm)"])/100
+            if dateArt>=fechaInicial and dateArt<=fechaFinal:
+                #print(x, "paso", artwork["ObjectID"], "cumple con rango de fechas")
+                altura=1 #tomamos la altura o ancho como 1 metro en caso de que alguno de los dos tengan un valor vacío
+                ancho=1
+                if len(str(altura))!=0:
+                   altura=float(artwork["Height (cm)"])/100 
+                if len(str(ancho))!=0:
+                    ancho=float(artwork["Width (cm)"])/100
                 areaArt=altura*ancho
                 areaprov=areaTotalObras+areaArt #se comprueba si con esta obra se supera el área
                 if areaprov>areaExpo: #esto significa que ya se sobrepasa el área si se añade esta obra
-                    print("!! Área obra:",areaArt,"Prueba, Object ID:",artwork["ObjectID"], "A prov", areaprov)
+                    #print("!! Área obra:",areaArt,"Prueba, Object ID:", "A prov", areaprov)
                     diferencia=areaExpo-areaTotalObras
-                    print("AT",areaTotalObras,"dif",diferencia)
+                    #print("AT",areaTotalObras,"dif",diferencia)
+                    
                     areaArt=diferencia #areaExpo-areaTotalObras #se "corta" esta obra para que quepa en el área
+                    obraCortada=("Se utilizaron "+str(diferencia)+ " del área (m^2) de la obra titulada: "+artwork["Title"]+
+                                " con ObjectID: "+artwork["ObjectID"]+" para completar el área de la exposición")
                 areaTotalObras+=areaArt
                 cantidad+=1
                 artwork["EstArea (m^2)"]=areaArt
                 lt.addLast(obrasExpo,artwork)
                 #queue.enqueue(obrasExpo,artwork)
         i+=1               
-    return cantidad,areaTotalObras,obrasExpo
+    return cantidad,areaTotalObras,obrasExpo,obraCortada
 
 def limpiarVar(dato):
     """

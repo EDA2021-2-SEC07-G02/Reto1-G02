@@ -60,18 +60,22 @@ def printFirstLastsResultsArt(ord_artwork, cadenaOpcion, sample=3):
     print(artPretty) >> Imprime la tabla
     controller.limpiarVar(artPretty) >> Borra la tabla hecha. Dato provisional
     """
-    size = lt.size(ord_artwork)
-    print("\nLas "+ str(sample)+" primeras y últimas obras "+cadenaOpcion)
+    size = ord_artwork["size"]
     artPretty=PrettyTable(hrules=prettytable.ALL)
     artPretty.field_names=["ObjectID","Title","Artists Names","Medium",
                             "Dimensions","Date","DateAcquired","URL"]
     artPretty.align="l"
     artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Artists Names":16,"Medium":13,
                             "Dimensions":15,"Date":12,"DateAcquired":11,"URL":10}
-
-    for i in list(range(sample))+list(range(size-sample,size)):
-        if i >= lt.size(ord_artwork):
-            break
+    
+    if size > sample*2: #Esto evita errores de list out of range
+        print("\nLas "+ str(sample)+" primeras y últimas obras "+cadenaOpcion) #se hace un rango de recorrido
+        indices=list(range(1,sample+1))+list(range(size-sample,size))
+    else:
+        indices=range(size)
+        print("\nLas "+ str(size)+" obras "+cadenaOpcion)
+    
+    for i in indices:
         artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
@@ -93,16 +97,22 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
     Print(artistPretty) >> Imprime la tabla
     controller.limpiarVar(artistPretty) >> Borra la tabla hecha. Dato provisional
     """
-    size = lt.size(ord_artist)
-    print("\nLos "+ str(sample)+" primeros y últimos artistas "+cadenaOpcion)
+    size = ord_artist["size"]
+    
     artistPretty=PrettyTable(hrules=prettytable.ALL)
     artistPretty.field_names=["ConstituentID","DisplayName","BeginDate","Nationality",
                             "Gender","ArtistBio","Wiki QID","ULAN"]
     artistPretty.align="l"
     artistPretty._max_width = {"ConstituentID":7,"DisplayName":15, "BeginDate":8,
                                 "Nationality":15,"Gender":12, "ArtistBio":15,"Wiki QID":10,"ULAN":15}
-
-    for i in list(range(sample))+list(range(size-sample,size)):
+    
+    if size > sample*2: #Esto evita errores de list out of range
+        print("\nLos "+ str(sample)+" primeros y últimos artistas "+cadenaOpcion) #se hace un rango de recorrido
+        indices=list(range(1,sample+1))+list(range(size-sample,size))
+    else:
+        indices=range(size)
+        print("\nLos "+ str(size)+" artistas "+cadenaOpcion)
+    for i in indices:
         if i >= lt.size(ord_artist):
             break
         artist = lt.getElement(ord_artist,i)
@@ -138,14 +148,22 @@ def printResultsArtworks(ord_artwork):
         dispname_artwork))
     print(artPretty)
 
-def printTableTransPricesArtworks(ord_artwork, sample=5):
+def printTableTransPricesArtworks(ord_artwork, cadena, sample=5):
     artPretty=PrettyTable(hrules=prettytable.ALL)
     artPretty.field_names=["ObjectID","Title","ArtistsNames","Medium",
                             "Date","Dimensions","Classification","TransCost (USD)","URL"]
     artPretty.align="l"
     artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"ArtistsNames":13,"Medium":15,
                             "Date":12,"Dimensions":10,"Classification":11,"TransCost (USD)":11,"URL":10}
-    for i in range(sample):
+    size=ord_artwork["size"]
+    if size>=sample:
+        print("\nTOP "+str(sample) +" de las obras más "+cadena+" de transportar")
+        indices=range(1,sample+1)
+    else:
+        print("\nTOP "+str(size) +" de las obras más "+cadena+" de transportar")
+        indices=range(size)
+
+    for i in indices:
         if i >= lt.size(ord_artwork):
             break
         artwork = lt.getElement(ord_artwork,i)
@@ -154,6 +172,7 @@ def printTableTransPricesArtworks(ord_artwork, sample=5):
                             artwork['Date'],artwork['Dimensions'],artwork['Classification'],
                             round(artwork['TransCost (USD)'],3),artwork['URL'] ))
     print(artPretty)
+    controller.limpiarVar(artPretty)
 
 def printMediums(ord_mediums,top=5):
     medPretty=PrettyTable(hrules=prettytable.ALL)
@@ -200,18 +219,21 @@ def printFirstLastsResultsExpo(ord_artwork, sample=5):
     print(ExpoPretty) >> Imprime la tabla
     controller.limpiarVar(artPretty) >> Borra la tabla hecha. Dato provisional
     """
-    size = lt.size(ord_artwork)
-    print("\nLas "+ str(sample)+" primeras y últimas obras propuestas para el MOMA son: ")
+    size = ord_artwork["size"]
+    
     ExpoPretty=PrettyTable(hrules=prettytable.ALL)
     ExpoPretty.field_names=["i","ObjectID","Title","Artists Names","Medium",
                             "Dimensions","Date","DateAcquired","Classification","EstArea (m^2)", "URL"]
     ExpoPretty.align="l"
     ExpoPretty._max_width = {"i":3,"ObjectID" : 10, "Title" : 15,"Artists Names":16,"Medium":5,
                             "Dimensions":5,"Date":12,"DateAcquired":11,"Classification":10,"EstArea (m^2)":6, "URL":10}
-    posiciones=list(range(sample))+list(range(size-sample,size))
-    for i in posiciones:
-        if i >= lt.size(ord_artwork):
-            break
+    if size>sample*2:
+        print("\nLas "+ str(sample)+" primeras y últimas obras propuestas para el MOMA son: ")
+        indices=list(range(1,sample+1))+list(range(size-sample,size))
+    else:
+        print("\nLas "+ str(size)+" obras propuestas para el MOMA son: ")
+        indices=range(1,size+1)
+    for i in indices:
         artwork = lt.getElement(ord_artwork,i)
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         ExpoPretty.add_row((i,artwork['ObjectID'],artwork['Title'],dispname_artwork,artwork['Medium'],
@@ -360,28 +382,29 @@ while True:
                 print("MoMA trasnportará",lt.size(listaObrasDepartamentoPrecio),"obras del departamento de",nombreDepartamento)
                 print("\nEl peso total estimado es",str(pesoTotal)+"kg")
                 print("El precio estimado de transportar todas las obras del departamento es",str(precioTotal)+"USD")
-                print("\nTOP 5 de las obras más costosas de transportar")
-                printTableTransPricesArtworks(listaObrasDepartamentoPrecio)
-                print("\nTOP 5 de las obras más antiguas a transportar")
-                printTableTransPricesArtworks(listaObrasDepartamentoAntiguedad)
+                
+                printTableTransPricesArtworks(listaObrasDepartamentoPrecio,"costosas")
+                printTableTransPricesArtworks(listaObrasDepartamentoAntiguedad,"antiguas")
             else:
                 print("El departamento",nombreDepartamento,"no existe o no tiene obras registradas.")
         
         # Opción 6: Proponer una nueva exposición en el museo (Requerimiento 6)
         elif int(inputs[0]) == 6:
             areaExpo=float(input("Ingrese el área total disponible (m^2): "))
-            fechaInicial=int(input("Ingrese el año inicial (AAAA-MM-DD): "))
-            fechaFinal=int(input("Ingrese el año final (AAAA-MM-DD): "))
+            fechaInicial=input("Ingrese el año inicial (AAAA-MM-DD): ")
+            fechaFinal=input("Ingrese el año final (AAAA-MM-DD): ")
             tiempoInicial=time.process_time()
             print("Eligiendo obras de arte para la exposición........")
             resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
             if resultado[0]>0:
-                print("\nÁrea utilizada por las obras: ",resultado[1])
-                print("Total de obras: ",resultado[0])
+                print("\n\nInformación de la propuesta para el MOMA con rango de años: "+fechaFinal+" - "+fechaFinal)
+                print("\nÁrea utilizada por las obras: "+str(resultado[1])+" de "+str(areaExpo)+" m^2 de área disponible")
+                print(resultado[3])
+                print("Total de obras que se pueden exhibir: ",round(resultado[0],3))
                 printFirstLastsResultsExpo(resultado[2])
-                for artwork in lt.iterator(catalog["artworks"]):
-                    if artwork["ObjectID"]=="147116":
-                        print(artwork)
+                # for artwork in lt.iterator(catalog["artworks"]):
+                #     if artwork["ObjectID"]=="147116":
+                #         print(artwork)
             else:
                 print("Imposible proponer exposición, no hay obras en el rango de fechas seleccionado o las fechas ingresadas no siguen el formato.")
 
