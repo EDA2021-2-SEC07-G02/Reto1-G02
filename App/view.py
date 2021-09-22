@@ -135,17 +135,16 @@ def printFirstLastsResultsArtists(ord_artist, cadenaOpcion, sample=3):
 def printResultsArtworks(ord_artwork):
     # TODO: documentación y que de exactamente lo que da el requerimiento 3
     artPretty=PrettyTable(hrules=prettytable.ALL)
-    artPretty.field_names=["ObjectID","Title","Medium","Dimensions","Date",
-                            "DateAcquired","URL","Artists Names"]
+    artPretty.field_names=["ObjectID","Title","Medium","Date","Dimensions",
+                            "DateAcquired","Department","Classification","URL"]
     artPretty.align="l"
-    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,"Dimensions":15,
-                            "Date":12,"DateAcquired":11,"URL":10,"Artists Names":16}
+    artPretty._max_width = {"ObjectID" : 10, "Title" : 15,"Medium":13,
+                            "Date":12,"Dimensions":15,"DateAcquired":11,"Department":10,"Classification":10,"URL":10}
 
     for artwork in lt.iterator(ord_artwork):
         dispname_artwork=(controller.getArtistName(catalog,artwork["ConstituentID"]))[0:-1]
         artPretty.add_row((artwork['ObjectID'],artwork['Title'],artwork['Medium'],
-        artwork['Dimensions'],artwork['Date'],artwork['DateAcquired'],artwork['URL'],
-        dispname_artwork))
+        artwork['Date'],artwork['Dimensions'],artwork['DateAcquired'],artwork['Department'],artwork['Classification'],artwork['URL']))
     print(artPretty)
 
 def printTableTransPricesArtworks(ord_artwork, cadena, sample=5):
@@ -358,10 +357,11 @@ while True:
                     str(tecnica)+".\n")
                 print("La lista de las 5 técnica más utilizadas")
                 printMediums(tecnicas)
-                print("A continuación se presentan la lista de las obras realizadas con la técnica",str(tecnica)+":")
+                print("\nA continuación se presentan la lista de las obras realizadas con la técnica",str(tecnica)+":")
                 printResultsArtworks(obrasTecnica)
             else:
                 print("El artista",nombreArtista,"no existe en la base de datos o no tiene ninguna obra registrada.")
+
 
 
         # Opción 4: Clasificar las obras por la nacionalidad de un artista (Requerimiento 4)
@@ -403,11 +403,16 @@ while True:
             areaExpo=float(input("Ingrese el área total disponible (m^2): "))
             fechaInicial=input("Ingrese el año inicial (AAAA): ")
             fechaFinal=input("Ingrese el año final (AAAA): ")
+            cortarObra=input("Desea incluir una obra parcialmente (utilizando una fracción de su área) para utilizar todo el espacio disponible (S/N): ")
+            if(cortarObra=="N"):
+                cortarObra=False
+            else:
+                cortarObra=True
             tiempoInicial=time.process_time()
             print("Eligiendo obras de arte para la exposición........")
-            resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
+            resultado=controller.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal,cortarObra)
             if resultado[0]>0:
-                print("\n\nInformación de la propuesta para el MOMA con rango de años: "+fechaFinal+" - "+fechaFinal)
+                print("\n\nInformación de la propuesta para el MOMA con rango de años: "+fechaInicial+" - "+fechaFinal)
                 print("\nÁrea utilizada por las obras: "+str(resultado[1])+" de "+str(areaExpo)+" m^2 de área disponible")
                 print(resultado[3])
                 print("Total de obras que se pueden exhibir: ",round(resultado[0],3))

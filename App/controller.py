@@ -102,8 +102,8 @@ def req4(catalog,sortType):
     # TODO: Documentación
     return model.req4(catalog,sortType)
 
-def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal): #req 6
-    return model.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal)
+def expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal,cortarObra): #req 6
+    return model.expoEpocaArea(catalog,areaExpo,fechaInicial,fechaFinal,cortarObra)
 
 def limpiarVar(dato):
     """

@@ -84,7 +84,7 @@ def addArtwork(catalog, artwork):
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-def cmpArtistDate(artist1,artist2): #req 1
+def cmpArtistDate(artist1,artist2):  # Requerimiento Grupal 1: Función Comparación Ordenamiento
     """
     Compara la fecha de dos artistas
     Parámetros: 
@@ -100,7 +100,7 @@ def cmpArtistDate(artist1,artist2): #req 1
         comparacion=artist1["BeginDate"]<artist2["BeginDate"]
     return comparacion
 
-def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
+def cmpArtworkByDateAcquired(artwork1, artwork2): # Requerimiento Grupal 2: Función Comparación Ordenamiento
     """ 
     Compara las fechas de dos obras de arte
     Parámetros: 
@@ -115,7 +115,7 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #req 2
     comparacion=fecha1<fecha2
     return comparacion
 
-def cmpFunctionTecnicasArtista(tecnica1,tecnica2): # req3
+def cmpFunctionTecnicasArtista(tecnica1,tecnica2): # Requerimiento Individual 3: Función Comparación Ordenamiento
     """ 
     Compara dos técnicas por su cantiadad de obras
     Parámetros: 
@@ -129,7 +129,7 @@ def cmpFunctionTecnicasArtista(tecnica1,tecnica2): # req3
     else:
         return False
 
-def cmpArtworkByPrice(obra1,obra2): # req 5
+def cmpArtworkByPrice(obra1,obra2): # Requerimiento Grupal 5: Función Comparación Ordenamiento
     """
     Función de comparación por el costo de transporte de artworks.
     Parámetros:
@@ -141,7 +141,7 @@ def cmpArtworkByPrice(obra1,obra2): # req 5
     return obra1["TransCost (USD)"]>obra2["TransCost (USD)"] # orden descendentes
     
 
-def cmpArtworkByDate(obra1,obra2): # req 5
+def cmpArtworkByDate(obra1,obra2): # Requerimiento Grupal 5: Función Comparación Ordenamiento
     """
     Función de comparación por fechas de artworks.
     Si alguna de las dos fechas es vacía se toma como valor de referencia el
@@ -196,7 +196,7 @@ def sortList(lista,cmpFunction,sortType):
 
 # Funciones de Consulta
 
-def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType): #req1
+def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType):  # Requerimiento Grupal 1: Función Principal
     """
     Esta función se usará para el Requerimiento 2. Primero agregarán los artistas
     a una nueva array list (ListaNac) dependiendo un rango de fechas ingresado por el usuario
@@ -224,7 +224,7 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType): #r
     sortList(listaNac,cmpArtistDate,sortType)
     return listaNac,contador
 
-def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType): # req2
+def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType):  # Requerimiento Grupal 2: Función Principal
     """
     La función primero agregará a una nueva array list (listaAdq) las obras que tengan
     una fecha de aquisición dentro del rango deseado. A su vez, se va a ir 
@@ -262,7 +262,7 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType
     return listaAdq, contadorPurchase, contadorRango
 
 
-def getArtistName(catalog,ConstituentID): #req 2
+def getArtistName(catalog,ConstituentID): # Requerimiento Grupal 2: Función Complementaria
     """
     Se retornara el nombre de un artista de acuerdo a su ConstituentID.
     Parámetros: 
@@ -286,13 +286,14 @@ def getArtistName(catalog,ConstituentID): #req 2
                 dispname+= artist["DisplayName"] +","
     return dispname
 
-#Requerimiento 3
-def tecnicasObrasPorArtista(catalog,nombre,sortType):
+
+def tecnicasObrasPorArtista(catalog,nombre,sortType): # Requerimiento Individual 3: Función Principal
     """ 
     Clasifica las obras de un artista por técnica dado un nombre
     Parámetros: 
         catalog: estructura de datos con el catalogo de artistas y obras
         nombre: nombre del artista
+        sortType: tipo de ordenamiento a utilizar
     Retorno:
         sortedList: lista de técnicas en donde cada elemento es una lista de obras de cada técnica
         totalObras: número total de obras del artista
@@ -317,7 +318,7 @@ def tecnicasObrasPorArtista(catalog,nombre,sortType):
             if not encontro: # si no existe
                 lt.addLast(tecnicas,lt.newList()) # crea una técnica (lista de obras) en la lista de tecnicas
                 lt.addLast(lt.lastElement(tecnicas),obraArtista) # añade la lista de obras de esa tecnica
-        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista,sortType) # utiliza la función de comparación con orden ascendente
+        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista,sortType)[1] # utiliza la función de comparación con orden ascendente
         totalObras=lt.size(obras) # retorna el número total de obras
     else:
         totalObras=0 # en el caso de que no encuentre el artista no hay obras
@@ -426,13 +427,28 @@ def req4(catalog,sortType):
 
 ###fin req 4
 
-#Requerimiento 5
+def transportarObrasDespartamento(catalog,departamento,sortType): # Requerimiento Grupal 5: Función Principal
+    """
+    La función indica el precio total de envío que cuesta transportar un departamento. Entrega también una
+    lista que contiene las obras que se van a transportar y el precio de transportar cada obra. Los precios
+    se establecen de acuerdo a 
 
-def transportarObrasDespartamento(catalog,departamento,sortType):
+    Parámetros: 
+        catalog: catalogo con obras y artistas
+        departamento: nombre del departamento a transportar
+        sortType: tipo de ordenamiento utilizado dentro del método
+    Retorno:
+        precioSortedList: lista de obras organizadas por precio
+        obrasDepartamento: lista de obras organizadas por fecha de antiguedad 
+        precioTotalEnvio: costo total de transportar las obras
+        pesoTotal: peso total de las obras
+        cantidadDeObras: cantidad de obras a transportar
+    """
+
     # Constantes
     PRECIO_ENVIO_UNIDAD=72
     PRECIO_ENVIO_FIJO=48
-    obrasDepartamento=lt.newList()
+    obrasDepartamento=lt.newList("ARRAY_LIST")
     precioTotalEnvio=0
     pesoTotal=0
     for obra in lt.iterator(catalog["artworks"]):
@@ -461,9 +477,6 @@ def transportarObrasDespartamento(catalog,departamento,sortType):
                 precioEnvio=PRECIO_ENVIO_FIJO
             obra["TransCost (USD)"]=precioEnvio
             precioTotalEnvio+=precioEnvio
-            # if (len(peso)>0):
-            #     peso+=float(peso)
-            # preguntar por peso estimado xdd
             lt.addLast(obrasDepartamento,obra)
     
     size=obrasDepartamento["size"]
@@ -473,10 +486,23 @@ def transportarObrasDespartamento(catalog,departamento,sortType):
     return precioSortedList, obrasDepartamento, precioTotalEnvio, pesoTotal, lt.size(obrasDepartamento)
 
 
+def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt, obraCortadaB=True): # Requerimiento Grupal 6 (Bono): Función Principal
+    """
+    La función propone una nueva exposición dada una área disponible y unos rangos de fechas de las obras
 
-####req 6
-def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt):
-    obrasExpo= lt.newList("ARRAY_LIST")#queue.newQueue() #estructura de cola // hay que verificar si es más eficiente que un arraylist
+    Parámetros: 
+        catalog: catalogo con obras y artistas
+        areaExpo: área disponible en metros cuadrados para la exposición
+        fechaInicial: fecha inicial de obras ingresada por el usuario
+        fechaFinal: fecha final de obras ingresada por el usuario
+    Retorno:
+        cantidad: cantidad de obras de la nueva exposición
+        areaTotalObras: área total ocupada por las obras
+        obrasExpo: lista con las obras de la exposición
+        obraCortada: parámetro que indica si quieren cortar una obra con tal de completar el espacio 
+        disponible para la exposición
+    """
+    obrasExpo= lt.newList("ARRAY_LIST")
     areaTotalObras=0
     cantidad=0
     size=lt.size(catalog["artworks"])
@@ -504,9 +530,9 @@ def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt):
                 #print(x, "paso", artwork["ObjectID"], "cumple con rango de fechas")
                 altura=1 #tomamos la altura o ancho como 1 metro en caso de que alguno de los dos tengan un valor vacío
                 ancho=1
-                if len(str(altura))!=0:
+                if artwork["Height (cm)"].isnumeric():
                    altura=float(artwork["Height (cm)"])/100 
-                if len(str(ancho))!=0:
+                if artwork["Width (cm)"].isnumeric():
                     ancho=float(artwork["Width (cm)"])/100
                 areaArt=altura*ancho
                 areaprov=areaTotalObras+areaArt #se comprueba si con esta obra se supera el área
@@ -514,14 +540,23 @@ def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt):
                     #print("!! Área obra:",areaArt,"Prueba, Object ID:", "A prov", areaprov)
                     diferencia=areaExpo-areaTotalObras
                     #print("AT",areaTotalObras,"dif",diferencia)
-                    
-                    areaArt=diferencia #areaExpo-areaTotalObras #se "corta" esta obra para que quepa en el área
-                    obraCortada=("Se utilizaron "+str(diferencia)+ " del área (m^2) de la obra titulada: "+artwork["Title"]+
-                                " con ObjectID: "+artwork["ObjectID"]+" para completar el área de la exposición")
-                areaTotalObras+=areaArt
-                cantidad+=1
-                artwork["EstArea (m^2)"]=areaArt
-                lt.addLast(obrasExpo,artwork)
+                    if obraCortadaB:
+                        areaArt=diferencia #areaExpo-areaTotalObras #se "corta" esta obra para que quepa en el área
+                        obraCortada=("Se utilizaron "+str(diferencia)+ " del área (m^2) de la obra titulada: "+artwork["Title"]+
+                                    " con ObjectID: "+artwork["ObjectID"]+" para completar el área de la exposición")
+                        areaTotalObras+=areaArt
+                        cantidad+=1
+                        artwork["EstArea (m^2)"]=areaArt
+                        lt.addLast(obrasExpo,artwork)
+                    else:
+                        obraCortada="No se utilizó ninguna fracción de área de una obra de acuerdo a lo seleccionado por el usuario"
+                        break
+                        
+                else:
+                    areaTotalObras+=areaArt
+                    cantidad+=1
+                    artwork["EstArea (m^2)"]=areaArt
+                    lt.addLast(obrasExpo,artwork)
                 #queue.enqueue(obrasExpo,artwork)
         i+=1               
     return cantidad,areaTotalObras,obrasExpo,obraCortada
