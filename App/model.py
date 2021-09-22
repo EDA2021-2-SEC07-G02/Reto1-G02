@@ -177,13 +177,13 @@ def sortList(lista,cmpFunction,sortType):
     start_time = time.process_time()
     #cantidad_registros= ((porcentaje/100)*lt.size(catalog['artworks']))//1
     #subLista=lt.subList(catalog['artworks'],0,cantidad_registros)
-    if sortType == "Insertion":
+    if sortType == "1":
         sorted_list= ins.sort(lista,cmpFunction)
-    elif sortType == "Shell":
+    elif sortType == "2":
         sorted_list= sa.sort(lista,cmpFunction)
-    elif sortType == "Merge":
+    elif sortType == "3":
         sorted_list= ms.sort(lista,cmpFunction)
-    elif sortType == "Quick":
+    elif sortType == "4":
         sorted_list= qs.sort(lista, cmpFunction)
     
     med_time = time.process_time() # BORRAR
@@ -287,7 +287,7 @@ def getArtistName(catalog,ConstituentID): #req 2
     return dispname
 
 #Requerimiento 3
-def tecnicasObrasPorArtista(catalog,nombre):
+def tecnicasObrasPorArtista(catalog,nombre,sortType):
     """ 
     Clasifica las obras de un artista por técnica dado un nombre
     Parámetros: 
@@ -317,7 +317,7 @@ def tecnicasObrasPorArtista(catalog,nombre):
             if not encontro: # si no existe
                 lt.addLast(tecnicas,lt.newList()) # crea una técnica (lista de obras) en la lista de tecnicas
                 lt.addLast(lt.lastElement(tecnicas),obraArtista) # añade la lista de obras de esa tecnica
-        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista) # utiliza la función de comparación con orden ascendente
+        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista,sortType) # utiliza la función de comparación con orden ascendente
         totalObras=lt.size(obras) # retorna el número total de obras
     else:
         totalObras=0 # en el caso de que no encuentre el artista no hay obras

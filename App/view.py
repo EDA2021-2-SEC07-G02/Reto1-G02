@@ -315,7 +315,7 @@ while True:
             fechaInicial=input("\nIngrese el año inicial (AAAA): ")
             fechaFinal=input("\nIngrese el año final (AAAA): ")
             tiempoInicial=time.process_time()
-            sortType=input("PRUEBA- Tipo de ordenamiento: Insertion - Selection - Merge - Quick ")
+            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             resultado= controller.listarArtistasCronologicamente(catalog, fechaInicial, fechaFinal,sortType)
             if resultado[1] > 0:
                 printFirstLastsResultsArtists(resultado[0]," ordenadas por año son:")
@@ -328,7 +328,7 @@ while True:
         elif int(inputs[0]) == 2:  
             fechaInicial=input("\nIngrese la fecha inicial (AAAA-MM-DD): ")
             fechaFinal=input("\nIngrese la fecha final (AAAA-MM-DD): ")
-            sortType=input("PRUEBA- Tipo de ordenamiento: Insertion - Selection - Merge - Quick ")
+            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             tiempoInicial=time.process_time()
             resultado= controller.listarAdquisicionesCronologicamente(catalog, fechaInicial, fechaFinal,sortType)
             if resultado[2] > 0:
@@ -342,7 +342,7 @@ while True:
         # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
         elif int(inputs[0]) == 3:
             nombreArtista=input("\nIngrese el nombre del artista: ")
-            sortType=input("PRUEBA- Tipo de ordenamiento: Insertion - Selection - Merge - Quick ")
+            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             tiempoInicial=time.process_time()
             respuesta=controller.tecnicasObrasPorArtista(catalog,nombreArtista,sortType)
             tecnicas=respuesta[0]
@@ -362,7 +362,7 @@ while True:
 
         # Opción 4: Clasificar las obras por la nacionalidad de un artista (Requerimiento 4)
         elif int(inputs[0]) == 4:
-            sortType=input("PRUEBA- Tipo de ordenamiento: Insertion - Selection - Merge - Quick ")
+            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             print("Cargando clasificación por nacionalidad de obras......")
             listaprovisional=controller.req4(catalog,sortType)
             print("tiempo de req4: ",listaprovisional[2])
@@ -375,7 +375,7 @@ while True:
 
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
         elif int(inputs[0]) == 5:
-            sortType=input("PRUEBA- Tipo de ordenamiento: Insertion - Selection - Merge - Quick ")
+            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             nombreDepartamento=input("\nIngrese el nombre del departamento: ")
             tiempoInicial=time.process_time()
             respuesta=controller.transportarObrasDespartamento(catalog,nombreDepartamento,sortType)

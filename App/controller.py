@@ -88,9 +88,9 @@ def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType
     """
     return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType)
 
-def tecnicasObrasPorArtista(catalog, nombre):
+def tecnicasObrasPorArtista(catalog, nombre,sortType):
     # TODO: Documentación
-    return model.tecnicasObrasPorArtista(catalog,nombre)
+    return model.tecnicasObrasPorArtista(catalog,nombre,sortType)
 
 def transportarObrasDespartamento(catalog, departamento,sortType):
     # TODO: Documentación
