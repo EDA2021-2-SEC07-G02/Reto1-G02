@@ -369,7 +369,6 @@ while True:
             sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             print("Cargando clasificación por nacionalidad de obras......")
             listaprovisional=controller.ClasificarObrasNacionalidad(catalog,sortType)
-            print("tiempo de req4: ",listaprovisional[2])
             print("Top 10 nacionalidades de acuerdo a su cantidad de obras de arte")
             printNationalityArt(listaprovisional[0])
             print("-"*25 + " Primer lugar " +"-"*25)

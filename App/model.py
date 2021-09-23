@@ -72,7 +72,7 @@ def NewNationalityArt(pais,artwork):  # Requerimiento individual 4
     Retorno:
         adding: Diccionario con una nueva nacionalidad 
     """
-    adding={"Nationality":"","Artworks": lt.newList("ARRAY_LIST",cmpNationalities)}
+    adding={"Nationality":"","Artworks": lt.newList("ARRAY_LIST",compareNationalities)}
     adding["Nationality"]=pais
     lt.addLast(adding["Artworks"],artwork)
     return adding
@@ -170,6 +170,37 @@ def cmpFunctionTecnicasArtista(tecnica1,tecnica2): # Requerimiento Individual 3:
     else:
         return False
 
+def compareNationalities(name, nationality):  # Requerimiento individual 4 : Función comparación al crear una array_list
+    """
+    Requerimiento 4
+    Función de comparación usada al crear la array list de countries en el requerimiento 4.
+    Se usa para acceder a las llaves de cada país.
+    Parámetros:
+        name: nombre de la nacionalidad
+        nationality: diccionario dentro de la lista
+    Retorno:
+        0:  El nombre de la nacionalidad es una de las llaves
+        -1: El nombre de la nacionalidad no es una de las llaves
+    """
+    if (name == nationality['Nationality']):
+        return 0
+    else:
+        return -1
+
+def cmpNationalitiesSize(nacionalidad1,nacionalidad2):  # Requerimiento individual 4 : Función comparación ordenamiento
+    """
+    Requerimiento 4
+    Función de comparación por cantidad de artworks por nacionalidad.
+    
+    Parámetros:
+        obra1: primera nacionalidad, contiene el valor "size" dado que artworks es un array list
+        obra2: segunda nacionalidad, contiene el valor "size" dado que artworks es un array list
+    Retorno:
+        True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
+        De lo contario, False.
+    """
+    return nacionalidad1["Artworks"]["size"]>nacionalidad2["Artworks"]["size"]
+
 def cmpArtworkByPrice(obra1,obra2): # Requerimiento Grupal 5: Función Comparación Ordenamiento
     """
     Función de comparación por el costo de transporte de artworks.
@@ -203,36 +234,7 @@ def cmpArtworkByDate(obra1,obra2): # Requerimiento Grupal 5: Función Comparaci�
         fecha2=int(obra2["Date"]) 
     return fecha1<fecha2
    
-def compareNationalities(name, nationality):  # Requerimiento individual 4
-    """
-    Requerimiento 4
-    Función de comparación usada al crear la array list de countries en el requerimiento 4.
-    Se usa para acceder a las llaves de cada país.
-    Parámetros:
-        name: nombre de la nacionalidad
-        nationality: diccionario dentro de la lista
-    Retorno:
-        0:  El nombre de la nacionalidad es una de las llaves
-        -1: El nombre de la nacionalidad no es una de las llaves
-    """
-    if (name == nationality['Nationality']):
-        return 0
-    else:
-        return -1
 
-def cmpNationalities(nacionalidad1,nacionalidad2):  # Requerimiento individual 4
-    """
-    Requerimiento 4
-    Función de comparación por cantidad de artworks por nacionalidad.
-    
-    Parámetros:
-        obra1: primera nacionalidad, contiene el valor "size" dado que artworks es un array list
-        obra2: segunda nacionalidad, contiene el valor "size" dado que artworks es un array list
-    Retorno:
-        True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
-        De lo contario, False.
-    """
-    return nacionalidad1["Artworks"]["size"]>nacionalidad2["Artworks"]["size"]
 
 # Funciones de ordenamiento
 
@@ -248,7 +250,6 @@ def sortList(lista,cmpFunction,sortType):
     Retorno:
         lista ordenada por insertion
     """
-    start_time = time.process_time()
     if sortType == "1":
         sorted_list= ins.sort(lista,cmpFunction)
     elif sortType == "2":
@@ -257,14 +258,7 @@ def sortList(lista,cmpFunction,sortType):
         sorted_list= ms.sort(lista,cmpFunction)
     elif sortType == "4":
         sorted_list= qs.sort(lista, cmpFunction)
-    
-    med_time = time.process_time() # BORRAR
-    elapsed_time_mseg = (med_time - start_time)*1000 # BORRAR
-    print(sortType,"TIEMPO DURACIÓN ORDENAMIENTO: ",elapsed_time_mseg) # BORRAR
-
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
+    return sorted_list
 
 # Funciones de Consulta
 
@@ -390,7 +384,7 @@ def tecnicasObrasPorArtista(catalog,nombre,sortType): # Requerimiento Individual
             if not encontro: # si no existe
                 lt.addLast(tecnicas,lt.newList()) # crea una técnica (lista de obras) en la lista de tecnicas
                 lt.addLast(lt.lastElement(tecnicas),obraArtista) # añade la lista de obras de esa tecnica
-        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista,sortType)[1] # utiliza la función de comparación con orden ascendente
+        sortedList=sortList(tecnicas,cmpFunctionTecnicasArtista,sortType) # utiliza la función de comparación con orden ascendente
         totalObras=lt.size(obras) # retorna el número total de obras
     else:
         totalObras=0 # en el caso de que no encuentre el artista no hay obras
@@ -447,7 +441,7 @@ def ClasificarObrasNacionalidad(catalog,sortType="1"):  # Requerimiento individu
             nationality= getNationality(catalog,conID)
             addNationality(countries,nationality,obra)
     
-    sortList(countries,cmpNationalities,sortType)
+    sortList(countries,cmpNationalitiesSize,sortType)
     primerlugar=lt.getElement(countries,1)
     top10=lt.subList(countries,1,10)
     return top10,primerlugar
