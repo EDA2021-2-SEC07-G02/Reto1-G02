@@ -1,8 +1,11 @@
-## Reto 1 - EDA
+# Reto 1 - EDA
 
-# Hecho por:
+## Hecho por:
 1. Daniel Gomez | 201728920 | df.gomezb@uniandes.edu.co (Req. 3)
 2. Jenifer Arce | 202014993 | j.arce@uniandes.edu.co (Req. 4)
+
+
+!!Observación: Usamos librerías: prettytable y re
 
 #ISIS1225 - Librerias de soporte
 

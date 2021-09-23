@@ -48,7 +48,7 @@ def loadData(catalog,muestra):
     loadArtists(catalog,muestra)
     loadArtworks(catalog,muestra)
 
-def loadArtists(catalog,muestra): ##MODIFICADO PARA HACER PRUEBAS
+def loadArtists(catalog,muestra="small"): ##MODIFICADO PARA HACER PRUEBAS
 
     """
     Carga los artistas en una lista dado un nombre de archivo
@@ -59,7 +59,6 @@ def loadArtists(catalog,muestra): ##MODIFICADO PARA HACER PRUEBAS
         model.addArtist(catalog, artist)
 
 def loadArtworks(catalog,muestra="small"):
-    # TODO: documentación parámetros retorno
     """
     Carga las obras en una lista dado un nombre de archivo
     """
@@ -76,39 +75,39 @@ def getArtistName(catalog, ID):
     """
     return model.getArtistName(catalog,ID)
 
-def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType):
+def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal):
     """
     Retorna a los artistas ordenados cronologicamente de acuerdo a un rango de fechas
     Además del total de artistas en ese rango de fechas
     """
-    return model.listarArtistasCronologicamente(catalog,int(fechaInicial),int(fechaFinal),sortType)
+    return model.listarArtistasCronologicamente(catalog,int(fechaInicial),int(fechaFinal))
 
-def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType):
+def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal):
     """
     Retorna obras de arte ordenadas cronologicamente de acuerdo a un rango de fechas.
     Además del total de obras compradas en el rango deseado
     """
-    return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType)
+    return model.listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal)
 
-def tecnicasObrasPorArtista(catalog, nombre,sortType):
+def tecnicasObrasPorArtista(catalog, nombre):
     """
     Retorna las técnicas usadas en obras de acuerdo a un artista en específico, junto al total de obras del
     artista y su técnica más usada y su listado de obras
     """
-    return model.tecnicasObrasPorArtista(catalog,nombre,sortType)
+    return model.tecnicasObrasPorArtista(catalog,nombre)
 
-def ClasificarObrasNacionalidad(catalog,sortType):
+def ClasificarObrasNacionalidad(catalog):
     """
     Retorna el top10 de las obras de arte de acuerdo a su nacionalidad, además brinda las obras del primer lugar
     """
-    return model.ClasificarObrasNacionalidad(catalog,sortType)
+    return model.ClasificarObrasNacionalidad(catalog)
 
-def transportarObrasDespartamento(catalog, departamento,sortType):
+def transportarObrasDespartamento(catalog, departamento):
     """
     Retorna las obras de arte más costosas y antiguas a transportar por departamento, junto al total de obras, 
     precio del servicioy peso estimado. 
     """
-    return model.transportarObrasDespartamento(catalog,departamento,sortType)
+    return model.transportarObrasDespartamento(catalog,departamento)
 
 
 

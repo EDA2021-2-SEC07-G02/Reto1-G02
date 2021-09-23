@@ -262,7 +262,7 @@ def sortList(lista,cmpFunction,sortType):
 
 # Funciones de Consulta
 
-def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType):  # Requerimiento Grupal 1: Función Principal
+def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType="3"):  # Requerimiento Grupal 1: Función Principal
     """
     Esta función se usará para el Requerimiento 2. Primero agregarán los artistas
     a una nueva array list (ListaNac) dependiendo un rango de fechas ingresado por el usuario
@@ -353,7 +353,7 @@ def getArtistName(catalog,ConstituentID): # Requerimiento Grupal 2: Función Com
     return dispname
 
 
-def tecnicasObrasPorArtista(catalog,nombre,sortType): # Requerimiento Individual 3: Función Principal
+def tecnicasObrasPorArtista(catalog,nombre,sortType="3"): # Requerimiento Individual 3: Función Principal
     """ 
     Clasifica las obras de un artista por técnica dado un nombre
     Parámetros: 

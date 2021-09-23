@@ -255,7 +255,7 @@ def initCatalog(ListType):
     """
     return controller.initCatalog(ListType)
 
-def loadData(catalog,muestra):
+def loadData(catalog,muestra="small"):
     """
     Carga los artistas y obras en la estructura de datos
     
@@ -299,11 +299,11 @@ while True:
     if inputs.isnumeric():
         # Opción 0: Carga de datos
         if int(inputs[0]) == 0:
-            ListType="ARRAY_LIST" #Opción número 1. Asimismo, queda por defecto ARRAY_LIST en caso de que se haya digitado otra opción por equivocación
+            ListType="ARRAY_LIST"
             print("\n\nCargando información de los archivos con representación de lista: " + ListType + " .....")
-            muestra=input("Seleccione la muestra para realizar pruebas (5pct,10pct,20pct,30pct,50pct,80pct,large,small): ")
+            muestra="small"
             catalog = initCatalog(ListType)
-            loadData(catalog,muestra)
+            loadData(catalog)
             print('\nAutores cargados: ' + str(lt.size(catalog['artists'])))
             print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
             printFirstLastsResultsArt(catalog['artworks'],"cargadas al catalogo son:")
@@ -318,8 +318,7 @@ while True:
             fechaInicial=input("\nIngrese el año inicial (AAAA): ")
             fechaFinal=input("\nIngrese el año final (AAAA): ")
             tiempoInicial=time.process_time()
-            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
-            resultado= controller.listarArtistasCronologicamente(catalog, fechaInicial, fechaFinal,sortType)
+            resultado= controller.listarArtistasCronologicamente(catalog, fechaInicial, fechaFinal)
             if resultado[1] > 0:
                 printFirstLastsResultsArtists(resultado[0]," ordenadas por año son:")
                 print("\nEl total de artistas en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
@@ -331,13 +330,12 @@ while True:
         elif int(inputs[0]) == 2:  
             fechaInicial=input("\nIngrese la fecha inicial (AAAA-MM-DD): ")
             fechaFinal=input("\nIngrese la fecha final (AAAA-MM-DD): ")
-            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             tiempoInicial=time.process_time()
-            resultado= controller.listarAdquisicionesCronologicamente(catalog, fechaInicial, fechaFinal,sortType)
+            resultado= controller.listarAdquisicionesCronologicamente(catalog, fechaInicial, fechaFinal)
             if resultado[2] > 0:
                 printFirstLastsResultsArt(resultado[0]," ordenadas por fecha son:")
-                print("\nEl total de obras en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
-                print("\nEl total de obras compradadas ('Purchase') en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[2]))
+                print("\nEl total de obras en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[2]))
+                print("\nEl total de obras compradadas ('Purchase') en el rango de fechas "+fechaInicial+" - "+fechaFinal+" es: "+str(resultado[1]))
             else:
                 print("\nNo  existe ninguna obra en las base de datos que haya sido registrada entre",fechaInicial,"y",fechaFinal,"o las fechas ingresadas no siguen el formato correcto.")
             controller.limpiarVar(resultado) #Se borra el resultado - Dato provisional
@@ -345,9 +343,8 @@ while True:
         # Opción 3: Clasificar las obras de un artista por técnica (Requerimiento 3)
         elif int(inputs[0]) == 3:
             nombreArtista=input("\nIngrese el nombre del artista: ")
-            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             tiempoInicial=time.process_time()
-            respuesta=controller.tecnicasObrasPorArtista(catalog,nombreArtista,sortType)
+            respuesta=controller.tecnicasObrasPorArtista(catalog,nombreArtista)
             tecnicas=respuesta[0]
             totalObras=respuesta[1]
             if totalObras!=0:
@@ -366,9 +363,8 @@ while True:
 
         # Opción 4: Clasificar las obras por la nacionalidad de un artista (Requerimiento 4)
         elif int(inputs[0]) == 4:
-            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             print("Cargando clasificación por nacionalidad de obras......")
-            listaprovisional=controller.ClasificarObrasNacionalidad(catalog,sortType)
+            listaprovisional=controller.ClasificarObrasNacionalidad(catalog)
             print("Top 10 nacionalidades de acuerdo a su cantidad de obras de arte")
             printNationalityArt(listaprovisional[0])
             print("-"*25 + " Primer lugar " +"-"*25)
@@ -378,10 +374,9 @@ while True:
 
         # Opción 5: Transportar obras de un departamento (Requerimiento 5)
         elif int(inputs[0]) == 5:
-            sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             nombreDepartamento=input("\nIngrese el nombre del departamento: ")
             tiempoInicial=time.process_time()
-            respuesta=controller.transportarObrasDespartamento(catalog,nombreDepartamento,sortType)
+            respuesta=controller.transportarObrasDespartamento(catalog,nombreDepartamento)
             listaObrasDepartamentoPrecio=respuesta[0]
             listaObrasDepartamentoAntiguedad=respuesta[1]
             precioTotal=respuesta[2]
