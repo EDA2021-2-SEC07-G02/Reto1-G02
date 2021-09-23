@@ -534,7 +534,6 @@ def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt, obraCortadaB=Tru
     cantidad=0
     size=lt.size(catalog["artworks"])
     i=0
-    x=0 ##Borrar
     obraCortada=""
     pattern=re.compile("[0-9][0-9][0-9][0-9]")
     fechasCorrectas=False
@@ -546,15 +545,9 @@ def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt, obraCortadaB=Tru
         artwork=lt.getElement(catalog["artworks"],i)
         #el siguiente condicional ignorará obras que tengan datos como su fecha, largo o ancho vacíos. Si la fecha es vacía
         #no se podrá utilizar la obra para la exposición por época. Pero si la obra tiene ancho y/o largo se podrá utilizar en la exposición.
-
-        #!!!!!!!!! Decidir que hacemos con Depth (cm)
         if artwork["Date"].isnumeric() and (artwork["Height (cm)"].isnumeric() or artwork["Width (cm)"].isnumeric()) and len(artwork["Depth (cm)"])==0:
-            #print(x, "paso", artwork["ObjectID"], "cumple")
-            x+=1
-            # print()
             dateArt=int(artwork["Date"])
             if dateArt>=fechaInicial and dateArt<=fechaFinal:
-                #print(x, "paso", artwork["ObjectID"], "cumple con rango de fechas")
                 altura=1 #tomamos la altura o ancho como 1 metro en caso de que alguno de los dos tengan un valor vacío
                 ancho=1
                 if artwork["Height (cm)"].isnumeric():
@@ -564,10 +557,9 @@ def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt, obraCortadaB=Tru
                 areaArt=altura*ancho
                 areaprov=areaTotalObras+areaArt #se comprueba si con esta obra se supera el área
                 if areaprov>areaExpo: #esto significa que ya se sobrepasa el área si se añade esta obra
-                    #print("!! Área obra:",areaArt,"Prueba, Object ID:", "A prov", areaprov)
                     diferencia=areaExpo-areaTotalObras
                     #print("AT",areaTotalObras,"dif",diferencia)
-                    if obraCortadaB:
+                    if obraCortadaB: #se cortará una obra para completar el área disponible en caso de que el usuario haya dicho que sí
                         areaArt=diferencia #areaExpo-areaTotalObras #se "corta" esta obra para que quepa en el área
                         obraCortada=("Se utilizaron "+str(diferencia)+ " del área (m^2) de la obra titulada: "+artwork["Title"]+
                                     " con ObjectID: "+artwork["ObjectID"]+" para completar el área de la exposición")
@@ -577,14 +569,12 @@ def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt, obraCortadaB=Tru
                         lt.addLast(obrasExpo,artwork)
                     else:
                         obraCortada="No se utilizó ninguna fracción de área de una obra de acuerdo a lo seleccionado por el usuario"
-                        break
-                        
+                        break   
                 else:
                     areaTotalObras+=areaArt
                     cantidad+=1
                     artwork["EstArea (m^2)"]=areaArt
                     lt.addLast(obrasExpo,artwork)
-                #queue.enqueue(obrasExpo,artwork)
         i+=1               
     return cantidad,areaTotalObras,obrasExpo,obraCortada
 
@@ -598,7 +588,5 @@ def limpiarVar(dato):
     Retorno:
         dato: Dato en None
     """
-    #print("La ocupación inicial en memoria del dato era:" + str(sys.getsizeof(dato)))
     dato=None
-    #print("La ocupación final en memoria del dato es:" + str(sys.getsizeof(dato)))
     return dato
