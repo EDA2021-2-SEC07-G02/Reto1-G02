@@ -59,6 +59,25 @@ def newCatalog(ListType):
     catalog['artworks'] = lt.newList(ListType)
     return catalog
 
+# Contrucción modelo [requerimiento 4]
+def NewNationalityArt(pais,artwork):  # Requerimiento individual 4
+    """
+    Requerimiento 4
+    Se retornara un diccionario con una nueva nacionalidad. El diccionario contiene
+    dos llaves "Nationality" una cadena de texto que representa una nacionalidad en específico y 
+    Artworks un tipo de array list que contiene todas las obras relacionadas a esa nacionalidad.
+    Parámetros:
+        Pais: Nueva nacionalidad
+        Artwork: obra de arte relacionada a esa nacionalidad
+    Retorno:
+        adding: Diccionario con una nueva nacionalidad 
+    """
+    adding={"Nationality":"","Artworks": lt.newList("ARRAY_LIST",cmpNationalities)}
+    adding["Nationality"]=pais
+    lt.addLast(adding["Artworks"],artwork)
+    return adding
+
+
 # Funciones para agregar informacion al catalogo
 
 def addArtist(catalog, artist):
@@ -81,6 +100,28 @@ def addArtwork(catalog, artwork):
     Se añade el artista en la última posición del catalogo con lt.addLast() 
     """
     lt.addLast(catalog['artworks'], artwork)
+
+#Funciones para agregar información [requerimiento 4]
+def addNationality(countries,nationality,artwork):  # Requerimiento individual 4
+    """
+    Requerimiento 4
+    La función comprueba si una nacionalidad está o no en la lista de countries.
+    Si ya está la nacionalidad, accederá a este elemento y agregará de últimas 
+    su respectiva obra de arte en la llave de "Artworks". En caso la obra no se encuentre
+    en la lista se agregará a esta lista con la función NewNationalityArt().
+    Parámetros:
+        countries: lista de nacionalidades con sus respectivas obras
+        nationality: nacionalidad a buscar / agregar
+        artwork: obra de arte de la nacionalidad correspondiente
+    Retorno:
+        Se agregarán las nacionalidades y/o obras con addLast()
+    """
+    posNationality=lt.isPresent(countries,nationality)
+    if posNationality>0: #si el país ya se encuentra en la lista se agregará solamente la obra a artworks
+        lt.addLast(lt.getElement(countries,posNationality)["Artworks"],artwork)
+    else:
+        pais=NewNationalityArt(nationality,artwork)
+        lt.addLast(countries,pais)
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -162,21 +203,52 @@ def cmpArtworkByDate(obra1,obra2): # Requerimiento Grupal 5: Función Comparaci�
         fecha2=int(obra2["Date"]) 
     return fecha1<fecha2
    
+def compareNationalities(name, nationality):  # Requerimiento individual 4
+    """
+    Requerimiento 4
+    Función de comparación usada al crear la array list de countries en el requerimiento 4.
+    Se usa para acceder a las llaves de cada país.
+    Parámetros:
+        name: nombre de la nacionalidad
+        nationality: diccionario dentro de la lista
+    Retorno:
+        0:  El nombre de la nacionalidad es una de las llaves
+        -1: El nombre de la nacionalidad no es una de las llaves
+    """
+    if (name == nationality['Nationality']):
+        return 0
+    else:
+        return -1
+
+def cmpNationalities(nacionalidad1,nacionalidad2):  # Requerimiento individual 4
+    """
+    Requerimiento 4
+    Función de comparación por cantidad de artworks por nacionalidad.
+    
+    Parámetros:
+        obra1: primera nacionalidad, contiene el valor "size" dado que artworks es un array list
+        obra2: segunda nacionalidad, contiene el valor "size" dado que artworks es un array list
+    Retorno:
+        True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
+        De lo contario, False.
+    """
+    return nacionalidad1["Artworks"]["size"]>nacionalidad2["Artworks"]["size"]
+
 # Funciones de ordenamiento
 
 def sortList(lista,cmpFunction,sortType):
     """
     ####### FUNCIÓN MODIFICADA PARA HACER PRUEBAS #####
-    Función de ordenamiento con insertation que se usará en distintos requerimientos
+    Función de ordenamiento que se usará en distintos requerimientos dependiendo
+    del ordenamiento deseado
     Parámetros: 
         lista: lista que se ordenara
         cmpFunction: función de comparación
+        sortType: tipo de ordenamiento (1)Insertion - (2)Selection - (3)Merge - (4)Quick
     Retorno:
         lista ordenada por insertion
     """
     start_time = time.process_time()
-    #cantidad_registros= ((porcentaje/100)*lt.size(catalog['artworks']))//1
-    #subLista=lt.subList(catalog['artworks'],0,cantidad_registros)
     if sortType == "1":
         sorted_list= ins.sort(lista,cmpFunction)
     elif sortType == "2":
@@ -224,7 +296,7 @@ def listarArtistasCronologicamente(catalog,fechaInicial,fechaFinal,sortType):  #
     sortList(listaNac,cmpArtistDate,sortType)
     return listaNac,contador
 
-def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType):  # Requerimiento Grupal 2: Función Principal
+def listarAdquisicionesCronologicamente(catalog,fechaInicial,fechaFinal,sortType="3"):  # Requerimiento Grupal 2: Función Principal
     """
     La función primero agregará a una nueva array list (listaAdq) las obras que tengan
     una fecha de aquisición dentro del rango deseado. A su vez, se va a ir 
@@ -325,9 +397,9 @@ def tecnicasObrasPorArtista(catalog,nombre,sortType): # Requerimiento Individual
         sortedList=lt.newList() # se inicializa una lista para evitar posibles errores
     return sortedList, totalObras
     
-########## req4
-def getNationality(catalog,ConstituentID):
+def getNationality(catalog,ConstituentID):  # Requerimiento individual 4
     """
+    Requerimiento 4
     Se retornara las nacionalidades de los artistas de acuerdo a su ConstituentID.
     Parámetros: 
         catalog: catalogo con obras y artistas
@@ -345,67 +417,24 @@ def getNationality(catalog,ConstituentID):
         nationality="Unknown" 
     return nationality
             
-def NewNationalityArt(pais,artwork):
-    # TODO: documentación
-    adding={"Nationality":"","Cantidad":0,"Artworks": lt.newList("ARRAY_LIST",cmpNationalities)}
-    adding["Nationality"]=pais
-    lt.addLast(adding["Artworks"],artwork)
-    return adding
-
-
-def addNationality(countries,nationality,artwork):
-    # TODO: documentación parámetros retorno
+def ClasificarObrasNacionalidad(catalog,sortType="1"):  # Requerimiento individual 4: Función Principal
     """
-    Se agregaran las nacionalidades con sus respectivas obras a una lista provisional.
-    """
-    posNationality=lt.isPresent(countries,nationality)
-    if posNationality>0: #si el país ya se encuentra en la lista se agregará solamente la obra a artworks
-        lt.addLast(lt.getElement(countries,posNationality)["Artworks"],artwork)
-    else:
-        pais=NewNationalityArt(nationality,artwork)
-        lt.addLast(countries,pais)
-
-def compareNationalities(name, nationality):
-    """
-    Función de comparación usada al crear la array list de countries en el requerimiento 4.
-    Se usa para acceder a las llaves de cada país.
+    Requerimiento 4.
+    La función clasificará las obras de acuerdo a la nacionalidad de su/s creador/es.
+    Se recorrerá todo el catalogo de obras de arte, y se relacionará el "ConstituentID" de cada
+    obra con su respectivo nacionalidad. En caso de que una de las obras tenga más de un artista 
+    se relacionará esta obra con las nacionalidades de cada artista. Al momento de relacionar la obra con
+    la nacionalidad de su/s artista/s se iran agregando nacionalidades con sus respectivas obras
+    a una array lista (countries).
+    Después de finalizar el recorrido y la categorización por nacionalidades, se usará un ordenamiento 
+    por tipo insertation para ordenar la lista de countries de mayor a menor.
     Parámetros:
-        name: ######
-        nationality: ###
-    Retorno:
-        0:  #####
-        -1: #####
-    """
-    if (name == nationality['Nationality']):
-        return 0
-    else:
-        return -1
-
-def cmpNationalities(nacionalidad1,nacionalidad2):
-    """
-    Función de comparación por cantidad de artworks por nacionalidad.
-    
-    Parámetros:
-        obra1: primera nacionalidad, contiene el valor "size" dado que artworks es un array list
-        obra2: segunda nacionalidad, contiene el valor "size" dado que artworks es un array list
-    Retorno:
-        True cuando la primera nacionalidad tiene mayor cantidad de obras que la segunda.
-        De lo contario, False.
-    """
-    return nacionalidad1["Artworks"]["size"]>nacionalidad2["Artworks"]["size"]
-
-def req4(catalog,sortType):
-    # TODO: documentación parámetros
-    """
-    Listas provisionales: 
-    1. countries: Nacionalidades de las obras y la cantidad de veces que se repiten
-    2. obrascountries: Lista de obras por cada nacionalidad
-
+        catalog: catalogo de obras y artistas
+        sortType="1" ordenamiento por insertion
     Retornos:
-    Top10 nacionalidades
-    Obras por nacionalidad del primer lugar
+        top10: Lista con el top10 de nacionalidades, ordenada de mayor a menor
+        primerlugar: Obras por nacionalidad del primer lugar
     """
-    start_time = time.process_time()
     countries=lt.newList("ARRAY_LIST",cmpfunction=compareNationalities)
     for obra in lt.iterator(catalog["artworks"]):
         conID=obra["ConstituentID"][1:-1]
@@ -421,13 +450,10 @@ def req4(catalog,sortType):
     sortList(countries,cmpNationalities,sortType)
     primerlugar=lt.getElement(countries,1)
     top10=lt.subList(countries,1,10)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return top10,primerlugar,elapsed_time_mseg
+    return top10,primerlugar
 
-###fin req 4
 
-def transportarObrasDespartamento(catalog,departamento,sortType): # Requerimiento Grupal 5: Función Principal
+def transportarObrasDespartamento(catalog,departamento,sortType="3"): # Requerimiento Grupal 5: Función Principal
     """
     La función indica el precio total de envío que cuesta transportar un departamento. Entrega también una
     lista que contiene las obras que se van a transportar y el precio de transportar cada obra. Los precios
@@ -436,7 +462,7 @@ def transportarObrasDespartamento(catalog,departamento,sortType): # Requerimient
     Parámetros: 
         catalog: catalogo con obras y artistas
         departamento: nombre del departamento a transportar
-        sortType: tipo de ordenamiento utilizado dentro del método
+        sortType: tipo de ordenamiento utilizado dentro del método // ordenamiento por merge
     Retorno:
         precioSortedList: lista de obras organizadas por precio
         obrasDepartamento: lista de obras organizadas por fecha de antiguedad 
@@ -495,6 +521,7 @@ def expoEpocaArea(catalog,areaExpo,fechaInicialSt,fechaFinalSt, obraCortadaB=Tru
         areaExpo: área disponible en metros cuadrados para la exposición
         fechaInicial: fecha inicial de obras ingresada por el usuario
         fechaFinal: fecha final de obras ingresada por el usuario
+        obraCortadaB: si el usuario quiere que se corte alguna obra para ocupar el área disponible
     Retorno:
         cantidad: cantidad de obras de la nueva exposición
         areaTotalObras: área total ocupada por las obras

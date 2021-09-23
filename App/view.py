@@ -368,7 +368,7 @@ while True:
         elif int(inputs[0]) == 4:
             sortType=input("PRUEBA- Tipo de ordenamiento: (1)Insertion - (2)Selection - (3)Merge - (4)Quick ")
             print("Cargando clasificación por nacionalidad de obras......")
-            listaprovisional=controller.req4(catalog,sortType)
+            listaprovisional=controller.ClasificarObrasNacionalidad(catalog,sortType)
             print("tiempo de req4: ",listaprovisional[2])
             print("Top 10 nacionalidades de acuerdo a su cantidad de obras de arte")
             printNationalityArt(listaprovisional[0])
@@ -417,9 +417,6 @@ while True:
                 print(resultado[3])
                 print("Total de obras que se pueden exhibir: ",round(resultado[0],3))
                 printFirstLastsResultsExpo(resultado[2])
-                # for artwork in lt.iterator(catalog["artworks"]):
-                #     if artwork["ObjectID"]=="147116":
-                #         print(artwork)
             else:
                 print("Imposible proponer exposición, no hay obras en el rango de fechas seleccionado o las fechas ingresadas no siguen el formato.")
 
